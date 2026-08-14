@@ -1,0 +1,30 @@
+name: Build standalone index
+
+on:
+  push:
+    paths:
+      - 'app.gz'
+      - '.github/workflows/build-index.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Decompress standalone app
+        run: gzip -dc app.gz > index.html
+      - name: Commit generated index
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          if git diff --cached --quiet; then
+            echo "No changes"
+          else
+            git commit -m "Build standalone Mi Dia a Dia"
+            git push
+          fi
