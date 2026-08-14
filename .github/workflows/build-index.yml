@@ -4,6 +4,7 @@ on:
   push:
     branches: [main]
     paths:
+      - 'payload.p*'
       - 'payload.part*'
       - '.github/workflows/build-index.yml'
   workflow_dispatch:
@@ -31,12 +32,15 @@ jobs:
         run: |
           set -euo pipefail
           printf '%s  %s\n' \
-            'b58071c01b1a78dee1b9f3ff7cd722506d0a1db93c74111c9ea43c47577c34f8' payload.part0 \
+            'c64cc6d75e9a6267b1e99b32d5c3c7dd6645e745973212822b1d3c9d256f6697' payload.p00 \
+            '450bfd309fabed1092f133f7af7e96925368d7af3e1b89177f2026099fd3e745' payload.p01 \
+            '5367d7ae1d611707c569fcba474e20d4b9fc9baf429e3ee7fc6a0f852fa43eac' payload.p02 \
+            '2838ebbec6479d6fccfaac41be1e769b16c17040bcbe89230a939c7e8f930ec2' payload.p03 \
             '04fca7fe297a5226bbcc0dbd40f6cfd56a1a11795ad9dc9817b7a7aa6dc37fe0' payload.part1 \
             '0dbb4e476cd765fac50547f6137c8355866a5355d34f031697406cac95adef1e' payload.part2 \
             '1157ee260e53aa044878a0fa34b576550cc7d9b9e16892fe0f8e48feb76e7e67' payload.part3 | sha256sum -c -
           mkdir -p dist
-          cat payload.part0 payload.part1 payload.part2 payload.part3 > /tmp/site.xz.b64
+          cat payload.p00 payload.p01 payload.p02 payload.p03 payload.part1 payload.part2 payload.part3 > /tmp/site.xz.b64
           base64 --decode /tmp/site.xz.b64 > /tmp/site.xz
           xz --test /tmp/site.xz
           xz --decompress --stdout /tmp/site.xz > dist/index.html
