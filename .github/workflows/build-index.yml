@@ -1,4 +1,4 @@
-name: Deploy Mi Día a Día to GitHub Pages
+name: Build verified GitHub Pages site
 
 on:
   push:
@@ -10,24 +10,21 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
-  group: pages
+  group: pages-build
   cancel-in-progress: true
 
 jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout source
         uses: actions/checkout@v6
-      - name: Reconstruct and verify integrated standalone site
+        with:
+          fetch-depth: 0
+      - name: Reconstruct and verify complete standalone site
         shell: bash
         run: |
           set -euo pipefail
@@ -39,26 +36,25 @@ jobs:
             '04fca7fe297a5226bbcc0dbd40f6cfd56a1a11795ad9dc9817b7a7aa6dc37fe0' payload.part1 \
             '0dbb4e476cd765fac50547f6137c8355866a5355d34f031697406cac95adef1e' payload.part2 \
             '1157ee260e53aa044878a0fa34b576550cc7d9b9e16892fe0f8e48feb76e7e67' payload.part3 | sha256sum -c -
-          mkdir -p dist
           cat payload.p00 payload.p01 payload.p02 payload.p03 payload.part1 payload.part2 payload.part3 > /tmp/site.xz.b64
           base64 --decode /tmp/site.xz.b64 > /tmp/site.xz
           xz --test /tmp/site.xz
-          xz --decompress --stdout /tmp/site.xz > dist/index.html
-          test -s dist/index.html
-          test "$(wc -c < dist/index.html)" -gt 180000
-          grep -q 'MI DÍA A DÍA' dist/index.html
-          grep -q 'cloudBtn' dist/index.html
-          grep -q 'api.jsonstorage.net' dist/index.html
-          grep -q 'viewport' dist/index.html
-          touch dist/.nojekyll
-      - name: Configure GitHub Pages
-        uses: actions/configure-pages@v5
-        with:
-          enablement: true
-      - name: Upload site
-        uses: actions/upload-pages-artifact@v4
-        with:
-          path: 'dist'
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          xz --decompress --stdout /tmp/site.xz > /tmp/index.html
+          test "$(wc -c < /tmp/index.html)" -gt 180000
+          grep -q 'MI DÍA A DÍA' /tmp/index.html
+          grep -q 'cloudBtn' /tmp/index.html
+          grep -q 'api.jsonstorage.net' /tmp/index.html
+          grep -q 'name="viewport"' /tmp/index.html
+      - name: Publish verified files to gh-pages branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git checkout -B gh-pages origin/gh-pages
+          find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          cp /tmp/index.html index.html
+          touch .nojekyll
+          git add -A
+          git commit -m 'Publish verified Mi Día a Día system' || true
+          git push origin gh-pages
