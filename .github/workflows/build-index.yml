@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
     paths:
-      - 'index.html'
+      - 'payload.part*'
       - '.github/workflows/build-index.yml'
   workflow_dispatch:
 
@@ -24,20 +24,23 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout full history
+      - name: Checkout
         uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-      - name: Build integrated standalone site
+      - name: Reconstruct and verify integrated standalone site
+        shell: bash
         run: |
+          set -euo pipefail
           mkdir -p dist
-          git show d5bf61a7c4fc9f4b394a7482f92368eb5bbdb642:app.gz > /tmp/mi-dia-a-dia.gz
-          gzip -t /tmp/mi-dia-a-dia.gz
-          gzip -dc /tmp/mi-dia-a-dia.gz > dist/index.html
+          cat payload.part0 payload.part1 payload.part2 payload.part3 > /tmp/site.xz.b64
+          base64 --decode /tmp/site.xz.b64 > /tmp/site.xz
+          xz --test /tmp/site.xz
+          xz --decompress --stdout /tmp/site.xz > dist/index.html
           test -s dist/index.html
+          test "$(wc -c < dist/index.html)" -gt 180000
           grep -q 'MI DÍA A DÍA' dist/index.html
           grep -q 'cloudBtn' dist/index.html
           grep -q 'api.jsonstorage.net' dist/index.html
+          grep -q 'viewport' dist/index.html
           touch dist/.nojekyll
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
