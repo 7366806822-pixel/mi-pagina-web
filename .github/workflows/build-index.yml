@@ -7,6 +7,7 @@ on:
       - 'payload.p*'
       - 'payload.part*'
       - 'patch_v8_to_v9.py'
+      - 'patch_add_realtime.py'
       - '.github/workflows/build-index.yml'
   workflow_dispatch:
 
@@ -41,8 +42,10 @@ jobs:
           base64 --decode /tmp/site.xz.b64 > /tmp/site.xz
           xz --test /tmp/site.xz
           xz --decompress --stdout /tmp/site.xz > /tmp/index.html
-      - name: Apply Supabase Realtime data layer
+      - name: Apply Supabase central data layer
         run: python patch_v8_to_v9.py
+      - name: Add bidirectional Realtime subscription
+        run: python patch_add_realtime.py
       - name: Verify production HTML
         shell: bash
         run: |
@@ -52,6 +55,8 @@ jobs:
           grep -q 'SUPABASE_URL' /tmp/index.html
           grep -q '@supabase/supabase-js@2' /tmp/index.html
           grep -q 'mdd_upsert_item' /tmp/index.html
+          grep -q 'postgres_changes' /tmp/index.html
+          grep -q 'subscribeRealtime' /tmp/index.html
           grep -q 'name="viewport"' /tmp/index.html
           ! grep -q 'api.jsonstorage.net' /tmp/index.html
           ! grep -q 'indexedDB' /tmp/index.html
