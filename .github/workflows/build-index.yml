@@ -6,6 +6,7 @@ on:
     paths:
       - 'payload.p*'
       - 'payload.part*'
+      - 'patch_v8_to_v9.py'
       - '.github/workflows/build-index.yml'
   workflow_dispatch:
 
@@ -24,7 +25,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - name: Reconstruct and verify complete standalone site
+      - name: Reconstruct original standalone site
         shell: bash
         run: |
           set -euo pipefail
@@ -40,11 +41,20 @@ jobs:
           base64 --decode /tmp/site.xz.b64 > /tmp/site.xz
           xz --test /tmp/site.xz
           xz --decompress --stdout /tmp/site.xz > /tmp/index.html
+      - name: Apply Supabase Realtime data layer
+        run: python patch_v8_to_v9.py
+      - name: Verify production HTML
+        shell: bash
+        run: |
+          set -euo pipefail
           test "$(wc -c < /tmp/index.html)" -gt 180000
           grep -q 'MI DÍA A DÍA' /tmp/index.html
-          grep -q 'cloudBtn' /tmp/index.html
-          grep -q 'api.jsonstorage.net' /tmp/index.html
+          grep -q 'SUPABASE_URL' /tmp/index.html
+          grep -q '@supabase/supabase-js@2' /tmp/index.html
+          grep -q 'mdd_upsert_item' /tmp/index.html
           grep -q 'name="viewport"' /tmp/index.html
+          ! grep -q 'api.jsonstorage.net' /tmp/index.html
+          ! grep -q 'indexedDB' /tmp/index.html
       - name: Publish verified files to gh-pages branch
         shell: bash
         run: |
@@ -56,5 +66,5 @@ jobs:
           cp /tmp/index.html index.html
           touch .nojekyll
           git add -A
-          git commit -m 'Publish verified Mi Día a Día system' || true
+          git commit -m 'Publish Supabase Realtime Mi Día a Día' || true
           git push origin gh-pages
