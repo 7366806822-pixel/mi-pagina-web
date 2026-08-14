@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#07111f">
   <meta name="description" content="Mi Día a Día — sistema central personal, jurídico, empresarial, académico y tecnológico.">
-  <title>Mi Día a Día — Edición Profesional Compartida</title>
+  <title>Mi Día a Día — Tiempo Real</title>
   <style>
 
 :root{
@@ -378,6 +378,8 @@ input[type="checkbox"]{border-radius:3px}
 @media(max-width:620px){.cloud-button span{display:none}.cloud-link-wrap{grid-template-columns:1fr}.cloud-link-wrap button{width:100%}}
 
 </style>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
   <canvas id="graphBg" aria-hidden="true"></canvas>
@@ -885,142 +887,226 @@ const state = {
   cloud: {endpoint:"",active:false,syncing:false,applying:false,timer:null,lastSync:"",lastError:"",remoteUpdatedAt:""}
 };
 
-/* ===================== IndexedDB ===================== */
+/* ===================== Supabase Realtime - almacenamiento central ===================== */
+const SUPABASE_URL = "https://ppisbpcexufegkwnqyog.supabase.co";
+const SUPABASE_KEY = "sb_publishable_bAgTrxjl6NkgpEazhmyu7A_1OrB4M6I";
+const WORKSPACE_ID = "02979e85-9abc-44ec-9e2d-0d399be2a5eb";
+
 class AppDB {
   constructor(){
-    this.db = null;
-    this.fallback = false;
-    this.fallbackKey = "mi_dia_a_dia_elite_fallback_v1";
-    this.memoryFallback = {records:[],trash:[],meta:{}};
+    this.client=null;
+    this.versions=new Map();
+    this.cacheKey="mdd_supabase_offline_cache_v1";
+    this.queueKey="mdd_supabase_pending_ops_v1";
+    this.memoryCache={records:[],trash:[],meta:{}};
+    this.fallback=false;
+    this.connected=false;
   }
+  key(store,id){return `${store}:${id}`}
+  itemId(store,obj){return store==="meta"?obj.key:obj.id}
+  _loadCache(){
+    try{
+      const raw=localStorage.getItem(this.cacheKey);
+      return raw?JSON.parse(raw):this.memoryCache;
+    }catch{return this.memoryCache}
+  }
+  _saveCache(data){
+    this.memoryCache=JSON.parse(JSON.stringify(data));
+    try{localStorage.setItem(this.cacheKey,JSON.stringify(data))}catch{}
+  }
+  _cacheStore(store,items){
+    const d=this._loadCache();
+    if(store==="meta")d.meta=Object.fromEntries(items.map(x=>[x.key,x.value]));
+    else d[store]=items;
+    this._saveCache(d);
+  }
+  _cachePut(store,obj){
+    const d=this._loadCache();
+    if(store==="meta"){d.meta=d.meta||{};d.meta[obj.key]=obj.value}
+    else{
+      d[store]=d[store]||[];
+      const i=d[store].findIndex(x=>x.id===obj.id);
+      if(i>=0)d[store][i]=obj;else d[store].push(obj);
+    }
+    this._saveCache(d);
+  }
+  _cacheDelete(store,key){
+    const d=this._loadCache();
+    if(store==="meta"){if(d.meta)delete d.meta[key]}
+    else d[store]=(d[store]||[]).filter(x=>x.id!==key);
+    this._saveCache(d);
+  }
+  _queue(){
+    try{return JSON.parse(localStorage.getItem(this.queueKey)||"[]")}catch{return []}
+  }
+  _saveQueue(q){try{localStorage.setItem(this.queueKey,JSON.stringify(q))}catch{}}
+  _enqueue(op){const q=this._queue();q.push(op);this._saveQueue(q)}
   async init(){
-    // Al abrir el HTML con doble clic (file://), Chrome puede dejar IndexedDB
-    // bloqueado o esperando. En ese caso usamos inmediatamente el almacenamiento
-    // local seguro y evitamos que toda la aplicación quede congelada.
-    if(location.protocol === "file:" || !("indexedDB" in window)){
-      this.fallback = true;
-      return;
-    }
+    if(!window.supabase?.createClient)throw new Error("No se pudo cargar el cliente de sincronización.");
+    this.client=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{
+      auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false},
+      realtime:{params:{eventsPerSecond:20}}
+    });
     try{
-      await new Promise((resolve)=>{
-        let finished=false;
-        const finish=(fallback=false)=>{
-          if(finished)return; finished=true; clearTimeout(timer);
-          if(fallback)this.fallback=true; resolve();
-        };
-        const timer=setTimeout(()=>finish(true),1800);
-        let req;
-        try{ req = indexedDB.open("MiDiaADiaEliteDB", 1); }
-        catch{ finish(true); return; }
-        req.onupgradeneeded = () => {
-          const idb = req.result;
-          if(!idb.objectStoreNames.contains("records")) idb.createObjectStore("records",{keyPath:"id"});
-          if(!idb.objectStoreNames.contains("trash")) idb.createObjectStore("trash",{keyPath:"id"});
-          if(!idb.objectStoreNames.contains("meta")) idb.createObjectStore("meta",{keyPath:"key"});
-        };
-        req.onsuccess = () => {
-          if(finished){ try{req.result.close()}catch{}; return; }
-          this.db=req.result; finish(false);
-        };
-        req.onerror = () => finish(true);
-        req.onblocked = () => finish(true);
+      const {error}=await this.client.from("mi_dia_a_dia_items").select("item_id").eq("workspace_id",WORKSPACE_ID).limit(1);
+      if(error)throw error;
+      this.connected=true;this.fallback=false;
+      await this.flushQueue();
+    }catch(e){
+      this.connected=false;this.fallback=true;
+      console.warn("Supabase temporalmente sin conexión; se usará caché offline.",e);
+    }
+    window.addEventListener("online",()=>this.flushQueue().catch(()=>{}));
+    this.subscribeRealtime();
+  }
+
+  subscribeRealtime(){
+    if(!this.client||this.channel)return;
+    this.channel=this.client.channel("mdd-shared-"+WORKSPACE_ID)
+      .on("postgres_changes",{
+        event:"*",schema:"public",table:"mi_dia_a_dia_items",
+        filter:`workspace_id=eq.${WORKSPACE_ID}`
+      },evt=>{
+        try{
+          const row=evt.new && Object.keys(evt.new).length?evt.new:evt.old;
+          if(!row||row.workspace_id!==WORKSPACE_ID)return;
+          const store=row.store,id=String(row.item_id||"");
+          if(!["records","trash","meta"].includes(store)||!id)return;
+          if(evt.eventType==="DELETE"){
+            this.versions.delete(this.key(store,id));
+            this._cacheDelete(store,id);
+            if(typeof state!=="undefined"){
+              if(store==="meta"){if(state.meta)delete state.meta[id]}
+              else state[store]=(state[store]||[]).filter(x=>String(x.id)!==id);
+            }
+          }else{
+            const obj=row.payload||{};
+            this.versions.set(this.key(store,id),Number(row.version||1));
+            this._cachePut(store,obj);
+            if(typeof state!=="undefined"){
+              if(store==="meta"){
+                state.meta=state.meta||{};state.meta[id]=obj.value;
+              }else{
+                state[store]=state[store]||[];
+                const i=state[store].findIndex(x=>String(x.id)===id);
+                const normalized=store==="records"&&typeof normRecord==="function"?normRecord(obj):obj;
+                if(i>=0)state[store][i]=normalized;else state[store].push(normalized);
+              }
+            }
+          }
+          if(typeof renderNav==="function")renderNav();
+          if(typeof renderMain==="function")renderMain();
+          if(typeof updateCloudUI==="function")updateCloudUI();
+        }catch(e){console.warn("Evento Realtime no aplicado",e)}
+      })
+      .subscribe(status=>{
+        this.connected=status==="SUBSCRIBED"||this.connected;
       });
-    }catch{
-      this.fallback=true;
-    }
   }
-  _fallbackLoad(){
-    try{
-      const raw=localStorage.getItem(this.fallbackKey);
-      return raw?JSON.parse(raw):this.memoryFallback;
-    }catch{
-      return this.memoryFallback;
-    }
-  }
-  _fallbackSave(data){
-    this.memoryFallback=JSON.parse(JSON.stringify(data));
-    try{ localStorage.setItem(this.fallbackKey,JSON.stringify(data)); }
-    catch(e){
-      try{ if(typeof state!=="undefined")state.storageWarning="El navegador no permitió guardar en almacenamiento local. Exporta un respaldo para no perder cambios." }catch{}
-    }
-  }
-  _activateFallback(){
-    this.fallback=true;
-    try{this.db?.close()}catch{}
-    this.db=null;
-    try{
-      if(typeof state!=="undefined")this._fallbackSave({records:state.records||[],trash:state.trash||[],meta:state.meta||{}});
-    }catch{}
-  }
+
   async all(store){
-    if(this.fallback){
-      const d=this._fallbackLoad();
-      if(store==="meta") return Object.entries(d.meta||{}).map(([key,value])=>({key,value}));
-      return d[store]||[];
-    }
-    return new Promise((resolve,reject)=>{
+    if(this.client){
       try{
-        const tx=this.db.transaction(store,"readonly");
-        const req=tx.objectStore(store).getAll();
-        req.onsuccess=()=>resolve(req.result||[]);
-        req.onerror=()=>reject(req.error);
-      }catch(e){reject(e)}
-    }).catch(()=>{this._activateFallback();return this.all(store)});
+        const {data,error}=await this.client
+          .from("mi_dia_a_dia_items")
+          .select("item_id,payload,version,updated_at")
+          .eq("workspace_id",WORKSPACE_ID).eq("store",store)
+          .order("updated_at",{ascending:true});
+        if(error)throw error;
+        this.connected=true;this.fallback=false;
+        const rows=(data||[]).map(r=>{
+          this.versions.set(this.key(store,r.item_id),Number(r.version||1));
+          return r.payload||{};
+        });
+        this._cacheStore(store,rows);
+        return rows;
+      }catch(e){this.connected=false;this.fallback=true;console.warn("Lectura cloud falló; usando caché.",e)}
+    }
+    const d=this._loadCache();
+    if(store==="meta")return Object.entries(d.meta||{}).map(([key,value])=>({key,value}));
+    return d[store]||[];
+  }
+  async _remotePut(store,obj,allowQueue=true){
+    const id=this.itemId(store,obj);if(!id)throw new Error("Registro sin identificador.");
+    const k=this.key(store,id), expected=this.versions.has(k)?this.versions.get(k):null;
+    const args={p_workspace:WORKSPACE_ID,p_store:store,p_item_id:String(id),p_payload:obj,p_expected_version:expected};
+    try{
+      let {data,error}=await this.client.rpc("mdd_upsert_item",args);
+      if(error)throw error;
+      let row=Array.isArray(data)?data[0]:data;
+      if(row?.conflict){
+        const remote=row.current_payload||{}, remoteV=Number(row.current_version||1);
+        const localStamp=String(obj.updatedAt||obj.updated_at||""), remoteStamp=String(remote.updatedAt||remote.updated_at||"");
+        this.versions.set(k,remoteV);
+        if(remoteStamp && (!localStamp || remoteStamp>localStamp)){
+          Object.keys(obj).forEach(x=>delete obj[x]);Object.assign(obj,remote);
+          this._cachePut(store,obj);
+          return {conflict:true,remoteWon:true};
+        }
+        ({data,error}=await this.client.rpc("mdd_upsert_item",{...args,p_expected_version:remoteV}));
+        if(error)throw error;
+        row=Array.isArray(data)?data[0]:data;
+      }
+      if(row?.current_version)this.versions.set(k,Number(row.current_version));
+      this.connected=true;this.fallback=false;this._cachePut(store,obj);
+      return {conflict:false};
+    }catch(e){
+      this.connected=false;this.fallback=true;this._cachePut(store,obj);
+      if(allowQueue)this._enqueue({type:"put",store,obj});
+      throw e;
+    }
   }
   async put(store,obj){
-    if(this.fallback){
-      const d=this._fallbackLoad();
-      if(store==="meta"){d.meta=d.meta||{};d.meta[obj.key]=obj.value}
-      else{
-        d[store]=d[store]||[];
-        const i=d[store].findIndex(x=>x.id===obj.id);
-        if(i>=0)d[store][i]=obj; else d[store].push(obj);
-      }
-      this._fallbackSave(d);return;
+    try{return await this._remotePut(store,obj,true)}
+    catch(e){
+      try{state.storageWarning="Sin conexión: el cambio quedó en cola y se enviará automáticamente al reconectar."}catch{}
+      return {queued:true,error:e};
     }
-    return new Promise((resolve,reject)=>{
-      try{
-        const tx=this.db.transaction(store,"readwrite");
-        tx.objectStore(store).put(obj);
-        tx.oncomplete=()=>resolve();
-        tx.onerror=()=>reject(tx.error);
-      }catch(e){reject(e)}
-    }).catch(()=>{this._activateFallback();return this.put(store,obj)});
   }
-  async delete(store,key){
-    if(this.fallback){
-      const d=this._fallbackLoad();
-      if(store==="meta"){if(d.meta)delete d.meta[key]}
-      else d[store]=(d[store]||[]).filter(x=>x.id!==key);
-      this._fallbackSave(d);return;
+  async _remoteDelete(store,key,allowQueue=true){
+    try{
+      const {error}=await this.client.from("mi_dia_a_dia_items").delete()
+        .eq("workspace_id",WORKSPACE_ID).eq("store",store).eq("item_id",String(key));
+      if(error)throw error;
+      this.versions.delete(this.key(store,key));this.connected=true;this.fallback=false;this._cacheDelete(store,key);
+    }catch(e){
+      this.connected=false;this.fallback=true;this._cacheDelete(store,key);
+      if(allowQueue)this._enqueue({type:"delete",store,key});
+      throw e;
     }
-    return new Promise((resolve,reject)=>{
-      try{
-        const tx=this.db.transaction(store,"readwrite");
-        tx.objectStore(store).delete(key);
-        tx.oncomplete=()=>resolve();
-        tx.onerror=()=>reject(tx.error);
-      }catch(e){reject(e)}
-    }).catch(()=>{this._activateFallback();return this.delete(store,key)});
   }
+  async delete(store,key){try{await this._remoteDelete(store,key,true)}catch{}}
   async clear(store){
-    if(this.fallback){
-      const d=this._fallbackLoad();
-      if(store==="meta")d.meta={};else d[store]=[];
-      this._fallbackSave(d);return;
+    try{
+      const {error}=await this.client.from("mi_dia_a_dia_items").delete().eq("workspace_id",WORKSPACE_ID).eq("store",store);
+      if(error)throw error;
+      [...this.versions.keys()].filter(k=>k.startsWith(store+":")).forEach(k=>this.versions.delete(k));
+      this._cacheStore(store,[]);
+    }catch(e){
+      const d=this._loadCache();if(store==="meta")d.meta={};else d[store]=[];this._saveCache(d);
+      this._enqueue({type:"clear",store});
     }
-    return new Promise((resolve,reject)=>{
-      try{
-        const tx=this.db.transaction(store,"readwrite");
-        tx.objectStore(store).clear();
-        tx.oncomplete=()=>resolve();
-        tx.onerror=()=>reject(tx.error);
-      }catch(e){reject(e)}
-    }).catch(()=>{this._activateFallback();return this.clear(store)});
   }
   async replaceAll(store,items){
     await this.clear(store);
-    for(const item of items) await this.put(store,item);
+    for(const item of items)await this.put(store,item);
+  }
+  async flushQueue(){
+    if(!this.client||!navigator.onLine)return;
+    const q=this._queue();if(!q.length)return;
+    const left=[];
+    for(const op of q){
+      try{
+        if(op.type==="put")await this._remotePut(op.store,op.obj,false);
+        else if(op.type==="delete")await this._remoteDelete(op.store,op.key,false);
+        else if(op.type==="clear"){
+          const {error}=await this.client.from("mi_dia_a_dia_items").delete().eq("workspace_id",WORKSPACE_ID).eq("store",op.store);
+          if(error)throw error;
+        }
+      }catch(e){left.push(op)}
+    }
+    this._saveQueue(left);
+    if(!left.length){this.connected=true;this.fallback=false;try{toast("Cambios offline sincronizados.")}catch{}}
   }
 }
 const db = new AppDB();
@@ -2094,87 +2180,25 @@ function openConfirm(title,text,action,label="Confirmar"){
 function closeConfirm(){
   $("confirmOverlay").classList.remove("open");$("confirmOverlay").setAttribute("aria-hidden","true");state.confirmAction=null;
 }
-const CLOUD_POLL_MS=4000;
-function cloudEndpointFromURL(){
-  try{const u=new URL(location.href);return u.searchParams.get("db")||""}catch{return ""}
-}
-function cloudShareURL(){
-  if(!state.cloud.endpoint)return "";
-  const u=new URL(location.href);u.searchParams.set("db",state.cloud.endpoint);return u.href;
-}
-function cloudSnapshot(){
-  return {app:"Mi Día a Día Elite PRO",schema:8,updatedAt:new Date().toISOString(),records:state.records,trash:state.trash,meta:state.meta};
-}
-function cloudValidEndpoint(v){return /^https:\/\/api\.jsonstorage\.net\/v1\/json\/[A-Za-z0-9_-]+/.test(String(v||""))}
-async function cloudCreate(){
-  if(state.cloud.syncing)return;state.cloud.syncing=true;updateCloudUI();
-  try{
-    const snap=cloudSnapshot();
-    const res=await fetch("https://api.jsonstorage.net/v1/json",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(snap)});
-    if(!res.ok)throw new Error("HTTP "+res.status);
-    const data=await res.json();if(!cloudValidEndpoint(data?.uri))throw new Error("El servidor no devolvió un espacio válido.");
-    state.cloud.endpoint=data.uri;state.cloud.active=true;state.cloud.remoteUpdatedAt=snap.updatedAt;state.cloud.lastSync=new Date().toISOString();state.cloud.lastError="";
-    safeLocalSet("mdd_cloud_endpoint",state.cloud.endpoint);
-    const u=new URL(location.href);u.searchParams.set("db",state.cloud.endpoint);history.replaceState(null,"",u);
-    startCloudPolling();updateCloudUI();toast("Nube activada. Comparte el enlace generado.");
-  }catch(e){state.cloud.lastError=e?.message||String(e);toast("No se pudo activar la nube.");}
-  finally{state.cloud.syncing=false;updateCloudUI()}
-}
-async function cloudPush({silent=false}={}){
-  if(!state.cloud.active||!state.cloud.endpoint||state.cloud.applying||state.cloud.syncing)return;
-  state.cloud.syncing=true;updateCloudUI();
-  try{
-    const snap=cloudSnapshot();
-    const res=await fetch(state.cloud.endpoint,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(snap)});
-    if(!res.ok)throw new Error("HTTP "+res.status);
-    state.cloud.remoteUpdatedAt=snap.updatedAt;state.cloud.lastSync=new Date().toISOString();state.cloud.lastError="";
-    if(!silent)toast("Cambios guardados en la nube.");
-  }catch(e){state.cloud.lastError=e?.message||String(e);if(!silent)toast("No se pudo sincronizar con la nube.");}
-  finally{state.cloud.syncing=false;updateCloudUI()}
-}
-async function cloudApplySnapshot(data){
-  if(!data||!Array.isArray(data.records)||!Array.isArray(data.trash))throw new Error("Datos compartidos inválidos.");
-  state.cloud.applying=true;
-  try{
-    state.records=data.records.map(normRecord);state.trash=data.trash.map(normRecord);state.meta={...state.meta,...(data.meta||{})};
-    await db.replaceAll("records",state.records);await db.replaceAll("trash",state.trash);await db.clear("meta");
-    for(const [key,value] of Object.entries(state.meta))await db.put("meta",{key,value});
-    state.cloud.remoteUpdatedAt=String(data.updatedAt||"");state.cloud.lastSync=new Date().toISOString();state.cloud.lastError="";
-    renderNav();renderMain();applyPreferences();
-  }finally{state.cloud.applying=false}
-}
-async function cloudPull({silent=false,force=false}={}){
-  if(!state.cloud.active||!state.cloud.endpoint||state.cloud.syncing)return;
-  state.cloud.syncing=true;updateCloudUI();
-  try{
-    const res=await fetch(state.cloud.endpoint+"?t="+Date.now(),{cache:"no-store"});if(!res.ok)throw new Error("HTTP "+res.status);
-    const data=await res.json();const remote=String(data.updatedAt||"");
-    if(force||!state.cloud.remoteUpdatedAt||remote>state.cloud.remoteUpdatedAt)await cloudApplySnapshot(data);
-    state.cloud.lastSync=new Date().toISOString();state.cloud.lastError="";if(!silent)toast("Información actualizada desde la nube.");
-  }catch(e){state.cloud.lastError=e?.message||String(e);if(!silent)toast("No se pudo actualizar desde la nube.");}
-  finally{state.cloud.syncing=false;updateCloudUI()}
-}
-function startCloudPolling(){if(state.cloud.timer)clearInterval(state.cloud.timer);if(state.cloud.active)state.cloud.timer=setInterval(()=>cloudPull({silent:true}),CLOUD_POLL_MS)}
-function initCloud(){
-  const fromURL=cloudEndpointFromURL(),saved=safeLocalGet("mdd_cloud_endpoint","")||"";const endpoint=fromURL||saved;
-  if(cloudValidEndpoint(endpoint)){state.cloud.endpoint=endpoint;state.cloud.active=true;safeLocalSet("mdd_cloud_endpoint",endpoint);startCloudPolling();}
-}
-function copyFallback(text){const a=document.createElement("textarea");a.value=text;a.style.position="fixed";a.style.opacity="0";document.body.appendChild(a);a.select();try{document.execCommand("copy")}catch{}a.remove()}
-async function copyCloudLink(){const link=cloudShareURL();if(!link)return;try{await navigator.clipboard.writeText(link)}catch{copyFallback(link)}toast("Enlace compartido copiado.")}
-function openCloudOverlay(){updateCloudUI();$("cloudOverlay").classList.add("open");$("cloudOverlay").setAttribute("aria-hidden","false")}
-function closeCloudOverlay(){$("cloudOverlay").classList.remove("open");$("cloudOverlay").setAttribute("aria-hidden","true")}
+/* ===================== Cloud compatibility shim ===================== */
+function initCloud(){}
+async function cloudPull(){return true}
+async function cloudPush(){return true}
+function cloudEndpointFromURL(){return ""}
 function updateCloudUI(){
-  const btn=$("cloudBtn");if(btn){btn.classList.toggle("online",state.cloud.active&&!state.cloud.syncing);btn.classList.toggle("syncing",state.cloud.syncing);btn.title=state.cloud.active?"Sincronización compartida activa":"Activar sistema compartido"}
-  const box=$("cloudStatusBox"),setup=$("cloudSetupArea"),log=$("cloudLog");if(!box||!setup)return;
-  if(!state.cloud.active){box.innerHTML=`<div class="cloud-status-row"><strong>Modo actual: solo este dispositivo</strong><span>Los demás aún no ven tus anotaciones.</span></div>`;setup.innerHTML=`<div class="hero-actions" style="margin:0 0 12px"><button class="primary-button" type="button" data-action="cloud-create">Activar nube y generar enlace</button></div>`;}
-  else{const link=cloudShareURL();box.innerHTML=`<div class="cloud-status-row"><strong><span class="cloud-live-pill"><i></i> Compartido activo</span></strong><span>${state.cloud.syncing?"Sincronizando…":"Mismo espacio en todos los dispositivos"}</span></div><div class="cloud-link-wrap"><input id="cloudShareInput" class="field-control" readonly value="${esc(link)}"><button class="secondary-button" type="button" data-action="cloud-copy">Copiar enlace</button></div>`;setup.innerHTML=`<div class="record-notes" style="margin-bottom:12px">Comparte exactamente este enlace por WhatsApp. Los cambios se guardan en la nube y los demás dispositivos revisan actualizaciones automáticamente.</div>`;}
-  if(log)log.textContent=state.cloud.lastError?"Último error: "+state.cloud.lastError:state.cloud.lastSync?"Última sincronización: "+new Date(state.cloud.lastSync).toLocaleString("es-PE"):"Aún no se ha realizado ninguna sincronización.";
-  if($("cloudPullBtn"))$("cloudPullBtn").disabled=!state.cloud.active||state.cloud.syncing;if($("cloudPushBtn"))$("cloudPushBtn").disabled=!state.cloud.active||state.cloud.syncing;
+  const b=document.getElementById("cloudBtn");
+  if(b){b.textContent="☁ Tiempo real";b.title="Datos centralizados en Supabase Realtime";}
 }
-async function markModified(){
-  const value=new Date().toISOString();await setMeta("lastModified",value);if(state.cloud.active&&!state.cloud.applying)cloudPush({silent:true});
+function closeCloudOverlay(){
+  const el=document.getElementById("cloudOverlay");
+  if(el){el.classList.remove("open");el.setAttribute("aria-hidden","true");}
 }
-
+function openCloudOverlay(){
+  const el=document.getElementById("cloudOverlay");
+  if(el){el.classList.add("open");el.setAttribute("aria-hidden","false");}
+  const status=document.getElementById("cloudStatus");
+  if(status)status.textContent="Conectado a Supabase Realtime. Todos los usuarios de este enlace trabajan sobre el mismo espacio de datos.";
+}
 /* ===================== Case workspace ===================== */
 const CASE_TABS = [
   ["overview","Resumen"],["chronology","Cronología"],["theory","Teoría del caso"],["facts","Hechos"],["issues","Problemas jurídicos"],
@@ -2581,7 +2605,6 @@ async function loadState(){
 async function init(){
   await loadState();
   initCloud();
-  if(state.cloud.active){try{await cloudPull({silent:true,force:!!cloudEndpointFromURL()})}catch{}}
   if(safeLocalGet("mdd_sidebar_collapsed","0")==="1")document.body.classList.add("sidebar-collapsed");
   $("pageSubtitle").textContent=subtitleForSpecial("today");
   renderNav();
@@ -2589,8 +2612,6 @@ async function init(){
   bindEvents();
   applyPreferences();
   updateClock();setInterval(updateClock,30000);updateCloudUI();
-  document.addEventListener("visibilitychange",()=>{if(!document.hidden&&state.cloud.active)cloudPull({silent:true})});
-  window.addEventListener("focus",()=>{if(state.cloud.active)cloudPull({silent:true})});
   window.addEventListener("error",e=>{if(e.error)reportRuntimeError(e.error,"error global")});
   window.addEventListener("unhandledrejection",e=>{e.preventDefault();reportRuntimeError(e.reason,"promesa no controlada")});
   try{initGraphBackground()}catch(e){console.warn("Fondo visual desactivado:",e)}
