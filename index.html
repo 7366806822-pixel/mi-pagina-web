@@ -1,1 +1,35 @@
-PLACEHOLDER
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#07111f">
+<title>Mi Día a Día — cargando</title>
+<style>
+html,body{margin:0;min-height:100%;background:#07111f;color:#f7f9fc;font-family:Segoe UI,Arial,sans-serif}body{display:grid;place-items:center;padding:24px;box-sizing:border-box}.box{max-width:560px;text-align:center}.mark{width:54px;height:54px;margin:0 auto 18px;display:grid;place-items:center;background:#d2b46c;color:#07111f;font-weight:900;border-radius:10px}h1{font-size:22px;margin:0 0 8px}p{color:#aab4c3;line-height:1.55;margin:0}.error{color:#ff9c96}
+</style>
+</head>
+<body>
+<main class="box"><div class="mark">MD</div><h1>Abriendo Mi Día a Día</h1><p id="status">Cargando la edición compartida…</p></main>
+<script>
+(async()=>{
+  const status=document.getElementById('status');
+  try{
+    if(!('DecompressionStream' in window)) throw new Error('Actualiza Chrome, Edge o Safari para abrir esta versión.');
+    const url='https://raw.githubusercontent.com/7366806822-pixel/mi-pagina-web/main/app.gz?build=6';
+    const response=await fetch(url,{cache:'no-store'});
+    if(!response.ok||!response.body) throw new Error('No se pudo descargar el sistema.');
+    const stream=response.body.pipeThrough(new DecompressionStream('gzip'));
+    const html=await new Response(stream).text();
+    if(!html.includes('MI DÍA A DÍA')) throw new Error('El archivo del sistema no es válido.');
+    document.open();
+    document.write(html);
+    document.close();
+  }catch(err){
+    status.className='error';
+    status.textContent='No se pudo abrir el sistema: '+(err&&err.message?err.message:String(err));
+  }
+})();
+</script>
+</body>
+</html>
