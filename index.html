@@ -16,8 +16,7 @@ html,body{margin:0;min-height:100%;background:#07111f;color:#f7f9fc;font-family:
   const status=document.getElementById('status');
   try{
     if(!('DecompressionStream' in window)) throw new Error('Actualiza Chrome, Edge o Safari para abrir esta versión.');
-    const url='https://raw.githubusercontent.com/7366806822-pixel/mi-pagina-web/main/app.gz?build=6';
-    const response=await fetch(url,{cache:'no-store'});
+    const response=await fetch('./app.gz',{cache:'no-store'});
     if(!response.ok||!response.body) throw new Error('No se pudo descargar el sistema.');
     const stream=response.body.pipeThrough(new DecompressionStream('gzip'));
     const html=await new Response(stream).text();
