@@ -7,6 +7,7 @@ on:
       - 'payload.p*'
       - 'payload.part*'
       - 'patch_v8_to_v9.py'
+      - 'patch_v8_to_v9_fixed.py'
       - 'patch_add_realtime.py'
       - '.github/workflows/build-index.yml'
   workflow_dispatch:
@@ -43,7 +44,7 @@ jobs:
           xz --test /tmp/site.xz
           xz --decompress --stdout /tmp/site.xz > /tmp/index.html
       - name: Apply Supabase central data layer
-        run: python patch_v8_to_v9.py
+        run: python patch_v8_to_v9_fixed.py
       - name: Add bidirectional Realtime subscription
         run: python patch_add_realtime.py
       - name: Verify production HTML
@@ -60,6 +61,17 @@ jobs:
           grep -q 'name="viewport"' /tmp/index.html
           ! grep -q 'api.jsonstorage.net' /tmp/index.html
           ! grep -q 'indexedDB' /tmp/index.html
+      - name: Validate JavaScript syntax
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          s=Path('/tmp/index.html').read_text(encoding='utf-8')
+          scripts=re.findall(r'<script(?:\s[^>]*)?>(.*?)</script>',s,re.S)
+          Path('/tmp/app.js').write_text(scripts[-1],encoding='utf-8')
+          PY
+          node --check /tmp/app.js
       - name: Publish verified files to gh-pages branch
         shell: bash
         run: |
