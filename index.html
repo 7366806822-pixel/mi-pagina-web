@@ -960,8 +960,24 @@ class AppDB {
     this.subscribeRealtime();
   }
 
+  async catchUpRealtime(){
+    try{
+      const records=await this.all("records");
+      const trash=await this.all("trash");
+      const metaRows=await this.all("meta");
+      if(typeof state!=="undefined"){
+        state.records=records.map(x=>typeof normRecord==="function"?normRecord(x):x);
+        state.trash=trash.map(x=>typeof normRecord==="function"?normRecord(x):x);
+        state.meta=Object.fromEntries(metaRows.map(x=>[x.key,x.value]));
+        if(typeof renderNav==="function")renderNav();
+        if(typeof renderMain==="function")renderMain();
+        if(typeof updateCloudUI==="function")updateCloudUI();
+      }
+    }catch(e){console.warn("No se pudo completar resincronización Realtime",e)}
+  }
   subscribeRealtime(){
     if(!this.client||this.channel)return;
+    this.realtimeReady=false;
     this.channel=this.client.channel("mdd-shared-"+WORKSPACE_ID)
       .on("postgres_changes",{
         event:"*",schema:"public",table:"mi_dia_a_dia_items",
@@ -984,9 +1000,8 @@ class AppDB {
             this.versions.set(this.key(store,id),Number(row.version||1));
             this._cachePut(store,obj);
             if(typeof state!=="undefined"){
-              if(store==="meta"){
-                state.meta=state.meta||{};state.meta[id]=obj.value;
-              }else{
+              if(store==="meta"){state.meta=state.meta||{};state.meta[id]=obj.value;}
+              else{
                 state[store]=state[store]||[];
                 const i=state[store].findIndex(x=>String(x.id)===id);
                 const normalized=store==="records"&&typeof normRecord==="function"?normRecord(obj):obj;
@@ -1000,7 +1015,10 @@ class AppDB {
         }catch(e){console.warn("Evento Realtime no aplicado",e)}
       })
       .subscribe(status=>{
-        this.connected=status==="SUBSCRIBED"||this.connected;
+        const wasReady=this.realtimeReady;
+        this.realtimeReady=status==="SUBSCRIBED";
+        this.connected=this.realtimeReady||this.connected;
+        if(this.realtimeReady&&!wasReady)this.catchUpRealtime();
       });
   }
 
