@@ -18,7 +18,9 @@ const base={id,type:'task',title:'E2E Realtime creación',area:'Estudio jurídic
   await b.waitForFunction(x=>state.records.some(r=>r.id===x&&r.title==='E2E Realtime edición'&&r.priority==='Urgente'),id,{timeout:20000}); console.log('EDIT_REALTIME_OK');
   const fresh=await browser.newContext({viewport:{width:1365,height:900}}),c=await fresh.newPage(); await c.goto(URL,{waitUntil:'domcontentloaded'}); await c.waitForFunction(()=>typeof db!=='undefined'&&db.client&&db.realtimeReady===true,{timeout:45000}); await c.waitForFunction(x=>state.records.some(r=>r.id===x&&r.title==='E2E Realtime edición'),id,{timeout:20000}); await fresh.close(); console.log('REOPEN_PERSISTENCE_OK');
   await a.evaluate(async x=>{await db.delete('records',x)},id); await b.waitForFunction(x=>!state.records.some(r=>r.id===x),id,{timeout:20000}); console.log('DELETE_REALTIME_OK');
-  if(!b.viewportSize()||b.viewportSize().width>500)throw new Error('Mobile viewport not applied'); if(!(await b.title()).includes('Tiempo Real'))throw new Error('Unexpected mobile title'); console.log('CHROME_DESKTOP_MOBILE_OK');
+  if(!b.viewportSize()||b.viewportSize().width>500)throw new Error('Mobile viewport not applied');
+  const brand=await b.locator('body').innerText(); if(!brand.includes('MI DÍA A DÍA'))throw new Error('Main interface not visible on mobile');
+  console.log('CHROME_DESKTOP_MOBILE_OK');
   if(errors.some(x=>/failed to fetch/i.test(x)))throw new Error('Detected Failed to fetch: '+errors.join(' | ')); console.log('E2E_REALTIME_ALL_OK');
  }finally{try{await a.evaluate(async x=>{if(typeof db!=='undefined')await db.delete('records',x)},id)}catch{} await browser.close()}
 })().catch(e=>{console.error(e);process.exit(1)});
