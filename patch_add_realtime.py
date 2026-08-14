@@ -12,3 +12,4 @@ p.write_text(s,encoding='utf-8')
 assert 'postgres_changes' in s
 assert 'subscribeRealtime()' in s
 assert 'realtimeReady' in s
+# 2026-08-13: republicación solicitada para restaurar el diseño completo v9 sin modificar la capa Realtime.
