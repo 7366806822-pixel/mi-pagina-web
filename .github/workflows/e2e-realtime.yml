@@ -1,0 +1,109 @@
+name: E2E public realtime verification
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/e2e-realtime.yml'
+
+jobs:
+  test-public-site:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v6
+      - name: Verify public page is serving production version
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error --retry 6 --retry-delay 5 --max-time 30 \
+            https://7366806822-pixel.github.io/mi-pagina-web/ -o /tmp/public.html
+          grep -q 'Mi Día a Día — Tiempo Real' /tmp/public.html
+          grep -q 'SUPABASE_URL' /tmp/public.html
+          grep -q 'postgres_changes' /tmp/public.html
+          ! grep -q 'api.jsonstorage.net' /tmp/public.html
+          ! grep -q 'indexedDB' /tmp/public.html
+      - name: Install Playwright Chromium
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm install playwright@1.55.0 --no-audit --no-fund
+          npx playwright install --with-deps chromium
+      - name: Run two-browser realtime CRUD and persistence test
+        run: |
+          cat > /tmp/e2e.js <<'NODE'
+          const { chromium, devices } = require('playwright');
+          const URL = 'https://7366806822-pixel.github.io/mi-pagina-web/';
+          const id = 'e2e_' + Date.now();
+          const base = {
+            id,
+            type:'task',
+            title:'E2E Realtime creación',
+            area:'Estudio jurídico',
+            priority:'Alta',
+            status:'Pendiente',
+            date:'',time:'',dueDate:'',project:'',context:'',tags:'e2e',notes:'prueba automática',nextAction:'',responsible:'',
+            createdAt:new Date().toISOString(), updatedAt:new Date().toISOString()
+          };
+          const browser = await chromium.launch({headless:true});
+          const desktop = await browser.newContext({ viewport:{width:1440,height:1000} });
+          const mobile = await browser.newContext({ ...devices['Pixel 7'] });
+          const a = await desktop.newPage();
+          const b = await mobile.newPage();
+          const consoleErrors=[];
+          for(const p of [a,b]) p.on('console',m=>{ if(m.type()==='error') consoleErrors.push(m.text()); });
+          try {
+            await Promise.all([a.goto(URL,{waitUntil:'domcontentloaded'}), b.goto(URL,{waitUntil:'domcontentloaded'})]);
+            await Promise.all([
+              a.waitForFunction(()=>typeof db!=='undefined' && db.client && typeof state!=='undefined',{timeout:30000}),
+              b.waitForFunction(()=>typeof db!=='undefined' && db.client && typeof state!=='undefined',{timeout:30000})
+            ]);
+            await Promise.all([
+              a.waitForFunction(()=>db.connected===true,{timeout:30000}),
+              b.waitForFunction(()=>db.connected===true,{timeout:30000})
+            ]);
+
+            // CREATE in desktop -> appears automatically in mobile without reload.
+            await a.evaluate(async r=>{ await db.put('records',r); }, base);
+            await b.waitForFunction(testId=>state.records.some(r=>r.id===testId && r.title==='E2E Realtime creación'), id, {timeout:20000});
+            console.log('CREATE_REALTIME_OK');
+
+            // EDIT in desktop -> appears automatically in mobile.
+            await a.evaluate(async testId=>{
+              const current=(await db.all('records')).find(r=>r.id===testId);
+              current.title='E2E Realtime edición';
+              current.priority='Urgente';
+              current.updatedAt=new Date().toISOString();
+              await db.put('records',current);
+            }, id);
+            await b.waitForFunction(testId=>state.records.some(r=>r.id===testId && r.title==='E2E Realtime edición' && r.priority==='Urgente'), id, {timeout:20000});
+            console.log('EDIT_REALTIME_OK');
+
+            // CLOSE/REOPEN fresh context -> cloud persistence remains.
+            const reopenedContext = await browser.newContext({ viewport:{width:1365,height:900} });
+            const c = await reopenedContext.newPage();
+            await c.goto(URL,{waitUntil:'domcontentloaded'});
+            await c.waitForFunction(()=>typeof db!=='undefined' && db.client && db.connected===true,{timeout:30000});
+            await c.waitForFunction(testId=>state.records.some(r=>r.id===testId && r.title==='E2E Realtime edición'), id, {timeout:20000});
+            console.log('REOPEN_PERSISTENCE_OK');
+            await reopenedContext.close();
+
+            // DELETE in desktop -> disappears automatically in mobile.
+            await a.evaluate(async testId=>{ await db.delete('records',testId); }, id);
+            await b.waitForFunction(testId=>!state.records.some(r=>r.id===testId), id, {timeout:20000});
+            console.log('DELETE_REALTIME_OK');
+
+            // Responsive/mobile sanity.
+            const mobileViewport = b.viewportSize();
+            if(!mobileViewport || mobileViewport.width>500) throw new Error('Mobile viewport not applied');
+            const title = await b.title();
+            if(!title.includes('Tiempo Real')) throw new Error('Unexpected page title on mobile');
+            console.log('CHROME_DESKTOP_MOBILE_OK');
+
+            if(consoleErrors.some(x=>/failed to fetch/i.test(x))) throw new Error('Detected Failed to fetch: '+consoleErrors.join(' | '));
+            console.log('E2E_REALTIME_ALL_OK');
+          } finally {
+            try { await a.evaluate(async testId=>{ if(typeof db!=='undefined') await db.delete('records',testId); }, id); } catch {}
+            await browser.close();
+          }
+          NODE
+          node /tmp/e2e.js
