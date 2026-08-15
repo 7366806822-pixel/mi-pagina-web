@@ -377,6 +377,39 @@ input[type="checkbox"]{border-radius:3px}
 .cloud-link-wrap{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;margin-top:10px}.cloud-link-wrap input{font-size:10.5px}.cloud-warning{padding:10px;border:1px solid rgba(232,164,60,.28);background:var(--orange-bg);color:#f1c77a;border-radius:7px;font-size:10.5px;line-height:1.5}.cloud-log{font-size:10px;color:var(--muted);line-height:1.55;margin-top:10px}.cloud-live-pill{display:inline-flex;align-items:center;gap:6px;padding:4px 7px;border:1px solid var(--line);border-radius:4px;font-size:9px;color:#a9b6c5}.cloud-live-pill i{width:7px;height:7px;border-radius:50%;background:var(--green)}
 @media(max-width:620px){.cloud-button span{display:none}.cloud-link-wrap{grid-template-columns:1fr}.cloud-link-wrap button{width:100%}}
 
+
+/* MDD_SIDEBAR_REVERSIBLE_V1 */
+/* El botón de contraer permanece disponible cuando el menú está cerrado. */
+@media (min-width:921px){
+  .brand-block{position:relative}
+  .sidebar-collapsed .sidebar-collapse{
+    display:inline-grid!important;
+    position:absolute;
+    right:-14px;
+    top:23px;
+    z-index:125;
+    width:28px;
+    min-width:28px;
+    height:28px;
+    border-radius:999px!important;
+    border-color:rgba(196,211,227,.24);
+    background:#13263a;
+    color:#dce7f2;
+    box-shadow:0 8px 24px rgba(0,0,0,.30);
+  }
+  .sidebar-collapsed .sidebar-collapse:hover{
+    background:#1a3550;
+    color:#fff;
+    border-color:rgba(143,180,219,.42);
+  }
+  .sidebar-collapsed .sidebar-collapse:focus-visible{
+    box-shadow:0 0 0 3px rgba(59,130,246,.28),0 8px 24px rgba(0,0,0,.30);
+  }
+}
+@media (max-width:920px){
+  .sidebar-collapsed .sidebar-collapse{display:none!important}
+}
+
 </style>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -2638,6 +2671,51 @@ init().catch(err=>{
   console.error(err);
   $("mainView").innerHTML=`<section class="panel section-panel"><div class="empty-state"><strong>No se pudo iniciar el sistema.</strong><span>Revisa la consola del navegador. Error: ${esc(err?.message||err)}</span></div></section>`;
 });
+
+
+/* MDD_SIDEBAR_REVERSIBLE_V1_JS */
+(() => {
+  'use strict';
+  const SIDEBAR_KEY = 'mdd_sidebar_collapsed';
+  const btn = document.getElementById('sidebarCollapse');
+  if (!btn) return;
+
+  const isDesktop = () => window.matchMedia('(min-width: 921px)').matches;
+
+  const syncSidebarButton = () => {
+    const collapsed = document.body.classList.contains('sidebar-collapsed') && isDesktop();
+    btn.textContent = collapsed ? '›' : '‹';
+    btn.setAttribute('aria-label', collapsed ? 'Expandir menú' : 'Contraer menú');
+    btn.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+    btn.setAttribute('aria-controls', 'sidebar');
+    btn.title = (collapsed ? 'Expandir menú' : 'Contraer menú') + ' · Alt+M';
+  };
+
+  const toggleSidebarFallback = () => {
+    if (!isDesktop()) return;
+    document.body.classList.toggle('sidebar-collapsed');
+    try {
+      localStorage.setItem(
+        SIDEBAR_KEY,
+        document.body.classList.contains('sidebar-collapsed') ? '1' : '0'
+      );
+    } catch (_) {}
+    syncSidebarButton();
+  };
+
+  const observer = new MutationObserver(syncSidebarButton);
+  observer.observe(document.body, {attributes:true, attributeFilter:['class']});
+  window.addEventListener('resize', syncSidebarButton, {passive:true});
+
+  document.addEventListener('keydown', (e) => {
+    if (e.altKey && !e.ctrlKey && !e.metaKey && String(e.key).toLowerCase() === 'm') {
+      e.preventDefault();
+      toggleSidebarFallback();
+    }
+  });
+
+  syncSidebarButton();
+})();
 
 </script>
 </body>
