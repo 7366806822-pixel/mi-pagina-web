@@ -12,6 +12,12 @@ const URL = 'https://7366806822-pixel.github.io/mi-pagina-web/';
   try {
     await page.goto(URL, { waitUntil: 'domcontentloaded' });
     await page.waitForSelector('#sidebarCollapse', { state: 'visible', timeout: 30000 });
+    await page.waitForFunction(() =>
+      typeof db !== 'undefined' && db.client &&
+      typeof state !== 'undefined' &&
+      document.querySelectorAll('#navRoot .nav-item').length > 0,
+      { timeout: 45000 }
+    );
 
     const btn = page.locator('#sidebarCollapse');
 
