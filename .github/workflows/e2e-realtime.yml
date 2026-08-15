@@ -7,6 +7,7 @@ on:
     paths:
       - '.github/workflows/e2e-realtime.yml'
       - 'e2e-realtime-test.js'
+      - 'e2e-sidebar-test.js'
 
 jobs:
   test-public-site:
@@ -22,6 +23,8 @@ jobs:
           grep -q 'SUPABASE_URL' /tmp/public.html
           grep -q 'postgres_changes' /tmp/public.html
           grep -q 'realtimeReady' /tmp/public.html
+          grep -q 'MDD_SIDEBAR_REVERSIBLE_V1' /tmp/public.html
+          grep -q 'Expandir menú' /tmp/public.html
           ! grep -q 'api.jsonstorage.net' /tmp/public.html
           ! grep -q 'indexedDB' /tmp/public.html
       - name: Install Chromium test runtime
@@ -29,7 +32,9 @@ jobs:
           npm init -y >/dev/null 2>&1
           npm install playwright@1.55.0 --no-audit --no-fund
           npx playwright install --with-deps chromium
+      - name: Test sidebar collapse and reopen
+        run: node e2e-sidebar-test.js
       - name: Test realtime CRUD persistence desktop and mobile
         run: node e2e-realtime-test.js
       - name: Mark verified backend schema run
-        run: echo 'Supabase schema active and E2E completed'
+        run: echo 'Supabase schema active, sidebar verified and E2E completed'
