@@ -16,17 +16,17 @@
       const connected=x&&x.sync_status!=='Desconectado';
       const last=x?.last_success_at||x?.last_synced_at;
       c.innerHTML=`<section class="page integration-page">
-        <div class="page-head"><div><div class="eyebrow">Integraciones</div><h1>Google Calendar</h1><p>Sincronización del calendario del estudio con Google Calendar y Supabase.</p></div></div>
+        <div class="page-head"><div><div class="eyebrow">Integraciones</div><h1>Google Calendar</h1><p>Sincronización del calendario del estudio con la cuenta autorizada.</p></div></div>
         <div class="integration-grid">
           <article class="table-card integration-card main-integration">
-            <div class="integration-head"><div class="google-mark">G</div><div><small>CALENDARIO EXTERNO</small><h2>Google Calendar</h2><p>Calendario principal vinculado al sistema jurídico.</p></div><span class="integration-status ${connected?'ok':'off'}">${connected?'Conectado':'Desconectado'}</span></div>
+            <div class="integration-head"><div class="google-mark">G</div><div><small>CALENDARIO VINCULADO</small><h2>Google Calendar</h2><p>Calendario principal conectado al sistema jurídico E&A.</p></div><span class="integration-status ${connected?'ok':'off'}">${connected?'Conectado':'Desconectado'}</span></div>
             <div class="integration-meta">
               <div><span>Cuenta</span><strong>${esc(x?.account_email||'7366806822@untrm.edu.pe')}</strong></div>
               <div><span>Calendario</span><strong>${esc(x?.calendar_name||'GENERAL')}</strong></div>
               <div><span>Zona horaria</span><strong>${esc(x?.timezone||'America/Lima')}</strong></div>
-              <div><span>Sincronización</span><strong>${Number(x?.sync_interval_minutes||60)} min</strong></div>
+              <div><span>Frecuencia automática</span><strong>${Number(x?.sync_interval_minutes||60)} min</strong></div>
               <div><span>Última sincronización</span><strong>${last?fmtDateTime(last):'Pendiente de primera ejecución automática'}</strong></div>
-              <div><span>Eventos Google en E&A</span><strong>${Number(googleCount||0)}</strong></div>
+              <div><span>Eventos sincronizados</span><strong>${Number(googleCount||0)}</strong></div>
             </div>
             ${x?.last_error?`<div class="integration-error"><b>Último error</b><span>${esc(x.last_error)}</span></div>`:''}
             <div class="integration-actions">
@@ -34,18 +34,20 @@
               <button id="toggleGoogleSync" class="btn ${connected?'btn-outline':'btn-primary'}"><i data-lucide="${connected?'unlink':'link'}"></i> ${connected?'Desconectar':'Reconectar'}</button>
               <a class="btn btn-outline" href="https://calendar.google.com" target="_blank" rel="noopener noreferrer"><i data-lucide="external-link"></i> Abrir Google Calendar</a>
             </div>
-            <div class="integration-note"><i data-lucide="shield-check"></i><span><b>Seguridad:</b> las credenciales privadas de Google no se almacenan en el frontend público. La plataforma conserva únicamente identificadores de sincronización y metadatos operativos.</span></div>
+            <div class="integration-note"><i data-lucide="shield-check"></i><span><b>Conexión protegida:</b> la plataforma conserva solo la información necesaria para identificar y sincronizar los eventos. Las credenciales privadas no se muestran al usuario.</span></div>
           </article>
-          <article class="table-card integration-card"><h3>Cómo funciona</h3><ol class="integration-flow"><li><b>Google Calendar</b><span>Los eventos del calendario GENERAL se incorporan a E&A sin duplicados.</span></li><li><b>Supabase</b><span>Los cambios se guardan con identificadores únicos y se distribuyen mediante Realtime.</span></li><li><b>E&A</b><span>Los eventos aparecen en Día, Semana, Mes, Agenda y panel principal.</span></li><li><b>Recordatorios</b><span>Las audiencias y actividades sincronizadas mantienen el motor interno de avisos; los eventos creados en Google pueden usar sus alertas en todos los dispositivos con esa cuenta.</span></li></ol></article>
+          <article class="table-card integration-card"><h3>Cómo funciona</h3><ol class="integration-flow"><li><b>Google Calendar</b><span>Los eventos del calendario GENERAL se incorporan a E&A sin crear copias duplicadas.</span></li><li><b>Sincronización segura</b><span>Los cambios se registran con identificadores únicos y se distribuyen automáticamente a las sesiones activas.</span></li><li><b>Calendario E&A</b><span>Los eventos aparecen en Día, Semana, Mes, Agenda y panel principal.</span></li><li><b>Recordatorios</b><span>Las audiencias y actividades mantienen los avisos internos; Google Calendar puede emitir sus propias alertas en los dispositivos donde esté configurada la cuenta.</span></li></ol></article>
         </div>
       </section>`;
       document.querySelector('#requestGoogleSync')?.addEventListener('click',async()=>{
+        if(!x) return toast('No existe una integración configurada.','err');
         const {error}=await sb.from('calendar_integrations').update({sync_requested_at:new Date().toISOString(),updated_at:new Date().toISOString()}).eq('id',x.id);
         if(error) return toast(humanError(error),'err');
         toast('Solicitud registrada. Se procesará en la próxima sincronización automática.');
         renderGoogleIntegration();
       });
       document.querySelector('#toggleGoogleSync')?.addEventListener('click',async()=>{
+        if(!x) return toast('No existe una integración configurada.','err');
         const next=connected?'Desconectado':'Conectado';
         const {error}=await sb.from('calendar_integrations').update({sync_status:next,updated_at:new Date().toISOString()}).eq('id',x.id);
         if(error) return toast(humanError(error),'err');
