@@ -18,6 +18,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>
   <link href="./style.css" rel="stylesheet"/>
+  <link href="./google-integration.css" rel="stylesheet"/>
 </head>
 <body>
   <div class="auth" id="auth">
@@ -46,6 +47,7 @@
         <button data-page="documents"><i data-lucide="folder-open"></i>Documentos</button>
         <button data-page="projects"><i data-lucide="folder-kanban"></i>Proyectos</button>
         <button data-page="reports"><i data-lucide="file-chart-column"></i>Reportes</button>
+        <button data-page="integrations"><i data-lucide="calendar-sync"></i>Integraciones</button>
       </nav>
       <button class="quick-case" id="quickCase"><span class="pluscirc">+</span><span><b>Nuevo caso</b><small>Registrar un nuevo caso o consulta</small></span></button>
       <div class="side-foot"><i data-lucide="shield-check"></i><span><b>Datos protegidos</b><br/>Seguridad y confidencialidad</span></div>
@@ -71,6 +73,7 @@
   <script src="./app-pages.js"></script>
   <script src="./patch.js"></script>
   <script src="./calendar-fix.js"></script>
+  <script src="./google-integration.js"></script>
   <script>if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js',{scope:'./'}).catch(e=>console.warn('Service Worker:',e)))}</script>
 </body>
 </html>
