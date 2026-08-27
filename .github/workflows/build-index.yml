@@ -17,6 +17,7 @@ on:
       - 'calendar_pro_css.p*'
       - 'patch_professional_ui.py'
       - 'patch_app_ready.py'
+      - 'tesis-juridica-untrm/**'
       - '.github/workflows/build-index.yml'
   workflow_dispatch:
 
@@ -115,6 +116,20 @@ jobs:
           print(f'Validating {len(scripts)} inline script(s)')
           PY
           for file in /tmp/app-*.js; do node --check "$file"; done
+      - name: Stage thesis app for direct publishing
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/tesis-app
+          cp -R tesis-juridica-untrm /tmp/tesis-app
+          test -f /tmp/tesis-app/index.html
+          test -f /tmp/tesis-app/app.js
+          test -f /tmp/tesis-app/styles.css
+          test -f /tmp/tesis-app/manifest.webmanifest
+          test -f /tmp/tesis-app/sw.js
+          for f in g1.txt g2.txt g3.txt g4.txt g5.txt; do test -f "/tmp/tesis-app/gz/$f"; done
+          ! grep -q 'http-equiv="refresh"' /tmp/tesis-app/index.html
+          ! grep -q "location.replace('../tesis-juridica-untrm/')" /tmp/tesis-app/index.html
       - name: Publish verified files to gh-pages branch
         shell: bash
         run: |
@@ -124,7 +139,19 @@ jobs:
           git checkout -B gh-pages origin/gh-pages
           find . -mindepth 1 -maxdepth 1 ! -name .git ! -name 'tesis-juridica-untrm' ! -name 'tesis' -exec rm -rf {} +
           cp /tmp/index.html index.html
+          rm -rf tesis tesis-juridica-untrm
+          cp -R /tmp/tesis-app tesis
+          cp -R /tmp/tesis-app tesis-juridica-untrm
           touch .nojekyll
+          test -f tesis/index.html
+          test -f tesis/app.js
+          test -f tesis/styles.css
+          test -f tesis/manifest.webmanifest
+          test -f tesis/sw.js
+          for f in g1.txt g2.txt g3.txt g4.txt g5.txt; do test -f "tesis/gz/$f"; done
+          cmp -s tesis/index.html tesis-juridica-untrm/index.html
+          ! grep -q 'http-equiv="refresh"' tesis/index.html
+          ! grep -q "location.replace('../tesis-juridica-untrm/')" tesis/index.html
           git add -A
-          git commit -m 'Publish professional Mi Día a Día PRO interface' || true
+          git commit -m 'Publish direct thesis app at /tesis and legacy route' || true
           git push origin gh-pages
