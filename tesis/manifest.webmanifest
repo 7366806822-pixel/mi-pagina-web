@@ -1,0 +1,10 @@
+{
+  "name": "Centro Integral de Tesis Jurídica – UNTRM",
+  "short_name": "Tesis UNTRM",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f6f9",
+  "theme_color": "#0b1f3a",
+  "icons": []
+}
