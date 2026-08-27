@@ -11,6 +11,9 @@ on:
       - 'patch_add_realtime.py'
       - 'patch_sidebar_toggle.py'
       - 'patch_google_calendar.py'
+      - 'patch_calendar_pro.py'
+      - 'calendar_pro_js.p*'
+      - 'calendar_pro_css.p*'
       - '.github/workflows/build-index.yml'
   workflow_dispatch:
 
@@ -53,11 +56,13 @@ jobs:
         run: python patch_sidebar_toggle.py
       - name: Integrate Google Calendar
         run: python patch_google_calendar.py
+      - name: Upgrade native Calendar experience
+        run: python patch_calendar_pro.py
       - name: Verify production HTML
         shell: bash
         run: |
           set -euo pipefail
-          test "$(wc -c < /tmp/index.html)" -gt 180000
+          test "$(wc -c < /tmp/index.html)" -gt 200000
           grep -q 'MI DÍA A DÍA' /tmp/index.html
           grep -q 'SUPABASE_URL' /tmp/index.html
           grep -q '@supabase/supabase-js@2' /tmp/index.html
@@ -70,6 +75,11 @@ jobs:
           grep -Eq 'MDD_GOOGLE_CALENDAR_V(1|2)' /tmp/index.html
           grep -q 'googleCalendar:renderGoogleCalendar' /tmp/index.html
           grep -q 'Google Calendar' /tmp/index.html
+          grep -q 'MDD_CALENDAR_PRO_V1' /tmp/index.html
+          grep -q 'MDDCalendarPro' /tmp/index.html
+          grep -q 'calendar-save-sync' /tmp/index.html
+          grep -q 'cal-time-lane' /tmp/index.html
+          grep -q 'calendar-view' /tmp/index.html
           grep -q 'America/Lima' /tmp/index.html
           grep -q 'name="viewport"' /tmp/index.html
           ! grep -q 'api.jsonstorage.net' /tmp/index.html
@@ -77,14 +87,18 @@ jobs:
       - name: Validate JavaScript syntax
         shell: bash
         run: |
+          set -euo pipefail
           python - <<'PY'
           from pathlib import Path
           import re
           s=Path('/tmp/index.html').read_text(encoding='utf-8')
           scripts=re.findall(r'<script(?:\s[^>]*)?>(.*?)</script>',s,re.S)
-          Path('/tmp/app.js').write_text(scripts[-1],encoding='utf-8')
+          assert scripts, 'No inline scripts found'
+          for i,script in enumerate(scripts):
+              Path(f'/tmp/app-{i}.js').write_text(script,encoding='utf-8')
+          print(f'Validating {len(scripts)} inline script(s)')
           PY
-          node --check /tmp/app.js
+          for file in /tmp/app-*.js; do node --check "$file"; done
       - name: Publish verified files to gh-pages branch
         shell: bash
         run: |
@@ -96,5 +110,5 @@ jobs:
           cp /tmp/index.html index.html
           touch .nojekyll
           git add -A
-          git commit -m 'Publish Supabase Realtime Mi Día a Día' || true
+          git commit -m 'Publish Calendar PRO with Supabase Realtime' || true
           git push origin gh-pages
