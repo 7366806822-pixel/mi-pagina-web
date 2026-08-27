@@ -429,6 +429,26 @@ input[type="checkbox"]{border-radius:3px}
 @media(max-width:1000px){.gcal-stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:620px){.gcal-stat-grid{grid-template-columns:1fr}.gcal-actions{width:100%}.gcal-actions a{flex:1 1 170px}.gcal-hero{padding:15px}}
 
+/* MDD_CALENDAR_PRO_V1 */
+.cal-app{overflow:hidden;min-height:calc(100vh - 120px);background:rgba(9,22,37,.96)}
+.cal-topbar{min-height:66px;padding:11px 13px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:rgba(8,20,34,.96)}
+.cal-nav,.cal-tools{display:flex;align-items:center;gap:7px;min-width:0}.cal-nav h2{font-size:18px;margin:0 0 0 5px;text-transform:capitalize;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:440px}.cal-icon{width:34px;height:34px;border:0;border-radius:50%;background:transparent;color:#c3cfdd;font-size:25px;display:grid;place-items:center}.cal-icon:hover{background:rgba(255,255,255,.07)}
+.cal-search{height:36px;display:flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:9px;background:rgba(255,255,255,.035);padding:0 9px;min-width:190px}.cal-search span{color:#7f91a5}.cal-search input{border:0;background:transparent;color:#eef5fc;width:155px;min-width:0}.cal-search input::placeholder{color:#718397}
+.cal-view-switch{display:flex;border:1px solid var(--line);border-radius:9px;overflow:hidden;background:rgba(255,255,255,.025)}.cal-view-switch button{border:0;border-right:1px solid var(--line);background:transparent;color:#9baabc;padding:9px 10px;font-size:10px;font-weight:800}.cal-view-switch button:last-child{border-right:0}.cal-view-switch button.active{background:rgba(59,130,246,.16);color:#fff}.cal-view-switch button:hover{background:rgba(255,255,255,.06)}
+.cal-layout{display:grid;grid-template-columns:230px minmax(0,1fr);min-height:720px}.cal-sidebar{border-right:1px solid var(--line);padding:14px 12px;background:rgba(5,17,29,.58);overflow:auto;transition:.18s}.cal-sidebar.closed{display:none}.cal-sidebar.closed+.cal-content{grid-column:1/-1}.cal-create-btn{border:0;border-radius:13px;background:#f7f9fc;color:#0a1624;padding:12px 17px;display:flex;align-items:center;gap:10px;font-size:13px;font-weight:900;box-shadow:0 8px 22px rgba(0,0,0,.24);margin-bottom:17px}.cal-create-btn:hover{filter:brightness(.95)}
+.cal-mini{margin-bottom:18px}.cal-mini-head{display:grid;grid-template-columns:26px 1fr 26px;align-items:center;gap:4px;margin-bottom:8px}.cal-mini-head strong{text-align:center;font-size:10px;text-transform:capitalize}.cal-mini-head button{border:0;background:transparent;color:#a8b7c7;font-size:19px;border-radius:50%;height:26px}.cal-mini-head button:hover{background:rgba(255,255,255,.06)}.cal-mini-week,.cal-mini-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}.cal-mini-week span{font-size:8px;color:#718399;text-align:center;padding:3px}.cal-mini-day{border:0;background:transparent;color:#aebdcd;aspect-ratio:1;border-radius:50%;font-size:9px}.cal-mini-day:hover{background:rgba(255,255,255,.07)}.cal-mini-day.muted{color:#4f6175}.cal-mini-day.today{background:#2d75ba;color:#fff;font-weight:900}.cal-mini-day.selected{box-shadow:inset 0 0 0 1px var(--gold);color:#fff}
+.cal-side-section{padding:11px 0;border-top:1px solid var(--line)}.cal-side-section>strong{font-size:9px;text-transform:uppercase;letter-spacing:.9px;color:#8092a7;display:block;margin:0 0 8px}.cal-check{display:grid;grid-template-columns:16px 9px minmax(0,1fr);gap:7px;align-items:center;padding:5px 3px;font-size:10px;color:#b5c3d2}.cal-check input{accent-color:#3b82f6;margin:0}.cal-check i{width:7px;height:7px;border-radius:2px;background:#4285f4}.cal-check span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.cal-side-foot{border-top:1px solid var(--line);padding-top:12px;color:#718399;font-size:9px;display:grid;gap:3px}.cal-side-foot strong{color:#9fb0c3;font-size:10px}
+.cal-content{min-width:0;position:relative;background:rgba(7,17,31,.26)}
+.cal-weekdays{display:grid;grid-template-columns:repeat(7,1fr);border-bottom:1px solid var(--line)}.cal-weekdays>div{font-size:9px;color:#8192a6;text-align:center;padding:9px;text-transform:uppercase;border-right:1px solid var(--line)}.cal-weekdays>div:last-child{border-right:0}.cal-month-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));grid-template-rows:repeat(6,minmax(104px,1fr));min-height:650px}.cal-month-day{position:relative;border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:5px;min-width:0;overflow:hidden}.cal-month-day:nth-child(7n){border-right:0}.cal-month-day.muted{background:rgba(255,255,255,.01);opacity:.58}.cal-month-day.today{background:rgba(59,130,246,.035)}.cal-month-day.drag-over{background:rgba(59,130,246,.11)}.cal-day-number{display:flex;justify-content:center;margin-bottom:3px;height:23px;pointer-events:none}.cal-day-number span{width:23px;height:23px;border-radius:50%;display:grid;place-items:center;font-size:9px;color:#b9c6d4}.cal-month-day.today .cal-day-number span{background:#2d75ba;color:#fff;font-weight:900}.cal-month-events{display:grid;gap:2px;position:relative;z-index:2}.cal-more{border:0;background:transparent;color:#9aacbf;text-align:left;font-size:9px;padding:3px 5px;border-radius:5px}.cal-more:hover{background:rgba(255,255,255,.06);color:#fff}
+.cal-event{position:relative;border:0;border-left:3px solid var(--event-color);background:color-mix(in srgb,var(--event-color) 17%,#102033);color:#eef5fc;border-radius:5px;text-align:left;min-width:0;overflow:hidden}.cal-event strong{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10px}.cal-event small{display:block;color:#aebccc;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:8.5px;margin-top:1px}.cal-event-time{display:block;font-size:8px;color:#b9c6d5;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.cal-event.month{padding:3px 5px}.cal-event.month .cal-event-time{display:none}.cal-event.month strong{font-size:9px}.cal-event.allday{padding:4px 6px;min-height:28px}.cal-event.allday .cal-resize-handle,.cal-event.month .cal-resize-handle{display:none}.cal-event.timed{width:100%;height:100%;padding:4px 6px;box-shadow:0 2px 7px rgba(0,0,0,.18)}.cal-event:hover{filter:brightness(1.12);z-index:8}.cal-resize-handle{position:absolute;height:6px;left:0;right:0;bottom:0;cursor:ns-resize;background:transparent}.cal-resize-handle:hover{background:rgba(255,255,255,.22)}
+.cal-schedule-scroll{height:calc(100vh - 175px);min-height:650px;overflow:auto;position:relative}.cal-day-view{display:grid;grid-template-columns:68px minmax(420px,1fr);grid-template-rows:56px auto;min-width:590px}.cal-week-view{display:grid;grid-template-columns:68px repeat(7,minmax(125px,1fr));grid-template-rows:56px auto;min-width:1030px}.cal-day-head-spacer{grid-column:1;grid-row:1;border-right:1px solid var(--line);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:15;background:#0a1828}.cal-day-head,.cal-week-head{grid-row:1;border-right:1px solid var(--line);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:center;gap:8px;position:sticky;top:0;z-index:15;background:#0a1828}.cal-day-head{grid-column:2}.cal-week-head span,.cal-day-head span{font-size:9px;text-transform:uppercase;color:#8192a6}.cal-week-head strong,.cal-day-head strong{width:29px;height:29px;border-radius:50%;display:grid;place-items:center;font-size:14px}.cal-week-head.today strong,.cal-day-head.today strong{background:#2d75ba;color:#fff}.cal-time-ruler{grid-column:1;grid-row:2;position:relative;height:1344px;border-right:1px solid var(--line)}.cal-time-ruler span{position:absolute;right:8px;transform:translateY(-50%);font-size:8px;color:#687b90;white-space:nowrap}.cal-day-column{grid-row:2;min-width:0;border-right:1px solid var(--line);position:relative}.cal-day-view .cal-day-column{grid-column:2}.cal-week-view .cal-day-column:nth-of-type(n){ }.cal-all-day{min-height:34px;padding:3px;display:grid;gap:2px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.01)}.cal-time-lane{position:relative;background:repeating-linear-gradient(to bottom,transparent 0,transparent 55px,var(--line) 55px,var(--line) 56px)}.cal-time-lane:after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(to bottom,transparent 0,transparent 13px,rgba(255,255,255,.018) 13px,rgba(255,255,255,.018) 14px)}.cal-event-wrap{position:absolute;z-index:4;min-height:20px}.cal-now{position:absolute;left:0;right:0;height:1px;background:#ef4444;z-index:9;pointer-events:none}.cal-now i{position:absolute;left:-4px;top:-4px;width:8px;height:8px;background:#ef4444;border-radius:50%}.cal-selection-ghost{position:absolute;left:4px;right:4px;border:1px dashed #78b7f2;background:rgba(59,130,246,.16);border-radius:5px;z-index:12;pointer-events:none}.cal-resizing{cursor:ns-resize!important;user-select:none!important}
+.cal-agenda{padding:10px 16px 30px;max-width:1050px;margin:auto}.cal-agenda section{display:grid;grid-template-columns:190px minmax(0,1fr);border-bottom:1px solid var(--line);padding:10px 0}.cal-agenda-date{padding:10px}.cal-agenda-date strong{display:block;text-transform:uppercase;color:#dce6f2;font-size:10px}.cal-agenda-date span{display:block;margin-top:3px;color:#74869a;font-size:9px}.cal-agenda-row{width:100%;display:grid;grid-template-columns:110px 8px minmax(0,1fr);gap:10px;align-items:start;border:0;background:transparent;color:#fff;text-align:left;padding:10px;border-radius:8px}.cal-agenda-row:hover{background:rgba(255,255,255,.045)}.cal-agenda-row>span{font-size:9px;color:#9dabbc}.cal-agenda-row>i{width:7px;height:7px;border-radius:50%;margin-top:3px}.cal-agenda-row strong{font-size:11px}.cal-agenda-row small{display:block;color:#8293a7;font-size:9px;margin-top:3px}.cal-empty{min-height:280px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:#8294a8;font-size:11px}
+.cal-editor-overlay{z-index:120}.cal-editor{width:min(780px,94vw);max-height:92vh;background:#0c1b2d;border:1px solid var(--line);border-radius:15px;box-shadow:0 28px 80px rgba(0,0,0,.5);display:flex;flex-direction:column;overflow:hidden}.cal-editor>header{padding:15px 17px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:flex-start}.cal-editor>header h2{font-size:17px;margin:4px 0}.cal-editor>header p{margin:0;color:#7e8fa3;font-size:9px}.cal-editor-body{padding:16px;overflow:auto}.cal-existing-actions{display:none;gap:6px;flex-wrap:wrap;margin:0 0 10px}.cal-existing-actions a{text-decoration:none;align-items:center}.cal-title-input{font-size:20px!important;font-weight:750;border-width:0 0 1px!important;border-radius:0!important;background:transparent!important;padding-left:2px!important}.cal-date-row{display:grid;grid-template-columns:1.2fr 1fr auto 1.2fr 1fr;align-items:center;gap:7px;margin-top:12px}.cal-date-row>span{color:#718399;text-align:center}.cal-inline-check{display:flex;align-items:center;gap:7px;font-size:10px;color:#b1bfce;margin-top:9px}.cal-inline-check input{accent-color:#3b82f6}.cal-more-options{border:0;background:transparent;color:#83b9ee;font-size:10px;font-weight:800;padding:10px 0}.cal-advanced{display:none;border-top:1px solid var(--line);padding-top:12px}.cal-advanced.open{display:block}.cal-repeat-custom{display:none}.cal-repeat-custom.show{display:block}.cal-repeat-grid{display:flex;align-items:center;gap:14px;flex-wrap:wrap}.cal-repeat-grid>label{font-size:10px;color:#a8b7c6}.cal-repeat-grid input[type=number]{width:55px;background:#13263a;color:#fff;border:1px solid var(--line);border-radius:7px;padding:6px}.cal-weekday-picks{display:flex;gap:5px}.cal-weekday-picks label input{display:none}.cal-weekday-picks label span{width:26px;height:26px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;font-size:9px;color:#96a6b7;cursor:pointer}.cal-weekday-picks label input:checked+span{background:#2d75ba;color:#fff;border-color:#2d75ba}.cal-reminders{display:flex;gap:6px;flex-wrap:wrap}.cal-reminders label{border:1px solid var(--line);border-radius:8px;padding:7px 8px;font-size:9px;color:#a6b4c4;display:flex;align-items:center;gap:5px}.cal-reminders input[type=checkbox]{accent-color:#3b82f6}.cal-reminders input[type=number]{width:65px;border:0;background:rgba(255,255,255,.05);color:#fff;padding:3px}.cal-color{height:39px;padding:4px}.cal-google-choice{display:flex;flex-direction:column;justify-content:center}.cal-google-choice small{font-size:8px;color:#728398;margin-top:4px}.cal-scope{display:none}.cal-editor>footer{padding:11px 15px;border-top:1px solid var(--line);display:grid;grid-template-columns:auto 1fr auto auto auto;gap:7px;align-items:center;background:#0a1828}.cal-editor>footer span{min-width:10px}
+.cal-day-pop{width:min(500px,92vw);max-height:78vh;overflow:hidden;background:#0c1b2d;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}.cal-day-pop header{display:flex;align-items:flex-start;justify-content:space-between;padding:14px;border-bottom:1px solid var(--line)}.cal-day-pop header h3{margin:5px 0 0;text-transform:capitalize}.cal-day-pop #calDayPopBody{padding:8px 12px;max-height:55vh;overflow:auto}.cal-day-pop footer{padding:10px 12px;border-top:1px solid var(--line)}.cal-pop-event{width:100%;border:0;background:transparent;color:#fff;border-radius:8px;padding:9px;display:grid;grid-template-columns:8px 1fr;gap:9px;text-align:left}.cal-pop-event:hover{background:rgba(255,255,255,.05)}.cal-pop-event i{width:7px;height:7px;border-radius:50%;margin-top:4px}.cal-pop-event strong{display:block;font-size:11px}.cal-pop-event span{display:block;font-size:9px;color:#899aab;margin-top:2px}
+@media(max-width:1100px){.cal-layout{grid-template-columns:205px minmax(0,1fr)}.cal-nav h2{max-width:280px}.cal-tools{flex-wrap:wrap;justify-content:flex-end}.cal-search{min-width:160px}.cal-search input{width:120px}}
+@media(max-width:820px){.cal-app{border-radius:0}.cal-topbar{align-items:flex-start}.cal-nav{width:100%;flex-wrap:wrap}.cal-nav h2{order:10;width:100%;max-width:none;font-size:16px;margin:4px 0}.cal-tools{width:100%;justify-content:space-between}.cal-view-switch{order:2}.cal-search{flex:1;min-width:130px}.cal-search input{width:100%}.cal-layout{display:block}.cal-sidebar{position:absolute;z-index:40;left:0;top:0;width:245px;height:100%;box-shadow:16px 0 35px rgba(0,0,0,.42)}.cal-sidebar.closed{display:none}.cal-content{min-height:650px}.cal-month-grid{grid-template-rows:repeat(6,minmax(92px,1fr));min-height:570px}.cal-month-day{padding:3px}.cal-event.month strong{font-size:8px}.cal-agenda section{grid-template-columns:1fr}.cal-agenda-date{padding-bottom:3px}.cal-date-row{grid-template-columns:1fr 1fr}.cal-date-row>span{display:none}.cal-editor .form-grid{grid-template-columns:1fr}.cal-editor .form-grid .full{grid-column:auto}.cal-editor>footer{grid-template-columns:1fr 1fr}.cal-editor>footer span{display:none}.cal-editor>footer .danger-button{grid-column:1}.cal-editor>footer .primary-button{grid-column:1/-1}.cal-editor>footer button{padding:9px 8px;font-size:10px}}
+@media(max-width:560px){.main-view{padding-left:0!important;padding-right:0!important}.cal-app{min-height:calc(100vh - 130px);border-left:0;border-right:0}.cal-topbar{padding:9px}.cal-tools .primary-button{display:none}.cal-view-switch{width:100%;order:4}.cal-view-switch button{flex:1}.cal-search{width:100%;order:3}.cal-month-grid{min-width:665px}.cal-month{overflow:auto}.cal-weekdays{min-width:665px}.cal-month-grid{grid-template-rows:repeat(6,90px)}.cal-month-day{min-height:90px}.cal-sidebar-toggle{display:inline-flex}.cal-agenda{padding:6px 9px 25px}.cal-agenda-row{grid-template-columns:88px 7px minmax(0,1fr);padding:9px 4px}.cal-schedule-scroll{height:calc(100vh - 220px);min-height:560px}.cal-editor{width:100vw;max-height:96vh;border-radius:14px 14px 0 0;align-self:flex-end}.cal-editor-overlay{align-items:flex-end}.cal-editor-body{padding:13px}.cal-title-input{font-size:18px!important}.cal-date-row{grid-template-columns:1fr 1fr}.cal-date-row input{font-size:10px}.cal-reminders label{padding:6px}.cal-editor>footer{padding:9px}.cal-day-pop{width:96vw}}
+
 </style>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -1750,7 +1770,7 @@ function renderCompleted(){
 }
 
 /* ===================== Calendar ===================== */
-function renderCalendar(){
+function renderCalendarLegacy(){
   const base=new Date(state.calendarDate.getFullYear(),state.calendarDate.getMonth(),1,12);
   const y=base.getFullYear(),m=base.getMonth();
   const firstDay=(new Date(y,m,1).getDay()+6)%7;
@@ -1784,6 +1804,11 @@ function renderCalendar(){
         ${cells.join("")}
       </div>
     </section>`;
+}
+
+function renderCalendar(){
+  if(window.MDDCalendarPro && typeof window.MDDCalendarPro.renderCalendar==="function") return window.MDDCalendarPro.renderCalendar();
+  return renderCalendarLegacy();
 }
 
 /* ===================== Legal panel ===================== */
@@ -2595,6 +2620,7 @@ async function quickAdd(){
   state.records.push(r);await db.put("records",r);await markModified();$("quickTitle").value="";renderNav();renderMain();toast("Anotación rápida guardada.");
 }
 function handleAction(el){
+  if(window.MDDCalendarPro && typeof window.MDDCalendarPro.handleAction==="function" && window.MDDCalendarPro.handleAction(el)) return;
   const action=el.dataset.action,id=el.dataset.id;
   if(action==="queue-google"){queueGoogleSync(id);return}
   if(action==="nav"){const item=findNavItem(el.dataset.groupIndex,el.dataset.itemIndex);if(item)navigate(item);return}
@@ -2815,6 +2841,358 @@ init().catch(err=>{
   });
 
   syncSidebarButton();
+})();
+
+</script>
+
+<script>
+"use strict";
+/* MDD_CALENDAR_PRO_V1 */
+(() => {
+  const CAL_VIEW_KEY = "mdd_calendar_view";
+  const HOUR_PX = 56;
+  const SLOT_MIN = 15;
+  const AREA_COLORS = {
+    "General":"#64748b","Universidad":"#2563eb","Estudio jurídico":"#dc2626","Empresas / negocios":"#16a34a",
+    "Creación de contenido":"#9333ea","Ejercicio / salud":"#0891b2","Personal / hogar":"#d97706","IJP":"#4f46e5",
+    "Tecnología / automatización":"#0f766e","Finanzas":"#ca8a04","Conocimiento":"#7c3aed"
+  };
+  const EVENT_TYPES = [
+    ["event","Evento / reunión"],["task","Tarea"],["reminder","Recordatorio"],["academic","Actividad universitaria"],
+    ["hearing","Audiencia"],["deadline","Plazo"],["followup","Seguimiento"]
+  ];
+
+  function calState(){
+    if(!state.calendarView) state.calendarView = safeLocalGet(CAL_VIEW_KEY,"month") || "month";
+    if(!["day","week","month","agenda"].includes(state.calendarView)) state.calendarView="month";
+    if(!state.calendarDate) state.calendarDate=new Date();
+    if(!state.calendarSearch) state.calendarSearch="";
+    if(!state.calendarHiddenAreas) state.calendarHiddenAreas=new Set();
+    if(!state.calendarHiddenSources) state.calendarHiddenSources=new Set();
+    if(typeof state.calendarSidebarOpen!=="boolean") state.calendarSidebarOpen=true;
+    return state;
+  }
+  function calDate(iso){ return new Date(`${iso}T12:00:00`); }
+  function isoDate(d){ return localISO(d); }
+  function addIso(iso,n){ return isoDate(addDaysTo(calDate(iso),n)); }
+  function mins(t){ if(!t)return 0; const [h,m]=String(t).split(":").map(Number); return (h||0)*60+(m||0); }
+  function hm(n){ n=Math.max(0,Math.min(1439,Math.round(n))); return `${String(Math.floor(n/60)).padStart(2,"0")}:${String(n%60).padStart(2,"0")}`; }
+  function fmt12(t){
+    if(!t)return "Todo el día"; const [hh,mm]=String(t).split(":").map(Number); const p=hh>=12?"p. m.":"a. m."; const h=hh%12||12; return `${h}:${String(mm||0).padStart(2,"0")} ${p}`;
+  }
+  function fmtRange(i){ return i.allDay?"Todo el día":`${fmt12(i.startTime)}${i.endTime?` – ${fmt12(i.endTime)}`:""}`; }
+  function eventColor(r){ return r.calendarColor||r.color||AREA_COLORS[r.area]||"#3b82f6"; }
+  function eventCalendarName(r){ return r.googleCalendarName || r.calendarName || r.area || "General"; }
+  function isArchived(r){ return r.status==="Archivado" || r.calendarHidden===true; }
+  function durationMinutes(r){
+    if(r.allDay)return 1440;
+    const s=mins(r.time||r.hearingTime||"09:00"), e=mins(r.endTime||"");
+    if(r.endDate && r.endDate!==getRecordDate(r)) return Math.max(60,(e||s+60)-s+1440);
+    return e>s?e-s:60;
+  }
+  function recurrenceRule(r){ return r.recurrence||"none"; }
+  function recurrenceEnd(r){ return r.recurrenceUntil||r.recurrenceEnd||""; }
+  function recurrenceExceptions(r){ return new Set(Array.isArray(r.recurrenceExDates)?r.recurrenceExDates:[]); }
+  function weekdayCode(d){ return ["SU","MO","TU","WE","TH","FR","SA"][d.getDay()]; }
+  function recurringDates(r,startIso,endIso){
+    const base=getRecordDate(r); if(!base)return [];
+    const rule=recurrenceRule(r), ex=recurrenceExceptions(r), out=[];
+    const hardEnd=recurrenceEnd(r) && recurrenceEnd(r)<endIso?recurrenceEnd(r):endIso;
+    if(rule==="none" || isGoogleRecord(r)) return base>=startIso&&base<=endIso&&!ex.has(base)?[base]:[];
+    const interval=Math.max(1,Number(r.recurrenceInterval)||1);
+    const baseD=calDate(base), start=calDate(startIso), end=calDate(hardEnd);
+    const weekDays=String(r.recurrenceWeekdays||weekdayCode(baseD)).split(",").filter(Boolean);
+    for(let d=new Date(start); d<=end; d=addDaysTo(d,1)){
+      const iso=isoDate(d); if(iso<base || ex.has(iso))continue;
+      const days=Math.floor((d-baseD)/86400000); let ok=false;
+      if(rule==="daily") ok=days%interval===0;
+      else if(rule==="weekdays") ok=d.getDay()>=1&&d.getDay()<=5;
+      else if(rule==="weekly" || rule==="custom"){
+        const weeks=Math.floor(days/7); ok=weeks%interval===0 && weekDays.includes(weekdayCode(d));
+      } else if(rule==="monthly"){
+        const md=(d.getFullYear()-baseD.getFullYear())*12+d.getMonth()-baseD.getMonth(); ok=md>=0&&md%interval===0&&d.getDate()===baseD.getDate();
+      } else if(rule==="yearly") ok=d.getMonth()===baseD.getMonth()&&d.getDate()===baseD.getDate()&&((d.getFullYear()-baseD.getFullYear())%interval===0);
+      if(ok)out.push(iso);
+      if(out.length>750)break;
+    }
+    return out;
+  }
+  function instancesForRange(startIso,endIso){
+    calState(); const q=state.calendarSearch.trim().toLowerCase(); const out=[];
+    state.records.forEach(r=>{
+      if(isArchived(r))return;
+      if(state.calendarHiddenAreas.has(r.area||"General"))return;
+      if(state.calendarHiddenSources.has(eventCalendarName(r)))return;
+      if(q && !recordSearchText(r).includes(q))return;
+      const base=getRecordDate(r); if(!base)return;
+      if(r.allDay && recurrenceRule(r)==="none"){
+        const a=base, b=r.endDate||base;
+        if(b<startIso||a>endIso)return;
+        for(let d=a;d<=b;d=addIso(d,1)) if(d>=startIso&&d<=endIso) out.push(makeInstance(r,d,d!==a));
+        return;
+      }
+      recurringDates(r,startIso,endIso).forEach(d=>out.push(makeInstance(r,d,d!==base)));
+    });
+    return out.sort((a,b)=>a.date.localeCompare(b.date)||(a.allDay?-1:1)-(b.allDay?-1:1)||(a.startTime||"").localeCompare(b.startTime||"")||a.record.title.localeCompare(b.record.title));
+  }
+  function makeInstance(r,date,isRecurringOccurrence=false){
+    return {record:r,id:r.id,date,startTime:r.time||r.hearingTime||"",endTime:r.endTime||"",allDay:!!r.allDay,isRecurringOccurrence,occurrenceDate:date,color:eventColor(r)};
+  }
+  function monthRange(d){
+    const first=new Date(d.getFullYear(),d.getMonth(),1,12), offset=(first.getDay()+6)%7;
+    const start=addDaysTo(first,-offset), end=addDaysTo(start,41); return [isoDate(start),isoDate(end)];
+  }
+  function weekRange(d){ const s=startOfWeek(d); return [isoDate(s),isoDate(addDaysTo(s,6))]; }
+  function currentRange(){
+    calState(); if(state.calendarView==="day"){const i=isoDate(state.calendarDate);return [i,i]}
+    if(state.calendarView==="week")return weekRange(state.calendarDate);
+    if(state.calendarView==="month")return monthRange(state.calendarDate);
+    const i=isoDate(state.calendarDate);return [i,addIso(i,90)];
+  }
+  function titleForView(){
+    const d=state.calendarDate;
+    if(state.calendarView==="day") return d.toLocaleDateString("es-PE",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+    if(state.calendarView==="week"){
+      const [a,b]=weekRange(d); return `${calDate(a).toLocaleDateString("es-PE",{day:"numeric",month:"short"})} – ${calDate(b).toLocaleDateString("es-PE",{day:"numeric",month:"short",year:"numeric"})}`;
+    }
+    if(state.calendarView==="agenda") return "Agenda / Programación";
+    return d.toLocaleDateString("es-PE",{month:"long",year:"numeric"});
+  }
+  function weekdayShort(d){ return d.toLocaleDateString("es-PE",{weekday:"short"}).replace(".",""); }
+  function calendarSources(){ return [...new Set(state.records.filter(r=>!isArchived(r)&&getRecordDate(r)).map(eventCalendarName).filter(Boolean))].sort(); }
+  function calendarAreas(){ return [...new Set(state.records.filter(r=>!isArchived(r)&&getRecordDate(r)).map(r=>r.area||"General"))].sort(); }
+
+  function miniCalendarHTML(){
+    const d=state.calendarDate, first=new Date(d.getFullYear(),d.getMonth(),1,12), offset=(first.getDay()+6)%7, start=addDaysTo(first,-offset);
+    let cells=""; for(let i=0;i<42;i++){
+      const x=addDaysTo(start,i), iso=isoDate(x), muted=x.getMonth()!==d.getMonth();
+      cells+=`<button class="cal-mini-day ${muted?"muted":""} ${iso===localISO()?"today":""} ${iso===isoDate(d)?"selected":""}" data-action="calendar-mini-day" data-date="${iso}">${x.getDate()}</button>`;
+    }
+    return `<div class="cal-mini"><div class="cal-mini-head"><button data-action="calendar-mini-prev" aria-label="Mes anterior">‹</button><strong>${first.toLocaleDateString("es-PE",{month:"long",year:"numeric"})}</strong><button data-action="calendar-mini-next" aria-label="Mes siguiente">›</button></div><div class="cal-mini-week">${["L","M","X","J","V","S","D"].map(x=>`<span>${x}</span>`).join("")}</div><div class="cal-mini-grid">${cells}</div></div>`;
+  }
+  function sidebarHTML(){
+    const areas=calendarAreas(), sources=calendarSources();
+    return `<aside class="cal-sidebar ${state.calendarSidebarOpen?"":"closed"}">
+      <button class="cal-create-btn" data-action="calendar-new">＋ <span>Crear</span></button>
+      ${miniCalendarHTML()}
+      <div class="cal-side-section"><strong>Mis calendarios</strong>${areas.map(a=>`<label class="cal-check"><input type="checkbox" data-cal-area="${esc(a)}" ${state.calendarHiddenAreas.has(a)?"":"checked"}><i style="background:${eventColor({area:a})}"></i><span>${esc(a)}</span></label>`).join("")}</div>
+      <div class="cal-side-section"><strong>Fuentes</strong>${sources.map(s=>`<label class="cal-check"><input type="checkbox" data-cal-source="${esc(s)}" ${state.calendarHiddenSources.has(s)?"":"checked"}><i></i><span>${esc(s)}</span></label>`).join("")}</div>
+      <div class="cal-side-foot"><span>Zona horaria</span><strong>America/Lima</strong></div>
+    </aside>`;
+  }
+  function toolbarHTML(){
+    return `<div class="cal-topbar">
+      <div class="cal-nav"><button class="secondary-button compact cal-sidebar-toggle" data-action="calendar-toggle-sidebar" aria-label="Mostrar u ocultar panel">☰</button><button class="secondary-button compact" data-action="calendar-today">Hoy</button><button class="cal-icon" data-action="calendar-prev" aria-label="Anterior">‹</button><button class="cal-icon" data-action="calendar-next" aria-label="Siguiente">›</button><h2>${esc(titleForView())}</h2></div>
+      <div class="cal-tools"><div class="cal-search"><span>⌕</span><input id="calendarSearch" value="${esc(state.calendarSearch)}" placeholder="Buscar eventos..."></div><div class="cal-view-switch">${[["day","Día"],["week","Semana"],["month","Mes"],["agenda","Agenda"]].map(([v,l])=>`<button class="${state.calendarView===v?"active":""}" data-action="calendar-view" data-view="${v}">${l}</button>`).join("")}</div><button class="primary-button compact" data-action="calendar-new">+ Crear</button></div>
+    </div>`;
+  }
+  function eventButton(i,cls=""){
+    const r=i.record, status=isGoogleRecord(r)?(r.googleSyncStatus==="synced"?"G":"G↻"):(r.googleSyncStatus?.startsWith("pending")?"↻":"");
+    return `<button class="cal-event ${cls}" draggable="true" data-cal-event="1" data-id="${esc(r.id)}" data-occurrence="${i.occurrenceDate}" style="--event-color:${esc(i.color)}" data-action="calendar-open" title="${esc(`${r.title} · ${fmtRange(i)}`)}"><span class="cal-event-time">${esc(fmtRange(i))}${status?` · ${status}`:""}</span><strong>${esc(r.title)}</strong>${r.location?`<small>${esc(r.location)}</small>`:""}<span class="cal-resize-handle" data-resize-id="${esc(r.id)}" data-occurrence="${i.occurrenceDate}" aria-hidden="true"></span></button>`;
+  }
+  function renderMonth(){
+    const [start,end]=monthRange(state.calendarDate), all=instancesForRange(start,end), by={}; all.forEach(i=>(by[i.date]??=[]).push(i));
+    const first=calDate(start); let cells="";
+    for(let n=0;n<42;n++){
+      const d=addDaysTo(first,n), iso=isoDate(d), list=by[iso]||[], muted=d.getMonth()!==state.calendarDate.getMonth();
+      cells+=`<div class="cal-month-day ${muted?"muted":""} ${iso===localISO()?"today":""}" data-cal-date="${iso}" data-action="calendar-day-quick"><div class="cal-day-number"><span>${d.getDate()}</span></div><div class="cal-month-events">${list.slice(0,4).map(i=>eventButton(i,"month")).join("")}${list.length>4?`<button class="cal-more" data-action="calendar-more" data-date="${iso}">+ ${list.length-4} más</button>`:""}</div></div>`;
+    }
+    return `<div class="cal-month"><div class="cal-weekdays">${["Lun","Mar","Mié","Jue","Vie","Sáb","Dom"].map(x=>`<div>${x}</div>`).join("")}</div><div class="cal-month-grid">${cells}</div></div>`;
+  }
+  function layoutTimed(list){
+    const sorted=list.filter(i=>!i.allDay&&i.startTime).slice().sort((a,b)=>mins(a.startTime)-mins(b.startTime)); let group=[],groupEnd=-1, groups=[];
+    const flush=()=>{if(!group.length)return;const ends=[];group.forEach(i=>{let c=ends.findIndex(e=>e<=mins(i.startTime));if(c<0)c=ends.length;ends[c]=mins(i.endTime||hm(mins(i.startTime)+60));i._col=c;});const cols=Math.max(1,ends.length);group.forEach(i=>i._cols=cols);groups.push(...group);group=[];groupEnd=-1;};
+    sorted.forEach(i=>{const s=mins(i.startTime),e=mins(i.endTime||hm(s+60));if(group.length&&s>=groupEnd)flush();group.push(i);groupEnd=Math.max(groupEnd,e);});flush();return groups;
+  }
+  function timeRulerHTML(){ return `<div class="cal-time-ruler">${Array.from({length:24},(_,h)=>`<span style="top:${h*HOUR_PX}px">${fmt12(`${String(h).padStart(2,"0")}:00`)}</span>`).join("")}</div>`; }
+  function timedEventsHTML(list,date){
+    return layoutTimed(list).map(i=>{const s=mins(i.startTime),e=Math.max(s+15,mins(i.endTime||hm(s+60))),top=s/60*HOUR_PX,height=Math.max(22,(e-s)/60*HOUR_PX),width=100/i._cols,left=i._col*width;return `<div class="cal-event-wrap" style="top:${top}px;height:${height}px;left:calc(${left}% + 2px);width:calc(${width}% - 4px)">${eventButton(i,"timed")}</div>`}).join("");
+  }
+  function currentTimeLine(date){
+    if(date!==localISO())return ""; const now=new Date(), top=(now.getHours()*60+now.getMinutes())/60*HOUR_PX;return `<div class="cal-now" style="top:${top}px"><i></i></div>`;
+  }
+  function dayColumn(date,list,label=""){
+    const timed=list.filter(i=>!i.allDay), allDay=list.filter(i=>i.allDay);
+    return `<div class="cal-day-column" data-cal-lane="${date}"><div class="cal-all-day">${allDay.map(i=>eventButton(i,"allday")).join("")}</div><div class="cal-time-lane" data-cal-time-lane="${date}" style="height:${24*HOUR_PX}px">${timedEventsHTML(timed,date)}${currentTimeLine(date)}</div></div>`;
+  }
+  function renderDay(){
+    const iso=isoDate(state.calendarDate), list=instancesForRange(iso,iso);
+    return `<div class="cal-schedule-scroll"><div class="cal-day-view"><div class="cal-day-head-spacer"></div><div class="cal-day-head ${iso===localISO()?"today":""}"><span>${weekdayShort(calDate(iso))}</span><strong>${calDate(iso).getDate()}</strong></div>${timeRulerHTML()}${dayColumn(iso,list)}</div></div>`;
+  }
+  function renderWeek(){
+    const [a,b]=weekRange(state.calendarDate), start=calDate(a), all=instancesForRange(a,b), by={};all.forEach(i=>(by[i.date]??=[]).push(i));
+    const heads=Array.from({length:7},(_,i)=>{const d=addDaysTo(start,i),iso=isoDate(d);return `<div class="cal-week-head ${iso===localISO()?"today":""}"><span>${weekdayShort(d)}</span><strong>${d.getDate()}</strong></div>`}).join("");
+    const cols=Array.from({length:7},(_,i)=>{const iso=isoDate(addDaysTo(start,i));return dayColumn(iso,by[iso]||[])}).join("");
+    return `<div class="cal-schedule-scroll"><div class="cal-week-view"><div class="cal-day-head-spacer"></div>${heads}${timeRulerHTML()}${cols}</div></div>`;
+  }
+  function renderAgendaView(){
+    const [a,b]=currentRange(), all=instancesForRange(a,b), groups={};all.forEach(i=>(groups[i.date]??=[]).push(i));
+    const dates=Object.keys(groups).sort(); if(!dates.length)return `<div class="cal-empty"><strong>No tienes eventos programados.</strong><button class="primary-button compact" data-action="calendar-new">+ Crear evento</button></div>`;
+    return `<div class="cal-agenda">${dates.map(date=>`<section><div class="cal-agenda-date"><strong>${date===localISO()?"HOY":calDate(date).toLocaleDateString("es-PE",{weekday:"long",day:"numeric",month:"long"})}</strong><span>${date}</span></div><div>${groups[date].map(i=>`<button class="cal-agenda-row" data-action="calendar-open" data-id="${esc(i.id)}" data-occurrence="${i.occurrenceDate}"><span>${esc(fmtRange(i))}</span><i style="background:${esc(i.color)}"></i><div><strong>${esc(i.record.title)}</strong><small>${esc([i.record.location,i.record.area,eventCalendarName(i.record)].filter(Boolean).join(" · "))}</small></div></button>`).join("")}</div></section>`).join("")}</div>`;
+  }
+  function renderCalendar(){
+    calState();
+    const body=state.calendarView==="day"?renderDay():state.calendarView==="week"?renderWeek():state.calendarView==="agenda"?renderAgendaView():renderMonth();
+    $("mainView").innerHTML=`<section class="cal-app panel">${toolbarHTML()}<div class="cal-layout">${sidebarHTML()}<main class="cal-content">${body}</main></div></section>`;
+    requestAnimationFrame(bindCalendarInteractions);
+  }
+
+  function navigateCalendar(delta){
+    calState(); const d=state.calendarDate;
+    if(delta===0) state.calendarDate=new Date();
+    else if(state.calendarView==="day") state.calendarDate=addDaysTo(d,delta);
+    else if(state.calendarView==="week"||state.calendarView==="agenda") state.calendarDate=addDaysTo(d,delta*7);
+    else state.calendarDate=new Date(d.getFullYear(),d.getMonth()+delta,1,12);
+    renderCalendar();
+  }
+
+  function ensureEditor(){
+    if($("calendarEditorOverlay"))return;
+    document.body.insertAdjacentHTML("beforeend",`<div class="overlay centered cal-editor-overlay" id="calendarEditorOverlay" aria-hidden="true"><section class="cal-editor" role="dialog" aria-modal="true" aria-labelledby="calendarEditorTitle"><header><div><span class="eyebrow">CALENDARIO</span><h2 id="calendarEditorTitle">Nuevo evento</h2><p id="calendarEditorSubtitle">America/Lima</p></div><button class="icon-button" data-action="calendar-cancel" aria-label="Cerrar">✕</button></header><div class="cal-editor-body"><div id="calendarEditorError" class="inline-error"></div><div id="calExistingActions" class="cal-existing-actions"><a id="calOpenGoogle" class="secondary-button compact" target="_blank" rel="noopener noreferrer">Abrir en Google ↗</a><a id="calOpenMeet" class="secondary-button compact" target="_blank" rel="noopener noreferrer">Entrar a Meet ↗</a><button class="secondary-button compact" data-action="calendar-duplicate" type="button">Duplicar</button></div><div class="cal-quick-fields"><input id="calTitle" class="field-control cal-title-input" placeholder="Agregar título"><div class="cal-date-row"><input id="calStartDate" class="field-control" type="date"><input id="calStartTime" class="field-control" type="time"><span>→</span><input id="calEndDate" class="field-control" type="date"><input id="calEndTime" class="field-control" type="time"></div><label class="cal-inline-check"><input id="calAllDay" type="checkbox"> Todo el día</label></div><button class="cal-more-options" data-action="calendar-more-options">Más opciones</button><div id="calAdvanced" class="cal-advanced"><div class="form-grid"><div><label class="field-label">Tipo</label><select id="calType" class="field-control">${EVENT_TYPES.map(([v,l])=>`<option value="${v}">${l}</option>`).join("")}</select></div><div><label class="field-label">Zona horaria</label><select id="calTimezone" class="field-control"><option>America/Lima</option></select></div><div><label class="field-label">Repetición</label><select id="calRecurrence" class="field-control"><option value="none">No se repite</option><option value="daily">Todos los días</option><option value="weekdays">Todos los días laborables</option><option value="weekly">Cada semana</option><option value="monthly">Cada mes</option><option value="yearly">Cada año</option><option value="custom">Personalizado</option></select></div><div><label class="field-label">Finaliza repetición</label><input id="calRecurrenceUntil" class="field-control" type="date"></div><div class="full cal-repeat-custom"><label class="field-label">Repetición personalizada</label><div class="cal-repeat-grid"><label>Cada <input id="calRecurrenceInterval" type="number" min="1" max="52" value="1"> semana(s)</label><div class="cal-weekday-picks">${[["MO","L"],["TU","M"],["WE","X"],["TH","J"],["FR","V"],["SA","S"],["SU","D"]].map(([v,l])=>`<label><input type="checkbox" data-cal-weekday="${v}"><span>${l}</span></label>`).join("")}</div></div></div><div><label class="field-label">Área</label><select id="calArea" class="field-control">${AREAS.map(a=>`<option>${esc(a)}</option>`).join("")}</select></div><div><label class="field-label">Categoría</label><input id="calCategory" class="field-control" placeholder="Reunión, clase, examen..."></div><div><label class="field-label">Proyecto</label><select id="calProject" class="field-control"></select></div><div><label class="field-label">Color</label><input id="calColor" class="field-control cal-color" type="color" value="#3b82f6"></div><div><label class="field-label">Ubicación</label><input id="calLocation" class="field-control" placeholder="Lugar / aula / sede"></div><div><label class="field-label">Google Meet / videollamada</label><input id="calMeet" class="field-control" type="url" placeholder="https://meet.google.com/..."></div><div><label class="field-label">Prioridad</label><select id="calPriority" class="field-control"><option>Urgente</option><option>Alta</option><option selected>Media</option><option>Baja</option></select></div><div><label class="field-label">Estado</label><select id="calStatus" class="field-control"><option>Pendiente</option><option>En curso</option><option>En espera</option><option>Completado</option><option>Archivado</option></select></div><div class="full"><label class="field-label">Recordatorios</label><div class="cal-reminders">${[[5,"5 min"],[10,"10 min"],[15,"15 min"],[30,"30 min"],[60,"1 h"],[1440,"1 día"]].map(([v,l])=>`<label><input type="checkbox" data-cal-reminder="${v}"><span>${l}</span></label>`).join("")}<label>Personalizado <input id="calCustomReminder" type="number" min="1" max="10080" placeholder="min"></label></div></div><div class="full"><label class="field-label">Descripción / notas</label><textarea id="calNotes" class="field-control" rows="4"></textarea></div><div><label class="field-label">Calendario de destino</label><select id="calDestination" class="field-control"></select></div><div class="cal-google-choice"><label class="cal-inline-check"><input id="calSyncGoogle" type="checkbox"> Sincronizar con Google Calendar</label><small id="calSyncStatus"></small></div><div id="calScopeWrap" class="full cal-scope"><label class="field-label">Aplicar cambios a</label><select id="calScope" class="field-control"><option value="this">Solo este evento</option><option value="following">Este y los siguientes</option><option value="series">Toda la serie</option></select></div></div></div></div><footer><button class="danger-button" id="calDeleteBtn" data-action="calendar-delete" type="button">Eliminar</button><span></span><button class="secondary-button" data-action="calendar-cancel" type="button">Cancelar</button><button class="secondary-button" data-action="calendar-save" type="button">Guardar</button><button class="primary-button" data-action="calendar-save-sync" type="button">Guardar y sincronizar</button></footer></section></div>`);
+  }
+  function reminderValues(r){ return Array.isArray(r.reminders)?r.reminders.map(Number).filter(Number.isFinite):typeof r.reminders==="string"?r.reminders.split(",").map(Number).filter(Number.isFinite):[10]; }
+  function setAllDayUI(){ const all=$("calAllDay")?.checked; if($("calStartTime"))$("calStartTime").disabled=all;if($("calEndTime"))$("calEndTime").disabled=all; }
+  function updateRepeatUI(){ const custom=$("calRecurrence")?.value==="custom"; qs(".cal-repeat-custom",$("calendarEditorOverlay"))?.classList.toggle("show",custom); }
+  function openCalendarEditor(id=null, occurrenceDate="", prefill={}, quick=true){
+    ensureEditor(); calState(); state.calendarEditingId=id; state.calendarOccurrenceDate=occurrenceDate||"";
+    const r=id?state.records.find(x=>x.id===id):null; const base=r?{...r}:{id:uid(),type:"event",title:"",area:"General",priority:"Media",status:"Pendiente",date:isoDate(state.calendarDate),time:"09:00",endDate:isoDate(state.calendarDate),endTime:"10:00",allDay:false,timezone:"America/Lima",recurrence:"none",reminders:[10],calendarColor:AREA_COLORS.General,createdAt:new Date().toISOString()};
+    const v={...base,...prefill}; if(occurrenceDate)v.date=occurrenceDate;
+    $("calendarEditorTitle").textContent=id?"Editar evento":"Nuevo evento"; $("calTitle").value=v.title||""; $("calStartDate").value=v.date||getRecordDate(v)||isoDate(state.calendarDate);$("calStartTime").value=v.time||v.hearingTime||"09:00";$("calEndDate").value=v.endDate||$("calStartDate").value;$("calEndTime").value=v.endTime||hm(mins($("calStartTime").value)+60);$("calAllDay").checked=!!v.allDay;$("calType").value=EVENT_TYPES.some(x=>x[0]===v.type)?v.type:"event";$("calTimezone").value=v.timezone||"America/Lima";$("calRecurrence").value=v.recurrence||"none";$("calRecurrenceUntil").value=v.recurrenceUntil||"";$("calRecurrenceInterval").value=v.recurrenceInterval||1;qsa("[data-cal-weekday]",$("calendarEditorOverlay")).forEach(x=>x.checked=String(v.recurrenceWeekdays||weekdayCode(calDate(v.date||localISO()))).split(",").includes(x.dataset.calWeekday));$("calArea").value=v.area||"General";$("calCategory").value=v.calendarCategory||"";$("calProject").innerHTML=["",...projectNames({includeArchived:true})].map(p=>`<option ${p===(v.project||"")?"selected":""}>${esc(p)}</option>`).join("");$("calColor").value=/^#[0-9a-f]{6}$/i.test(eventColor(v))?eventColor(v):"#3b82f6";$("calLocation").value=v.location||"";$("calMeet").value=v.meetUrl||v.hangoutLink||"";$("calPriority").value=v.priority||"Media";$("calStatus").value=v.status||"Pendiente";$("calNotes").value=v.notes||v.description||"";
+    const rem=reminderValues(v);qsa("[data-cal-reminder]",$("calendarEditorOverlay")).forEach(x=>x.checked=rem.includes(Number(x.dataset.calReminder)));const standard=[5,10,15,30,60,1440];$("calCustomReminder").value=rem.find(x=>!standard.includes(x))||"";
+    const names=["Mi Día a Día",...calendarSources()];$("calDestination").innerHTML=names.map(n=>`<option ${n===(v.googleCalendarName||v.calendarName||"Mi Día a Día")?"selected":""}>${esc(n)}</option>`).join("");$("calSyncGoogle").checked=!!(isGoogleRecord(v)||String(v.googleSyncStatus||"").startsWith("pending"));$("calSyncStatus").textContent=isGoogleRecord(v)?`Google · ${v.googleSyncStatus||"synced"}`:"Evento local";
+    const actions=$("calExistingActions"),openG=$("calOpenGoogle"),openM=$("calOpenMeet");actions.style.display=id?"flex":"none";openG.style.display=r?.googleEventUrl?"inline-flex":"none";if(r?.googleEventUrl)openG.href=r.googleEventUrl;openM.style.display=(v.meetUrl||v.hangoutLink)?"inline-flex":"none";if(v.meetUrl||v.hangoutLink)openM.href=v.meetUrl||v.hangoutLink;const recurring=!!r&&recurrenceRule(r)!=="none"&&!isGoogleRecord(r);$("calScopeWrap").style.display=recurring?"block":"none";$("calDeleteBtn").style.visibility=id?"visible":"hidden";$("calAdvanced").classList.toggle("open",!quick||!!id);setAllDayUI();updateRepeatUI();$("calendarEditorError").classList.remove("show");$("calendarEditorOverlay").classList.add("open");$("calendarEditorOverlay").setAttribute("aria-hidden","false");setTimeout(()=>$("calTitle")?.focus(),30);
+  }
+  function closeCalendarEditor(){ const o=$("calendarEditorOverlay");if(o){o.classList.remove("open");o.setAttribute("aria-hidden","true")}state.calendarEditingId=null;state.calendarOccurrenceDate=""; }
+  function collectEditor(){
+    const start=$("calStartDate").value,end=$("calEndDate").value||start,all=$("calAllDay").checked;
+    const rem=qsa("[data-cal-reminder]",$("calendarEditorOverlay")).filter(x=>x.checked).map(x=>Number(x.dataset.calReminder));const custom=Number($("calCustomReminder").value);if(custom>0)rem.push(custom);
+    return {type:$("calType").value,title:$("calTitle").value.trim(),area:$("calArea").value,priority:$("calPriority").value,status:$("calStatus").value,date:start,time:all?"":$("calStartTime").value,endDate:end,endTime:all?"":$("calEndTime").value,allDay:all,timezone:"America/Lima",recurrence:$("calRecurrence").value,recurrenceUntil:$("calRecurrenceUntil").value,recurrenceInterval:Math.max(1,Number($("calRecurrenceInterval").value)||1),recurrenceWeekdays:qsa("[data-cal-weekday]",$("calendarEditorOverlay")).filter(x=>x.checked).map(x=>x.dataset.calWeekday).join(","),calendarCategory:$("calCategory").value.trim(),project:$("calProject").value,calendarColor:$("calColor").value,location:$("calLocation").value.trim(),meetUrl:$("calMeet").value.trim(),notes:$("calNotes").value.trim(),reminders:[...new Set(rem)].sort((a,b)=>a-b),googleCalendarName:$("calDestination").value==="Mi Día a Día"?"":$("calDestination").value,syncGoogle:$("calSyncGoogle").checked};
+  }
+  function validateEditor(v){ if(!v.title)return "Escribe un título.";if(!v.date)return "Selecciona la fecha de inicio.";if(v.endDate<v.date)return "La fecha final no puede ser anterior.";if(!v.allDay&&v.endDate===v.date&&mins(v.endTime)<=mins(v.time))return "La hora final debe ser posterior a la hora de inicio.";return ""; }
+  function applyCalendarFields(r,v){
+    Object.assign(r,v);delete r.syncGoogle;r.updatedAt=new Date().toISOString();if(r.type==="hearing"){r.hearingDate=v.date;r.hearingTime=v.time;r.dueDate=v.date}else if(r.type==="deadline")r.dueDate=v.date;
+    if(v.syncGoogle){r.googleCalendarId=r.googleCalendarId||"primary";r.googleSyncStatus=isGoogleRecord(r)?"pending_update":"pending_create";if(!r.source)r.source="local";}
+    return normRecord(r);
+  }
+  async function saveBaseRecord(r){ const idx=state.records.findIndex(x=>x.id===r.id);if(idx>=0)state.records[idx]=r;else state.records.push(r);await db.put("records",r);await markModified(); }
+  async function saveCalendarEditor(forceSync=false){
+    const v=collectEditor();if(forceSync)v.syncGoogle=true;const err=validateEditor(v);if(err){$("calendarEditorError").textContent=err;$("calendarEditorError").classList.add("show");return}
+    const source=state.calendarEditingId?state.records.find(x=>x.id===state.calendarEditingId):null;const occurrence=state.calendarOccurrenceDate;const scope=$("calScope")?.value||"series";
+    if(source && recurrenceRule(source)!=="none"&&!isGoogleRecord(source)&&occurrence&&occurrence!==getRecordDate(source)&&scope!=="series"){
+      const ex=new Set(Array.isArray(source.recurrenceExDates)?source.recurrenceExDates:[]);ex.add(occurrence);source.recurrenceExDates=[...ex];source.updatedAt=new Date().toISOString();
+      if(scope==="this"){
+        const child=applyCalendarFields({...source,id:uid(),recurrence:"none",recurrenceExDates:[],parentRecurringId:source.id,recurrenceExceptionDate:occurrence,createdAt:new Date().toISOString()},v);await saveBaseRecord(source);await saveBaseRecord(child);
+      }else{
+        source.recurrenceUntil=addIso(occurrence,-1);const next=applyCalendarFields({...source,id:uid(),date:occurrence,recurrenceUntil:v.recurrenceUntil||"",recurrenceExDates:[],createdAt:new Date().toISOString()},v);await saveBaseRecord(source);await saveBaseRecord(next);
+      }
+    }else{
+      const target=applyCalendarFields(source?{...source}:{id:uid(),createdAt:new Date().toISOString()},v);await saveBaseRecord(target);
+    }
+    closeCalendarEditor();renderNav();renderCalendar();toast(source?"Evento actualizado.":"Evento creado.");
+  }
+
+  function duplicateCalendarEvent(){
+    const r=state.records.find(x=>x.id===state.calendarEditingId);if(!r)return;
+    const copy={...r,title:`Copia de ${r.title}`,googleEventId:"",googleEventUrl:"",googleRecurringEventId:"",googleSyncStatus:"",source:"local",recurrenceExceptionDate:"",parentRecurringId:""};
+    closeCalendarEditor();openCalendarEditor(null,"",copy,false);
+  }
+  async function calendarDelete(){
+    const r=state.records.find(x=>x.id===state.calendarEditingId);if(!r)return;const occurrence=state.calendarOccurrenceDate, scope=$("calScope")?.value||"series", deleteGoogle=$("calSyncGoogle")?.checked&&isGoogleRecord(r);
+    const text=deleteGoogle?"Se solicitará eliminar también el evento de Google Calendar.":isGoogleRecord(r)?"Se ocultará únicamente en Mi Día a Día; el evento de Google se conservará.":"El evento se enviará a la Papelera.";
+    openConfirm("Eliminar evento",text,async()=>{
+      if(recurrenceRule(r)!=="none"&&!isGoogleRecord(r)&&occurrence&&occurrence!==getRecordDate(r)&&scope!=="series"){
+        if(scope==="this"){const ex=new Set(r.recurrenceExDates||[]);ex.add(occurrence);r.recurrenceExDates=[...ex];await saveBaseRecord(r)}else{r.recurrenceUntil=addIso(occurrence,-1);await saveBaseRecord(r)}
+      }else if(deleteGoogle){r.googleSyncStatus="pending_delete";r.googleDeleteConfirmed=true;r.calendarHidden=true;r.status="Archivado";await saveBaseRecord(r)}
+      else if(isGoogleRecord(r)){r.calendarHidden=true;r.localVisibility="hidden";r.status="Archivado";await saveBaseRecord(r)}
+      else await moveToTrash(r.id);
+      closeCalendarEditor();renderCalendar();
+    },deleteGoogle?"Eliminar también en Google":"Eliminar");
+  }
+
+  function setRecordDateTime(r,date,time){
+    const oldDate=getRecordDate(r)||date, dur=durationMinutes(r), oldStart=mins(r.time||r.hearingTime||time||"09:00");r.date=date;r.time=time||r.time||"";
+    if(r.type==="hearing"){r.hearingDate=date;r.hearingTime=r.time;r.dueDate=date}else if(r.type==="deadline")r.dueDate=date;
+    if(r.allDay){const span=Math.max(0,Math.round((calDate(r.endDate||oldDate)-calDate(oldDate))/86400000));r.endDate=addIso(date,span)}else{r.endDate=date;r.endTime=hm((time?mins(time):oldStart)+dur)}
+    r.updatedAt=new Date().toISOString();if(isGoogleRecord(r))r.googleSyncStatus="pending_update";return r;
+  }
+  async function moveInstance(id,occurrence,newDate,newTime){
+    const r=state.records.find(x=>x.id===id);if(!r)return;
+    if(recurrenceRule(r)!=="none"&&!isGoogleRecord(r)&&occurrence&&occurrence!==getRecordDate(r)){
+      const ex=new Set(r.recurrenceExDates||[]);ex.add(occurrence);r.recurrenceExDates=[...ex];await saveBaseRecord(r);const child=setRecordDateTime({...r,id:uid(),recurrence:"none",recurrenceExDates:[],parentRecurringId:r.id,recurrenceExceptionDate:occurrence,createdAt:new Date().toISOString()},newDate,newTime);await saveBaseRecord(child);
+    }else{await saveBaseRecord(setRecordDateTime(r,newDate,newTime))}
+    renderCalendar();toast("Evento reprogramado.");
+  }
+  async function resizeEvent(id,occurrence,newEndMinutes){
+    const r=state.records.find(x=>x.id===id);if(!r||r.allDay)return;
+    const applyResize=(target)=>{const start=mins(target.time||target.hearingTime||"09:00");target.endTime=hm(Math.max(start+15,newEndMinutes));target.endDate=getRecordDate(target);target.updatedAt=new Date().toISOString();if(isGoogleRecord(target))target.googleSyncStatus="pending_update";return target};
+    if(recurrenceRule(r)!=="none"&&!isGoogleRecord(r)&&occurrence&&occurrence!==getRecordDate(r)){
+      const ex=new Set(r.recurrenceExDates||[]);ex.add(occurrence);r.recurrenceExDates=[...ex];r.updatedAt=new Date().toISOString();await saveBaseRecord(r);
+      const child=applyResize({...r,id:uid(),date:occurrence,recurrence:"none",recurrenceExDates:[],parentRecurringId:r.id,recurrenceExceptionDate:occurrence,createdAt:new Date().toISOString()});await saveBaseRecord(child);
+    }else await saveBaseRecord(applyResize(r));
+    renderCalendar();toast("Duración actualizada.");
+  }
+
+  function openDayPopover(date){
+    let pop=$("calendarDayPopover");if(!pop){document.body.insertAdjacentHTML("beforeend",`<div class="overlay centered" id="calendarDayPopover" aria-hidden="true"><section class="cal-day-pop"><header><div><span class="eyebrow">AGENDA DEL DÍA</span><h3 id="calDayPopTitle"></h3></div><button class="icon-button" data-action="calendar-close-more">✕</button></header><div id="calDayPopBody"></div><footer><button class="primary-button compact" data-action="calendar-new-day">+ Crear evento</button></footer></section></div>`);pop=$("calendarDayPopover")}
+    state.calendarPopoverDate=date;$("calDayPopTitle").textContent=calDate(date).toLocaleDateString("es-PE",{weekday:"long",day:"numeric",month:"long"});const list=instancesForRange(date,date);$("calDayPopBody").innerHTML=list.length?list.map(i=>`<button class="cal-pop-event" data-action="calendar-open" data-id="${esc(i.id)}" data-occurrence="${i.occurrenceDate}"><i style="background:${esc(i.color)}"></i><div><strong>${esc(i.record.title)}</strong><span>${esc(fmtRange(i))}</span></div></button>`).join(""):`<div class="cal-empty">No tienes eventos programados.</div>`;pop.classList.add("open");pop.setAttribute("aria-hidden","false");
+  }
+  function closeDayPopover(){const p=$("calendarDayPopover");if(p){p.classList.remove("open");p.setAttribute("aria-hidden","true")}}
+
+  function bindCalendarInteractions(){
+    const root=qs(".cal-app");if(!root)return;
+    qs("#calendarSearch",root)?.addEventListener("input",e=>{state.calendarSearch=e.target.value;const pos=e.target.selectionStart;renderCalendar();requestAnimationFrame(()=>{$("calendarSearch")?.focus();$("calendarSearch")?.setSelectionRange(pos,pos)})});
+    qsa("[data-cal-area]",root).forEach(x=>x.addEventListener("change",()=>{x.checked?state.calendarHiddenAreas.delete(x.dataset.calArea):state.calendarHiddenAreas.add(x.dataset.calArea);renderCalendar()}));
+    qsa("[data-cal-source]",root).forEach(x=>x.addEventListener("change",()=>{x.checked?state.calendarHiddenSources.delete(x.dataset.calSource):state.calendarHiddenSources.add(x.dataset.calSource);renderCalendar()}));
+    qsa("[data-cal-event]",root).forEach(ev=>ev.addEventListener("dragstart",e=>{state.calendarDrag={id:ev.dataset.id,occurrence:ev.dataset.occurrence};e.dataTransfer.effectAllowed="move";e.dataTransfer.setData("text/plain",ev.dataset.id)}));
+    qsa("[data-cal-date]",root).forEach(cell=>{cell.addEventListener("dragover",e=>{e.preventDefault();cell.classList.add("drag-over")});cell.addEventListener("dragleave",()=>cell.classList.remove("drag-over"));cell.addEventListener("drop",e=>{e.preventDefault();e.stopPropagation();cell.classList.remove("drag-over");if(state.calendarDrag)moveInstance(state.calendarDrag.id,state.calendarDrag.occurrence,cell.dataset.calDate,"")})});
+    qsa("[data-cal-time-lane]",root).forEach(lane=>{
+      lane.addEventListener("dragover",e=>e.preventDefault());lane.addEventListener("drop",e=>{e.preventDefault();if(!state.calendarDrag)return;const rect=lane.getBoundingClientRect(),min=Math.round(((e.clientY-rect.top)/HOUR_PX*60)/SLOT_MIN)*SLOT_MIN;moveInstance(state.calendarDrag.id,state.calendarDrag.occurrence,lane.dataset.calTimeLane,hm(min))});
+      lane.addEventListener("dblclick",e=>{if(e.target.closest("[data-cal-event]"))return;const rect=lane.getBoundingClientRect(),min=Math.round(((e.clientY-rect.top)/HOUR_PX*60)/SLOT_MIN)*SLOT_MIN;openCalendarEditor(null,"",{date:lane.dataset.calTimeLane,time:hm(min),endDate:lane.dataset.calTimeLane,endTime:hm(min+60)},true)});
+      lane.addEventListener("pointerdown",e=>{if(e.button!==0||e.target.closest("[data-cal-event]"))return;const rect=lane.getBoundingClientRect(),start=Math.round(((e.clientY-rect.top)/HOUR_PX*60)/SLOT_MIN)*SLOT_MIN;const ghost=document.createElement("div");ghost.className="cal-selection-ghost";ghost.style.top=`${start/60*HOUR_PX}px`;ghost.style.height=`${SLOT_MIN/60*HOUR_PX}px`;lane.appendChild(ghost);state.calendarSelection={lane,date:lane.dataset.calTimeLane,start,ghost};e.preventDefault();});
+    });
+    qsa("[data-resize-id]",root).forEach(h=>h.addEventListener("pointerdown",e=>{e.stopPropagation();e.preventDefault();const event=h.closest(".cal-event-wrap"),startY=e.clientY,startH=event?.getBoundingClientRect().height||56;state.calendarResize={id:h.dataset.resizeId,occurrence:h.dataset.occurrence,startY,startH,event};document.body.classList.add("cal-resizing")}));
+  }
+
+  document.addEventListener("pointermove",e=>{
+    if(state.calendarSelection){const {lane,start,ghost}=state.calendarSelection,rect=lane.getBoundingClientRect(),cur=Math.round(((e.clientY-rect.top)/HOUR_PX*60)/SLOT_MIN)*SLOT_MIN,end=Math.max(start+SLOT_MIN,cur);ghost.style.top=`${Math.min(start,end)/60*HOUR_PX}px`;ghost.style.height=`${Math.max(SLOT_MIN,Math.abs(end-start))/60*HOUR_PX}px`;state.calendarSelection.end=end;}
+    if(state.calendarResize){const r=state.calendarResize,dy=e.clientY-r.startY,h=Math.max(18,r.startH+dy);if(r.event)r.event.style.height=`${h}px`;}
+  });
+  document.addEventListener("pointerup",e=>{
+    if(state.calendarSelection){const x=state.calendarSelection;state.calendarSelection=null;x.ghost?.remove();const end=x.end||x.start+60;if(Math.abs(end-x.start)>=SLOT_MIN)openCalendarEditor(null,"",{date:x.date,time:hm(Math.min(x.start,end)),endDate:x.date,endTime:hm(Math.max(x.start,end))},true);}
+    if(state.calendarResize){const r=state.calendarResize;state.calendarResize=null;document.body.classList.remove("cal-resizing");const rec=state.records.find(x=>x.id===r.id);if(rec){const start=mins(rec.time||rec.hearingTime||"09:00"),dy=e.clientY-r.startY,newEnd=start+Math.round(((r.startH+dy)/HOUR_PX*60)/SLOT_MIN)*SLOT_MIN;resizeEvent(r.id,r.occurrence,newEnd)}}
+  });
+
+  function initReminderEngine(){
+    if(window.__mddCalendarReminderTimer)return; const check=()=>{const now=new Date(),today=localISO();state.records.filter(r=>!isArchived(r)&&getRecordDate(r)===today&&!r.allDay&&(r.time||r.hearingTime)).forEach(r=>{const target=new Date(`${today}T${r.time||r.hearingTime}:00`);const diff=Math.round((target-now)/60000);reminderValues(r).forEach(m=>{const key=`mdd_cal_rem_${r.id}_${today}_${m}`;if(diff===m&&safeLocalGet(key,"")!=="1"){safeLocalSet(key,"1");toast(`${r.title} · en ${m<60?`${m} min`:m===60?"1 hora":`${Math.round(m/60)} h`}`);if("Notification" in window&&Notification.permission==="granted")new Notification(r.title,{body:`Empieza ${fmt12(r.time||r.hearingTime)}`});}})});};check();window.__mddCalendarReminderTimer=setInterval(check,30000);
+  }
+
+  function calendarHandleAction(el){
+    const a=el?.dataset?.action;
+    if(a==="calendar-view"){state.calendarView=el.dataset.view;safeLocalSet(CAL_VIEW_KEY,state.calendarView);renderCalendar();return true}
+    if(a==="calendar-prev"){navigateCalendar(-1);return true} if(a==="calendar-next"){navigateCalendar(1);return true} if(a==="calendar-today"){navigateCalendar(0);return true}
+    if(a==="calendar-new"){openCalendarEditor(null,"",{},true);return true} if(a==="calendar-new-day"){const d=state.calendarPopoverDate||localISO();closeDayPopover();openCalendarEditor(null,"",{date:d,endDate:d},true);return true}
+    if(a==="calendar-open"){openCalendarEditor(el.dataset.id,el.dataset.occurrence||"",{},false);return true}
+    if(a==="calendar-day-quick"){if(el.closest("[data-cal-event],.cal-more"))return true;openCalendarEditor(null,"",{date:el.dataset.calDate,endDate:el.dataset.calDate},true);return true}
+    if(a==="calendar-more"){openDayPopover(el.dataset.date);return true} if(a==="calendar-close-more"){closeDayPopover();return true}
+    if(a==="calendar-more-options"){$("calAdvanced")?.classList.toggle("open");return true}
+    if(a==="calendar-duplicate"){duplicateCalendarEvent();return true} if(a==="calendar-cancel"){closeCalendarEditor();return true} if(a==="calendar-save"){saveCalendarEditor(false);return true} if(a==="calendar-save-sync"){saveCalendarEditor(true);return true} if(a==="calendar-delete"){calendarDelete();return true}
+    if(a==="calendar-toggle-sidebar"){state.calendarSidebarOpen=!state.calendarSidebarOpen;renderCalendar();return true}
+    if(a==="calendar-mini-day"){state.calendarDate=calDate(el.dataset.date);state.calendarView="day";safeLocalSet(CAL_VIEW_KEY,"day");renderCalendar();return true}
+    if(a==="calendar-mini-prev"){state.calendarDate=new Date(state.calendarDate.getFullYear(),state.calendarDate.getMonth()-1,1,12);renderCalendar();return true}
+    if(a==="calendar-mini-next"){state.calendarDate=new Date(state.calendarDate.getFullYear(),state.calendarDate.getMonth()+1,1,12);renderCalendar();return true}
+    return false;
+  }
+
+  document.addEventListener("change",e=>{if(e.target?.id==="calAllDay")setAllDayUI();if(e.target?.id==="calRecurrence")updateRepeatUI();});
+  document.addEventListener("keydown",e=>{
+    const tag=e.target?.tagName;if(["INPUT","TEXTAREA","SELECT"].includes(tag))return;
+    if(e.key==="Escape"){closeCalendarEditor();closeDayPopover();return}
+    if(state.currentNav?.special!=="calendar")return;
+    const k=String(e.key).toLowerCase();if(k==="t"){e.preventDefault();navigateCalendar(0)}else if(k==="d"){e.preventDefault();state.calendarView="day";safeLocalSet(CAL_VIEW_KEY,"day");renderCalendar()}else if(k==="w"){e.preventDefault();state.calendarView="week";safeLocalSet(CAL_VIEW_KEY,"week");renderCalendar()}else if(k==="m"){e.preventDefault();state.calendarView="month";safeLocalSet(CAL_VIEW_KEY,"month");renderCalendar()}else if(k==="a"){e.preventDefault();state.calendarView="agenda";safeLocalSet(CAL_VIEW_KEY,"agenda");renderCalendar()}else if(k==="c"){e.preventDefault();openCalendarEditor(null,"",{},true)};
+  });
+
+  window.MDDCalendarPro={renderCalendar,handleAction:calendarHandleAction,openCalendarEditor,closeCalendarEditor,initReminderEngine,version:"1.0.0"};
+  if(document.readyState!=="loading")setTimeout(initReminderEngine,1000);else document.addEventListener("DOMContentLoaded",()=>setTimeout(initReminderEngine,1000),{once:true});
 })();
 
 </script>
