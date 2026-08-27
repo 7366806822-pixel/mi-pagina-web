@@ -9,17 +9,19 @@ on:
       - 'e2e-realtime-test.js'
       - 'e2e-sidebar-test.js'
       - 'e2e-calendar-test.js'
+      - 'e2e-professional-ui-test.js'
+      - 'patch_professional_ui.py'
 
 jobs:
   test-public-site:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 18
     steps:
       - uses: actions/checkout@v6
       - name: Verify public production page
         run: |
           set -euo pipefail
-          curl --fail --silent --show-error --retry 6 --retry-delay 5 --max-time 30 https://7366806822-pixel.github.io/mi-pagina-web/ -o /tmp/public.html
+          curl --fail --silent --show-error --retry 8 --retry-delay 5 --max-time 30 https://7366806822-pixel.github.io/mi-pagina-web/ -o /tmp/public.html
           grep -q 'Mi Día a Día — Tiempo Real' /tmp/public.html
           grep -q 'SUPABASE_URL' /tmp/public.html
           grep -q 'postgres_changes' /tmp/public.html
@@ -28,6 +30,9 @@ jobs:
           grep -q 'MDD_CALENDAR_PRO_V1' /tmp/public.html
           grep -q 'MDDCalendarPro' /tmp/public.html
           grep -q 'calendar-save-sync' /tmp/public.html
+          grep -q 'MDD_PRO_UI_V1' /tmp/public.html
+          grep -q 'MDD_PRO_UI_V1_JS' /tmp/public.html
+          grep -q 'Hora actual en Lima' /tmp/public.html
           ! grep -q 'api.jsonstorage.net' /tmp/public.html
           ! grep -q 'indexedDB' /tmp/public.html
       - name: Install Chromium test runtime
@@ -41,5 +46,7 @@ jobs:
         run: node e2e-realtime-test.js
       - name: Test Calendar PRO views CRUD recurrence drag resize and mobile
         run: node e2e-calendar-test.js
+      - name: Test premium UI realtime Lima clock desktop and mobile
+        run: node e2e-professional-ui-test.js
       - name: Mark verified backend schema run
-        run: echo 'Supabase schema active, sidebar, realtime and Calendar PRO verified'
+        run: echo 'Supabase, sidebar, realtime, Calendar PRO and premium UI verified'
