@@ -9,8 +9,8 @@ const title='E2E Calendar '+Date.now();
  let id='';
  try{
   await page.goto(URL,{waitUntil:'domcontentloaded'});
-  await page.waitForFunction(()=>typeof state!=='undefined'&&typeof db!=='undefined'&&window.MDDCalendarPro,{timeout:45000});
-  await page.evaluate(()=>{const el=[...document.querySelectorAll('[data-action="nav"]')].find(x=>x.textContent.includes('Calendario')&&!x.textContent.includes('Google'));if(!el)throw new Error('Calendar nav item not found');el.click()});
+  await page.waitForFunction(()=>typeof state!=='undefined'&&typeof db!=='undefined'&&window.MDDCalendarPro&&typeof navItemBySpecial==='function'&&typeof navigate==='function',{timeout:45000});
+  await page.evaluate(()=>{const it=navItemBySpecial('calendar');if(!it)throw new Error('Calendar navigation config not found');navigate(it)});
   await page.locator('.cal-app').waitFor({state:'visible'});
   for(const view of ['day','week','month','agenda']){
     await page.locator(`[data-action="calendar-view"][data-view="${view}"]`).click();
@@ -47,8 +47,8 @@ const title='E2E Calendar '+Date.now();
   await page.locator('#calLocation').fill('E2E ubicación temporal'); await page.locator('[data-action="calendar-save"]').click();
   await page.waitForFunction(x=>state.records.some(r=>r.id===x&&r.location==='E2E ubicación temporal'),child.id); console.log('SEARCH_EDIT_OK');
 
-  const mobile=await browser.newContext({...devices['Pixel 7']}); const mp=await mobile.newPage(); await mp.goto(URL,{waitUntil:'domcontentloaded'}); await mp.waitForFunction(()=>window.MDDCalendarPro&&typeof state!=='undefined',{timeout:45000});
-  await mp.evaluate(()=>{const el=[...document.querySelectorAll('[data-action="nav"]')].find(x=>x.textContent.includes('Calendario')&&!x.textContent.includes('Google'));if(!el)throw new Error('Calendar nav item not found');el.click()}); await mp.locator('.cal-app').waitFor();
+  const mobile=await browser.newContext({...devices['Pixel 7']}); const mp=await mobile.newPage(); await mp.goto(URL,{waitUntil:'domcontentloaded'}); await mp.waitForFunction(()=>window.MDDCalendarPro&&typeof state!=='undefined'&&typeof navItemBySpecial==='function'&&typeof navigate==='function',{timeout:45000});
+  await mp.evaluate(()=>{const it=navItemBySpecial('calendar');if(!it)throw new Error('Calendar navigation config not found');navigate(it)}); await mp.locator('.cal-app').waitFor();
   await mp.locator('[data-action="calendar-view"][data-view="agenda"]').click(); const mobileBox=await mp.locator('.cal-app').boundingBox(); if(!mobileBox||mobileBox.width>500)throw new Error('Calendar mobile layout is not constrained');
   console.log('MOBILE_RESPONSIVE_OK'); await mobile.close();
   if(errors.length)throw new Error('Browser errors: '+errors.join(' | ')); console.log('CALENDAR_PRO_E2E_ALL_OK');
