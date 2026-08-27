@@ -10,11 +10,18 @@ const title='E2E Calendar '+Date.now();
  try{
   await page.goto(URL,{waitUntil:'domcontentloaded'});
   await page.waitForFunction(()=>typeof state!=='undefined'&&typeof db!=='undefined'&&window.MDDCalendarPro&&typeof navItemBySpecial==='function'&&typeof navigate==='function',{timeout:45000});
+  // Confirma que init() terminó y bindEvents() ya enlazó los controles reales.
+  await page.locator('#globalAddBtn').click();
+  await page.locator('#recordOverlay.open').waitFor({state:'visible',timeout:30000});
+  await page.locator('#cancelRecordBtn').click();
+  await page.locator('#recordOverlay.open').waitFor({state:'hidden',timeout:10000});
+  console.log('APP_EVENT_BINDING_READY_OK');
+
   await page.evaluate(()=>{const it=navItemBySpecial('calendar');if(!it)throw new Error('Calendar navigation config not found');navigate(it)});
   await page.locator('.cal-app').waitFor({state:'visible'});
   for(const view of ['day','week','month','agenda']){
     await page.locator(`[data-action="calendar-view"][data-view="${view}"]`).click();
-    await page.waitForFunction(v=>state.calendarView===v,view); console.log('VIEW_'+view.toUpperCase()+'_OK');
+    await page.waitForFunction(v=>state.calendarView===v,view,{timeout:10000}); console.log('VIEW_'+view.toUpperCase()+'_OK');
   }
   await page.locator('[data-action="calendar-today"]').click(); await page.locator('[data-action="calendar-view"][data-view="day"]').click();
   await page.locator('[data-action="calendar-new"]').first().click(); await page.locator('#calendarEditorOverlay.open').waitFor();
@@ -48,6 +55,7 @@ const title='E2E Calendar '+Date.now();
   await page.waitForFunction(x=>state.records.some(r=>r.id===x&&r.location==='E2E ubicación temporal'),child.id); console.log('SEARCH_EDIT_OK');
 
   const mobile=await browser.newContext({...devices['Pixel 7']}); const mp=await mobile.newPage(); await mp.goto(URL,{waitUntil:'domcontentloaded'}); await mp.waitForFunction(()=>window.MDDCalendarPro&&typeof state!=='undefined'&&typeof navItemBySpecial==='function'&&typeof navigate==='function',{timeout:45000});
+  await mp.locator('#globalAddBtn').click(); await mp.locator('#recordOverlay.open').waitFor({state:'visible',timeout:30000}); await mp.locator('#cancelRecordBtn').click(); await mp.locator('#recordOverlay.open').waitFor({state:'hidden',timeout:10000});
   await mp.evaluate(()=>{const it=navItemBySpecial('calendar');if(!it)throw new Error('Calendar navigation config not found');navigate(it)}); await mp.locator('.cal-app').waitFor();
   await mp.locator('[data-action="calendar-view"][data-view="agenda"]').click(); const mobileBox=await mp.locator('.cal-app').boundingBox(); if(!mobileBox||mobileBox.width>500)throw new Error('Calendar mobile layout is not constrained');
   console.log('MOBILE_RESPONSIVE_OK'); await mobile.close();
