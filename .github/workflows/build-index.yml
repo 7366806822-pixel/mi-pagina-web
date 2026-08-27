@@ -14,6 +14,7 @@ on:
       - 'patch_calendar_pro.py'
       - 'calendar_pro_js.p*'
       - 'calendar_pro_css.p*'
+      - 'patch_professional_ui.py'
       - '.github/workflows/build-index.yml'
   workflow_dispatch:
 
@@ -58,6 +59,8 @@ jobs:
         run: python patch_google_calendar.py
       - name: Upgrade native Calendar experience
         run: python patch_calendar_pro.py
+      - name: Apply professional premium interface
+        run: python patch_professional_ui.py
       - name: Verify production HTML
         shell: bash
         run: |
@@ -80,6 +83,9 @@ jobs:
           grep -q 'calendar-save-sync' /tmp/index.html
           grep -q 'cal-time-lane' /tmp/index.html
           grep -q 'calendar-view' /tmp/index.html
+          grep -q 'MDD_PRO_UI_V1' /tmp/index.html
+          grep -q 'MDD_PRO_UI_V1_JS' /tmp/index.html
+          grep -q 'Hora actual en Lima' /tmp/index.html
           grep -q 'America/Lima' /tmp/index.html
           grep -q 'name="viewport"' /tmp/index.html
           ! grep -q 'api.jsonstorage.net' /tmp/index.html
@@ -110,5 +116,5 @@ jobs:
           cp /tmp/index.html index.html
           touch .nojekyll
           git add -A
-          git commit -m 'Publish Calendar PRO with Supabase Realtime' || true
+          git commit -m 'Publish professional Mi Día a Día PRO interface' || true
           git push origin gh-pages
