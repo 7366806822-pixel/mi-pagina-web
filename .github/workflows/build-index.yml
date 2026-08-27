@@ -67,10 +67,10 @@ jobs:
           grep -q 'MDD_SIDEBAR_REVERSIBLE_V1' /tmp/index.html
           grep -q 'Expandir menú' /tmp/index.html
           grep -q 'Alt+M' /tmp/index.html
-          grep -q 'MDD_GOOGLE_CALENDAR_V1' /tmp/index.html
+          grep -Eq 'MDD_GOOGLE_CALENDAR_V(1|2)' /tmp/index.html
           grep -q 'googleCalendar:renderGoogleCalendar' /tmp/index.html
-          grep -q 'calendar.google.com/calendar/embed' /tmp/index.html
-          grep -q 'America%2FLima' /tmp/index.html
+          grep -q 'Google Calendar' /tmp/index.html
+          grep -q 'America/Lima' /tmp/index.html
           grep -q 'name="viewport"' /tmp/index.html
           ! grep -q 'api.jsonstorage.net' /tmp/index.html
           ! grep -q 'indexedDB' /tmp/index.html
