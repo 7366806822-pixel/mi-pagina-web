@@ -1,0 +1,80 @@
+const { chromium, devices } = require('playwright');
+const URL='https://7366806822-pixel.github.io/mi-pagina-web/';
+const title='E2E Calendar '+Date.now();
+(async()=>{
+ const browser=await chromium.launch({headless:true});
+ const desktop=await browser.newContext({viewport:{width:1440,height:1000}});
+ const page=await desktop.newPage();
+ const errors=[]; page.on('pageerror',e=>errors.push(e.message)); page.on('console',m=>{if(m.type()==='error')errors.push(m.text())});
+ let id='';
+ try{
+  await page.goto(URL,{waitUntil:'domcontentloaded'});
+  await page.waitForFunction(()=>typeof state!=='undefined'&&typeof db!=='undefined'&&window.MDDCalendarPro,{timeout:45000});
+  await page.getByRole('button',{name:'Calendario',exact:true}).click();
+  await page.locator('.cal-app').waitFor({state:'visible'});
+  for(const [view,label] of [['day','Día'],['week','Semana'],['month','Mes'],['agenda','Agenda']]){
+    await page.locator(`[data-action="calendar-view"][data-view="${view}"]`).click();
+    await page.waitForFunction(v=>state.calendarView===v,view); console.log('VIEW_'+view.toUpperCase()+'_OK');
+  }
+  await page.locator('[data-action="calendar-today"]').click();
+  await page.locator('[data-action="calendar-view"][data-view="day"]').click();
+  await page.locator('[data-action="calendar-new"]').first().click();
+  await page.locator('#calendarEditorOverlay.open').waitFor();
+  const today=await page.evaluate(()=>localISO());
+  await page.locator('#calTitle').fill(title);
+  await page.locator('#calStartDate').fill(today); await page.locator('#calEndDate').fill(today);
+  await page.locator('#calStartTime').fill('13:00'); await page.locator('#calEndTime').fill('14:00');
+  await page.locator('[data-action="calendar-more-options"]').click();
+  await page.locator('#calRecurrence').selectOption('weekly');
+  await page.locator('[data-action="calendar-save"]').click();
+  await page.waitForFunction(t=>state.records.some(r=>r.title===t),title,{timeout:20000});
+  id=await page.evaluate(t=>state.records.find(r=>r.title===t)?.id||'',title);
+  if(!id)throw new Error('Calendar event was not persisted');
+  const saved=await page.evaluate(x=>state.records.find(r=>r.id===x),id);
+  if(saved.time!=='13:00'||saved.endTime!=='14:00'||saved.recurrence!=='weekly')throw new Error('Event fields not persisted correctly');
+  console.log('CREATE_PERSISTENCE_RECURRENCE_OK');
+
+  await page.locator('[data-action="calendar-view"][data-view="week"]').click();
+  await page.locator('[data-action="calendar-next"]').click();
+  await page.locator(`[data-cal-event][data-id="${id}"]`).first().waitFor({state:'visible',timeout:10000});
+  console.log('RECURRENCE_RENDER_OK');
+
+  await page.locator('[data-action="calendar-today"]').click(); await page.locator('[data-action="calendar-view"][data-view="day"]').click();
+  const ev=page.locator(`[data-cal-event][data-id="${id}"]`).first(); await ev.waitFor({state:'visible'});
+  const lane=page.locator(`[data-cal-time-lane="${today}"]`); await ev.dragTo(lane,{targetPosition:{x:220,y:56*15}});
+  await page.waitForTimeout(800);
+  const baseAfter=await page.evaluate(x=>state.records.find(r=>r.id===x),id);
+  const child=await page.evaluate(([x,d])=>state.records.find(r=>r.parentRecurringId===x&&r.recurrenceExceptionDate===d),[id,today]);
+  if(!child||!Array.isArray(baseAfter.recurrenceExDates)||!baseAfter.recurrenceExDates.includes(today))throw new Error('Recurring drag did not create a safe exception');
+  console.log('DRAG_DROP_RECURRING_EXCEPTION_OK');
+
+  const childEl=page.locator(`[data-cal-event][data-id="${child.id}"]`).first(); await childEl.waitFor({state:'visible'});
+  const handle=childEl.locator('[data-resize-id]'); const box=await handle.boundingBox(); if(!box)throw new Error('Resize handle unavailable');
+  await page.mouse.move(box.x+box.width/2,box.y+box.height/2); await page.mouse.down(); await page.mouse.move(box.x+box.width/2,box.y+box.height/2+56,{steps:5}); await page.mouse.up();
+  await page.waitForTimeout(800);
+  const resized=await page.evaluate(x=>state.records.find(r=>r.id===x),child.id);
+  const toMin=t=>{const [h,m]=t.split(':').map(Number);return h*60+m};
+  if(toMin(resized.endTime)-toMin(resized.time)<105)throw new Error('Resize did not extend event duration');
+  console.log('RESIZE_OK');
+
+  await page.locator('#calendarSearch').fill(title);
+  await childEl.click(); await page.locator('#calendarEditorOverlay.open').waitFor();
+  await page.locator('#calLocation').fill('E2E ubicación temporal');
+  await page.locator('[data-action="calendar-save"]').click();
+  await page.waitForFunction(x=>state.records.some(r=>r.id===x&&r.location==='E2E ubicación temporal'),child.id);
+  console.log('SEARCH_EDIT_OK');
+
+  const mobile=await browser.newContext({...devices['Pixel 7']}); const mp=await mobile.newPage();
+  await mp.goto(URL,{waitUntil:'domcontentloaded'}); await mp.waitForFunction(()=>window.MDDCalendarPro&&typeof state!=='undefined',{timeout:45000});
+  await mp.getByRole('button',{name:'Calendario',exact:true}).click(); await mp.locator('.cal-app').waitFor();
+  await mp.locator('[data-action="calendar-view"][data-view="agenda"]').click();
+  if((await mp.locator('.cal-app').boundingBox()).width>500)throw new Error('Calendar mobile layout is not constrained');
+  console.log('MOBILE_RESPONSIVE_OK'); await mobile.close();
+
+  if(errors.length)throw new Error('Browser errors: '+errors.join(' | '));
+  console.log('CALENDAR_PRO_E2E_ALL_OK');
+ } finally {
+  try{await page.evaluate(async ([t,base])=>{const rows=await db.all('records');for(const r of rows.filter(r=>r.title===t||r.parentRecurringId===base))await db.delete('records',r.id);const trash=await db.all('trash');for(const r of trash.filter(r=>r.title===t||r.parentRecurringId===base))await db.delete('trash',r.id)},[title,id])}catch{}
+  await browser.close();
+ }
+})().catch(e=>{console.error(e);process.exit(1)});
