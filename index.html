@@ -2999,6 +2999,8 @@ async function init(){
   renderNav();
   renderMain();
   bindEvents();
+  /* MDD_APP_READY_V1 */
+  document.documentElement.dataset.appReady="1";
   applyPreferences();
   updateClock();setInterval(updateClock,15000);updateCloudUI();
   window.addEventListener("error",e=>{if(e.error)reportRuntimeError(e.error,"error global")});
