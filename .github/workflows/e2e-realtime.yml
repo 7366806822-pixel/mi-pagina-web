@@ -42,11 +42,11 @@ jobs:
           npx playwright install --with-deps chromium
       - name: Test sidebar collapse and reopen
         run: node e2e-sidebar-test.js
+      - name: Test premium UI realtime Lima clock desktop and mobile
+        run: node e2e-professional-ui-test.js
       - name: Test realtime CRUD persistence desktop and mobile
         run: node e2e-realtime-test.js
       - name: Test Calendar PRO views CRUD recurrence drag resize and mobile
         run: node e2e-calendar-test.js
-      - name: Test premium UI realtime Lima clock desktop and mobile
-        run: node e2e-professional-ui-test.js
       - name: Mark verified backend schema run
         run: echo 'Supabase, sidebar, realtime, Calendar PRO and premium UI verified'
