@@ -9,6 +9,7 @@ on:
       - 'patch_v8_to_v9.py'
       - 'patch_v8_to_v9_fixed.py'
       - 'patch_add_realtime.py'
+      - 'patch_supabase_pagination.py'
       - 'patch_sidebar_toggle.py'
       - 'patch_google_calendar.py'
       - 'patch_calendar_pro.py'
@@ -53,6 +54,8 @@ jobs:
         run: python patch_v8_to_v9_fixed.py
       - name: Add bidirectional Realtime subscription
         run: python patch_add_realtime.py
+      - name: Load all Supabase rows with pagination
+        run: python patch_supabase_pagination.py
       - name: Keep sidebar reversible
         run: python patch_sidebar_toggle.py
       - name: Integrate Google Calendar
@@ -72,6 +75,8 @@ jobs:
           grep -q 'mdd_upsert_item' /tmp/index.html
           grep -q 'postgres_changes' /tmp/index.html
           grep -q 'subscribeRealtime' /tmp/index.html
+          grep -q 'MDD_SUPABASE_PAGINATION_V1' /tmp/index.html
+          grep -q 'range(offset,offset+pageSize-1)' /tmp/index.html
           grep -q 'MDD_SIDEBAR_REVERSIBLE_V1' /tmp/index.html
           grep -q 'Expandir menú' /tmp/index.html
           grep -q 'Alt+M' /tmp/index.html
