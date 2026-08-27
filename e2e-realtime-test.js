@@ -14,7 +14,8 @@ const base={id,type:'task',title:'E2E Realtime creación',area:'Estudio jurídic
   await Promise.all([a.waitForFunction(()=>db.realtimeReady===true,{timeout:45000}),b.waitForFunction(()=>db.realtimeReady===true,{timeout:45000})]);
   await a.evaluate(async r=>{await db.put('records',r)},base);
   await b.waitForFunction(x=>state.records.some(r=>r.id===x&&r.title==='E2E Realtime creación'),id,{timeout:20000}); console.log('CREATE_REALTIME_OK');
-  await a.evaluate(async x=>{const r=(await db.all('records')).find(v=>v.id===x);r.title='E2E Realtime edición';r.priority='Urgente';r.updatedAt=new Date().toISOString();await db.put('records',r)},id);
+  const edited={...base,title:'E2E Realtime edición',priority:'Urgente',updatedAt:new Date().toISOString()};
+  await a.evaluate(async r=>{await db.put('records',r)},edited);
   await b.waitForFunction(x=>state.records.some(r=>r.id===x&&r.title==='E2E Realtime edición'&&r.priority==='Urgente'),id,{timeout:20000}); console.log('EDIT_REALTIME_OK');
   const fresh=await browser.newContext({viewport:{width:1365,height:900}}),c=await fresh.newPage(); await c.goto(URL,{waitUntil:'domcontentloaded'}); await c.waitForFunction(()=>typeof db!=='undefined'&&db.client&&db.realtimeReady===true,{timeout:45000}); await c.waitForFunction(x=>state.records.some(r=>r.id===x&&r.title==='E2E Realtime edición'),id,{timeout:20000}); await fresh.close(); console.log('REOPEN_PERSISTENCE_OK');
   await a.evaluate(async x=>{await db.delete('records',x)},id); await b.waitForFunction(x=>!state.records.some(r=>r.id===x),id,{timeout:20000}); console.log('DELETE_REALTIME_OK');
