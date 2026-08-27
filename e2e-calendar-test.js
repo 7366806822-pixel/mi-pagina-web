@@ -24,7 +24,9 @@ const title='E2E Calendar '+Date.now();
   await page.locator('#calTitle').fill(title); await page.locator('#calStartDate').fill(today); await page.locator('#calEndDate').fill(today);
   await page.locator('#calStartTime').fill('13:00'); await page.locator('#calEndTime').fill('14:00');
   await page.locator('[data-action="calendar-more-options"]').click(); await page.locator('#calRecurrence').selectOption('weekly');
-  await page.locator('[data-action="calendar-save"]').click(); await page.waitForFunction(t=>state.records.some(r=>r.title===t),title,{timeout:20000});
+  await page.locator('[data-action="calendar-save"]').click();
+  await page.waitForFunction(t=>state.records.some(r=>r.title===t),title,{timeout:20000});
+  await page.locator('#calendarEditorOverlay.open').waitFor({state:'hidden',timeout:20000});
   id=await page.evaluate(t=>state.records.find(r=>r.title===t)?.id||'',title); if(!id)throw new Error('Calendar event was not persisted');
   const saved=await page.evaluate(x=>state.records.find(r=>r.id===x),id); if(saved.time!=='13:00'||saved.endTime!=='14:00'||saved.recurrence!=='weekly')throw new Error('Event fields not persisted correctly');
   console.log('CREATE_PERSISTENCE_RECURRENCE_OK');
@@ -47,7 +49,9 @@ const title='E2E Calendar '+Date.now();
 
   await page.locator('#calendarSearch').fill(title); await page.locator(`[data-cal-event][data-id="${child.id}"]`).first().click(); await page.locator('#calendarEditorOverlay.open').waitFor();
   await page.locator('#calLocation').fill('E2E ubicación temporal'); await page.locator('[data-action="calendar-save"]').click();
-  await page.waitForFunction(x=>state.records.some(r=>r.id===x&&r.location==='E2E ubicación temporal'),child.id); console.log('SEARCH_EDIT_OK');
+  await page.waitForFunction(x=>state.records.some(r=>r.id===x&&r.location==='E2E ubicación temporal'),child.id);
+  await page.locator('#calendarEditorOverlay.open').waitFor({state:'hidden',timeout:20000});
+  console.log('SEARCH_EDIT_OK');
 
   const mobile=await browser.newContext({...devices['Pixel 7']}); const mp=await mobile.newPage(); await mp.goto(URL,{waitUntil:'domcontentloaded'}); await mp.waitForFunction(()=>document.documentElement.dataset.appReady==='1'&&window.MDDCalendarPro&&typeof state!=='undefined'&&typeof navItemBySpecial==='function'&&typeof navigate==='function',{timeout:60000});
   await mp.evaluate(()=>{const it=navItemBySpecial('calendar');if(!it)throw new Error('Calendar navigation config not found');navigate(it)}); await mp.locator('.cal-app').waitFor();
