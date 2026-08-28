@@ -20,7 +20,7 @@ jobs:
           node-version: '22'
       - name: Install Supabase client
         run: npm install --no-save @supabase/supabase-js@2
-      - name: Verify anonymous auth, RLS CRUD and private storage
+      - name: Verify direct session, RLS CRUD and private storage
         env:
           SUPABASE_URL: https://ppisbpcexufegkwnqyog.supabase.co
           SUPABASE_PUBLISHABLE_KEY: sb_publishable_bAgTrxjl6NkgpEazhmyu7A_1OrB4M6I
@@ -31,11 +31,24 @@ jobs:
           import { createClient } from '@supabase/supabase-js'
           const sb=createClient(process.env.SUPABASE_URL,process.env.SUPABASE_PUBLISHABLE_KEY,{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}})
           const fail=(label,error)=>{console.error(`${label}: ${error?.message||error}`);process.exit(1)}
-          const auth=await sb.auth.signInAnonymously({options:{data:{purpose:'tesis-direct-access-e2e'}}})
-          if(auth.error)fail('ANON_AUTH_FAILED',auth.error)
+
+          const response=await fetch(`${process.env.SUPABASE_URL}/functions/v1/tesis-direct-session`,{
+            method:'POST',
+            headers:{
+              apikey:process.env.SUPABASE_PUBLISHABLE_KEY,
+              'content-type':'application/json',
+              'x-tesis-client':'tesis-untrm-direct-v1',
+              origin:'https://7366806822-pixel.github.io'
+            },
+            body:'{}'
+          })
+          const payload=await response.json().catch(()=>({}))
+          if(!response.ok||!payload?.token_hash)fail('DIRECT_SESSION_ENDPOINT_FAILED',payload?.error||`HTTP ${response.status}`)
+          const auth=await sb.auth.verifyOtp({token_hash:payload.token_hash,type:'email'})
+          if(auth.error)fail('DIRECT_SESSION_VERIFY_FAILED',auth.error)
           const user=auth.data.user
-          if(!user?.id)fail('ANON_AUTH_FAILED','No user returned')
-          console.log('ANON_AUTH_OK')
+          if(!user?.id)fail('DIRECT_SESSION_VERIFY_FAILED','No user returned')
+          console.log('DIRECT_SESSION_OK')
 
           const p=await sb.from('tesis_projects').insert({owner_id:user.id,title:'E2E TEMPORAL - ELIMINAR'}).select('id,owner_id').single()
           if(p.error)fail('PROJECT_INSERT_FAILED',p.error)
