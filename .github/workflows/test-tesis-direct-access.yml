@@ -69,7 +69,8 @@ jobs:
           console.log('TASK_UPDATE_OK')
 
           const storagePath=`${user.id}/${projectId}/e2e-temporal.txt`
-          const upload=await sb.storage.from('tesis-files').upload(storagePath,new Blob(['tesis-e2e']),{contentType:'text/plain',upsert:false})
+          const testFile=new Blob(['tesis-e2e'],{type:'text/plain'})
+          const upload=await sb.storage.from('tesis-files').upload(storagePath,testFile,{contentType:'text/plain',upsert:false})
           if(upload.error)fail('STORAGE_UPLOAD_FAILED',upload.error)
           const signed=await sb.storage.from('tesis-files').createSignedUrl(storagePath,60)
           if(signed.error||!signed.data?.signedUrl)fail('STORAGE_SIGNED_URL_FAILED',signed.error||'No signed URL')
