@@ -117,7 +117,7 @@ jobs:
           print(f'Validating {len(scripts)} inline script(s)')
           PY
           for file in /tmp/app-*.js; do node --check "$file"; done
-      - name: Build thesis app with invisible automatic session
+      - name: Build thesis app with invisible server-managed session
         shell: bash
         run: |
           set -euo pipefail
@@ -129,20 +129,23 @@ jobs:
           python patch_tesis_direct_access.py /tmp/tesis-source.js
           node --check /tmp/tesis-source.js
           cp /tmp/tesis-source.js /tmp/tesis-app/source.js
-          printf "%s\n" "import './source.js?v=direct-access-v1';" > /tmp/tesis-app/app.js
+          printf "%s\n" "import './source.js?v=direct-access-v2';" > /tmp/tesis-app/app.js
           test -f /tmp/tesis-app/index.html
           test -f /tmp/tesis-app/app.js
           test -f /tmp/tesis-app/source.js
           test -f /tmp/tesis-app/styles.css
           test -f /tmp/tesis-app/manifest.webmanifest
           test -f /tmp/tesis-app/sw.js
-          grep -q 'signInAnonymously' /tmp/tesis-app/source.js
+          grep -q 'tesis-direct-session' /tmp/tesis-app/source.js
+          grep -q 'verifyOtp' /tmp/tesis-app/source.js
           grep -q 'ensureAutomaticSession' /tmp/tesis-app/source.js
+          ! grep -q 'signInAnonymously' /tmp/tesis-app/source.js
           ! grep -q 'signInWithPassword' /tmp/tesis-app/source.js
           ! grep -q 'id="authForm"' /tmp/tesis-app/source.js
           ! grep -q 'Correo electrónico' /tmp/tesis-app/source.js
           ! grep -q 'Crear cuenta segura' /tmp/tesis-app/source.js
           ! grep -q 'title="Cerrar sesión"' /tmp/tesis-app/source.js
+          ! grep -q 'SUPABASE_SERVICE_ROLE_KEY' /tmp/tesis-app/source.js
           ! grep -q 'http-equiv="refresh"' /tmp/tesis-app/index.html
           ! grep -q "location.replace('../tesis-juridica-untrm/')" /tmp/tesis-app/index.html
       - name: Publish verified files to gh-pages branch
@@ -166,10 +169,13 @@ jobs:
           test -f tesis/sw.js
           cmp -s tesis/index.html tesis-juridica-untrm/index.html
           cmp -s tesis/source.js tesis-juridica-untrm/source.js
-          grep -q 'signInAnonymously' tesis/source.js
+          grep -q 'tesis-direct-session' tesis/source.js
+          grep -q 'verifyOtp' tesis/source.js
+          ! grep -q 'signInAnonymously' tesis/source.js
           ! grep -q 'signInWithPassword' tesis/source.js
           ! grep -q 'Correo electrónico' tesis/source.js
           ! grep -q 'title="Cerrar sesión"' tesis/source.js
+          ! grep -q 'SUPABASE_SERVICE_ROLE_KEY' tesis/source.js
           ! grep -q 'http-equiv="refresh"' tesis/index.html
           git add -A
           git commit -m 'Publish thesis direct access without login barrier' || true
