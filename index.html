@@ -3769,7 +3769,7 @@ init().catch(err=>{
       lane.addEventListener("dblclick",e=>{if(e.target.closest("[data-cal-event]"))return;const rect=lane.getBoundingClientRect(),min=Math.round(((e.clientY-rect.top)/HOUR_PX*60)/SLOT_MIN)*SLOT_MIN;openCalendarEditor(null,"",{date:lane.dataset.calTimeLane,time:hm(min),endDate:lane.dataset.calTimeLane,endTime:hm(min+60)},true)});
       lane.addEventListener("pointerdown",e=>{if(e.button!==0||e.target.closest("[data-cal-event]"))return;const rect=lane.getBoundingClientRect(),start=Math.round(((e.clientY-rect.top)/HOUR_PX*60)/SLOT_MIN)*SLOT_MIN;const ghost=document.createElement("div");ghost.className="cal-selection-ghost";ghost.style.top=`${start/60*HOUR_PX}px`;ghost.style.height=`${SLOT_MIN/60*HOUR_PX}px`;lane.appendChild(ghost);state.calendarSelection={lane,date:lane.dataset.calTimeLane,start,ghost};e.preventDefault();});
     });
-    qsa("[data-resize-id]",root).forEach(h=>h.addEventListener("pointerdown",e=>{e.stopPropagation();e.preventDefault();const event=h.closest(".cal-event-wrap"),startY=e.clientY,startH=event?.getBoundingClientRect().height||56;state.calendarResize={id:h.dataset.resizeId,occurrence:h.dataset.occurrence,startY,startH,event};document.body.classList.add("cal-resizing")}));
+    qsa("[data-resize-id]",root).forEach(h=>h.addEventListener("pointerdown",e=>{e.stopPropagation();e.preventDefault();const event=h.closest(".cal-event-wrap"),button=h.closest("[data-cal-event]"),startY=e.clientY,startH=event?.getBoundingClientRect().height||56;if(button)button.draggable=false;state.calendarResize={id:h.dataset.resizeId,occurrence:h.dataset.occurrence,startY,startH,event,button};document.body.classList.add("cal-resizing")}));
   }
 
   document.addEventListener("pointermove",e=>{
@@ -3778,7 +3778,7 @@ init().catch(err=>{
   });
   document.addEventListener("pointerup",e=>{
     if(state.calendarSelection){const x=state.calendarSelection;state.calendarSelection=null;x.ghost?.remove();const end=x.end||x.start+60;if(Math.abs(end-x.start)>=SLOT_MIN)openCalendarEditor(null,"",{date:x.date,time:hm(Math.min(x.start,end)),endDate:x.date,endTime:hm(Math.max(x.start,end))},true);}
-    if(state.calendarResize){const r=state.calendarResize;state.calendarResize=null;document.body.classList.remove("cal-resizing");const rec=state.records.find(x=>x.id===r.id);if(rec){const start=mins(rec.time||rec.hearingTime||"09:00"),dy=e.clientY-r.startY,newEnd=start+Math.round(((r.startH+dy)/HOUR_PX*60)/SLOT_MIN)*SLOT_MIN;resizeEvent(r.id,r.occurrence,newEnd)}}
+    if(state.calendarResize){const r=state.calendarResize;state.calendarResize=null;document.body.classList.remove("cal-resizing");if(r.button)r.button.draggable=true;const rec=state.records.find(x=>x.id===r.id);if(rec){const start=mins(rec.time||rec.hearingTime||"09:00"),dy=e.clientY-r.startY,newEnd=start+Math.round(((r.startH+dy)/HOUR_PX*60)/SLOT_MIN)*SLOT_MIN;resizeEvent(r.id,r.occurrence,newEnd)}}
   });
 
   function initReminderEngine(){
