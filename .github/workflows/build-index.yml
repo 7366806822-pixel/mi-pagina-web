@@ -16,6 +16,7 @@ on:
       - 'calendar_pro_js.p*'
       - 'calendar_pro_css.p*'
       - 'patch_professional_ui.py'
+      - 'patch_reference_ui.py'
       - 'patch_app_ready.py'
       - 'patch_tesis_direct_access.py'
       - 'tesis-juridica-untrm/**'
@@ -67,6 +68,8 @@ jobs:
         run: python patch_calendar_pro.py
       - name: Apply professional premium interface
         run: python patch_professional_ui.py
+      - name: Match supplied visual references
+        run: python patch_reference_ui.py
       - name: Mark interface ready after event bindings
         run: python patch_app_ready.py
       - name: Verify production HTML
@@ -95,6 +98,12 @@ jobs:
           grep -q 'calendar-view' /tmp/index.html
           grep -q 'MDD_PRO_UI_V1' /tmp/index.html
           grep -q 'MDD_PRO_UI_V1_JS' /tmp/index.html
+          grep -q 'MDD_REFERENCE_UI_V2' /tmp/index.html
+          grep -q 'MDD_REFERENCE_UI_V2_JS' /tmp/index.html
+          grep -q 'mdd-digital-clock' /tmp/index.html
+          grep -q 'clockSecond' /tmp/index.html
+          grep -q 'setInterval(updateClock,1000)' /tmp/index.html
+          grep -q 'typeof markModified==="function"' /tmp/index.html
           grep -q 'MDD_APP_READY_V1' /tmp/index.html
           grep -q 'dataset.appReady="1"' /tmp/index.html
           grep -q 'Hora actual en Lima' /tmp/index.html
