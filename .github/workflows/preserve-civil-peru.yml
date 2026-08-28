@@ -1,0 +1,33 @@
+name: Preserve Civil Peru site
+
+on:
+  workflow_run:
+    workflows: ["Build verified GitHub Pages site"]
+    types: [completed]
+
+permissions:
+  contents: write
+
+jobs:
+  restore-civil-peru:
+    if: github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout gh-pages history
+        uses: actions/checkout@v6
+        with:
+          ref: gh-pages
+          fetch-depth: 0
+
+      - name: Restore isolated Civil Peru app if removed
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git checkout a6ee65504fc21918fa3fc35d066c79b812340ec2 -- civil-peru
+          git add civil-peru
+          if ! git diff --cached --quiet; then
+            git commit -m 'Preserve Civil Peru application'
+            git push origin gh-pages
+          fi
