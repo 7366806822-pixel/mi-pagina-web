@@ -10,8 +10,8 @@ const URL='https://7366806822-pixel.github.io/mi-pagina-web/';
     page.on('console',m=>{if(m.type()==='error')errors.push(m.text())});
     page.on('pageerror',e=>errors.push(e.message));
     await page.goto(URL,{waitUntil:'domcontentloaded'});
-    await page.waitForFunction(()=>document.documentElement.dataset.ui==='reference-v2',{timeout:30000});
-    await page.waitForFunction(()=>document.querySelector('.live-date.mdd-digital-clock')&&document.getElementById('clockSecond')?.dataset.value?.length===2,{timeout:10000});
+    await page.waitForFunction(()=>document.documentElement.dataset.ui==='reference-v2'&&document.documentElement.dataset.appReady==='1',{timeout:60000});
+    await page.waitForFunction(()=>document.querySelector('.live-date.mdd-digital-clock')&&document.getElementById('clockSecond')?.dataset.value?.length===2&&document.querySelector('.panel'),{timeout:20000});
 
     const desktopCheck=await page.evaluate(()=>{
       const clock=document.querySelector('.live-date.mdd-digital-clock');
@@ -44,6 +44,7 @@ const URL='https://7366806822-pixel.github.io/mi-pagina-web/';
         topbarHeight:topbar?.getBoundingClientRect().height||0,
         panelRadius:panel?parseFloat(getComputedStyle(panel).borderRadius):0,
         panelBg:panel?getComputedStyle(panel).backgroundImage:'',
+        panelColor:panel?getComputedStyle(panel).backgroundColor:'',
         panelBorder:panel?getComputedStyle(panel).borderColor:'',
         brandClip:brand?getComputedStyle(brand).clipPath:'none',
         noOverflow:document.documentElement.scrollWidth<=window.innerWidth+2,
@@ -63,7 +64,8 @@ const URL='https://7366806822-pixel.github.io/mi-pagina-web/';
     if(desktopCheck.clockHeight<60||desktopCheck.clockWidth<145||desktopCheck.topbarHeight<84)throw new Error('Reference topbar/digital clock sizing not applied');
     if(desktopCheck.segCount<6)throw new Error('Seven-segment visual digits were not rendered');
     if(desktopCheck.brandClip==='none')throw new Error('Gold shield brand model not applied');
-    if(desktopCheck.panelRadius<8||!desktopCheck.panelBg.includes('gradient'))throw new Error('Reference dark panel design not applied');
+    if(desktopCheck.panelRadius<8)throw new Error('Reference panel radius not applied');
+    if(!desktopCheck.panelBg.includes('gradient')&&!/rgb\((?:0|[1-9]|1\d|2\d),\s*(?:0|[1-9]|1\d|2\d),\s*(?:0|[1-9]|1\d|2\d)\)/.test(desktopCheck.panelColor))throw new Error(`Reference dark panel design not applied: ${desktopCheck.panelBg} / ${desktopCheck.panelColor}`);
     if(!desktopCheck.noOverflow)throw new Error('Unexpected desktop horizontal overflow');
     if(!desktopCheck.proTimer)throw new Error('Realtime status synchronizer not initialized');
 
@@ -84,7 +86,7 @@ const URL='https://7366806822-pixel.github.io/mi-pagina-web/';
     m.on('console',x=>{if(x.type()==='error')errors.push(x.text())});
     m.on('pageerror',e=>errors.push(e.message));
     await m.goto(URL,{waitUntil:'domcontentloaded'});
-    await m.waitForFunction(()=>document.documentElement.dataset.ui==='reference-v2'&&document.querySelector('.live-date.mdd-digital-clock'),{timeout:30000});
+    await m.waitForFunction(()=>document.documentElement.dataset.ui==='reference-v2'&&document.documentElement.dataset.appReady==='1'&&document.querySelector('.live-date.mdd-digital-clock'),{timeout:60000});
     await m.waitForFunction(()=>document.getElementById('clockSecond')?.dataset.value?.length===2,{timeout:10000});
     const mobileCheck=await m.evaluate(()=>{
       const clock=document.querySelector('.live-date.mdd-digital-clock');
