@@ -3908,6 +3908,37 @@ init().catch(err=>{
 })();
 </script>
 
+
+<script>
+/* MDD_CALENDAR_RESIZE_DELEGATE_V1 */
+(()=>{
+  'use strict';
+  if(window.__mddCalendarResizeDelegateV1)return;
+  window.__mddCalendarResizeDelegateV1=true;
+  document.addEventListener('pointerdown',e=>{
+    const target=e.target;
+    const handle=target&&typeof target.closest==='function'?target.closest('[data-resize-id]'):null;
+    if(!handle||!handle.closest('.cal-app'))return;
+    if(typeof state==='undefined')return;
+    const event=handle.closest('.cal-event-wrap');
+    if(!event)return;
+    const button=handle.closest('[data-cal-event]');
+    e.preventDefault();
+    e.stopPropagation();
+    if(button)button.draggable=false;
+    state.calendarResize={
+      id:handle.dataset.resizeId,
+      occurrence:handle.dataset.occurrence||'',
+      startY:e.clientY,
+      startH:event.getBoundingClientRect().height||56,
+      event,
+      button
+    };
+    document.body.classList.add('cal-resizing');
+  },true);
+})();
+</script>
+
 <!-- MDD_CALENDAR_MARKMODIFIED_COMPAT_V1 -->
 </body>
 </html>
