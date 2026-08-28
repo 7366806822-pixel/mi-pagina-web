@@ -35,9 +35,34 @@ const title='E2E Calendar '+Date.now();
   const baseAfter=await page.evaluate(x=>state.records.find(r=>r.id===x),id);const child=await page.evaluate(([x,d])=>state.records.find(r=>r.parentRecurringId===x&&r.recurrenceExceptionDate===d),[id,occurrence]);
   if(!child||!Array.isArray(baseAfter.recurrenceExDates)||!baseAfter.recurrenceExDates.includes(occurrence))throw new Error('Recurring drag did not create a safe exception');console.log('DRAG_DROP_RECURRING_EXCEPTION_OK');
   await page.evaluate(d=>{state.calendarDate=new Date(d+'T12:00:00');state.calendarView='day';renderCalendar()},occurrence);
-  const childEl=page.locator(`[data-cal-event][data-id="${child.id}"]`).first();await childEl.waitFor({state:'visible'});const handle=childEl.locator('[data-resize-id]');const box=await handle.boundingBox();if(!box)throw new Error('Resize handle unavailable');
-  await page.mouse.move(box.x+box.width/2,box.y+box.height/2);await page.mouse.down();await page.mouse.move(box.x+box.width/2,box.y+box.height/2+56,{steps:5});await page.mouse.up();await page.waitForTimeout(1000);
-  const resized=await page.evaluate(x=>state.records.find(r=>r.id===x),child.id);const toMin=t=>{const [h,m]=t.split(':').map(Number);return h*60+m};if(toMin(resized.endTime)-toMin(resized.time)<105)throw new Error('Resize did not extend event duration');console.log('RESIZE_OK');
+  const childEl=page.locator(`[data-cal-event][data-id="${child.id}"]`).first();await childEl.waitFor({state:'visible'});
+
+  const resizeDiag=await page.evaluate(async childId=>{
+    const ev=document.querySelector(`[data-cal-event][data-id="${childId}"]`);
+    const h=ev?.querySelector('[data-resize-id]');
+    const wrap=ev?.closest('.cal-event-wrap');
+    const before=state.records.find(r=>r.id===childId);
+    if(!ev||!h||!wrap||!before)return {error:'resize DOM unavailable'};
+    const hb=h.getBoundingClientRect();
+    const y=hb.top+Math.max(1,hb.height/2);
+    const mk=(type,clientY,buttons=0)=>new PointerEvent(type,{bubbles:true,cancelable:true,pointerId:77,pointerType:'mouse',isPrimary:true,button:0,buttons,clientX:hb.left+Math.max(1,hb.width/2),clientY});
+    h.dispatchEvent(mk('pointerdown',y,1));
+    const down={active:!!state.calendarResize,startY:state.calendarResize?.startY,startH:state.calendarResize?.startH,draggable:ev.draggable};
+    document.dispatchEvent(mk('pointermove',y+56,1));
+    const during={active:!!state.calendarResize,inlineHeight:wrap.style.height};
+    document.dispatchEvent(mk('pointerup',y+56,0));
+    await new Promise(r=>setTimeout(r,1400));
+    const after=state.records.find(r=>r.id===childId);
+    const persisted=(await db.all('records')).find(r=>r.id===childId);
+    return {before:{time:before.time,endTime:before.endTime},down,during,after:after?{time:after.time,endTime:after.endTime}:null,persisted:persisted?{time:persisted.time,endTime:persisted.endTime}:null,runtimeErrors:state.runtimeErrors.slice(-4),error:null};
+  },child.id);
+  console.log('RESIZE_DIAG '+JSON.stringify(resizeDiag));
+  if(resizeDiag.error)throw new Error(resizeDiag.error);
+  if(!resizeDiag.down.active)throw new Error('Resize pointerdown did not activate Calendar resize state');
+  const resized=await page.evaluate(x=>state.records.find(r=>r.id===x),child.id);const toMin=t=>{const [h,m]=t.split(':').map(Number);return h*60+m};
+  if(toMin(resized.endTime)-toMin(resized.time)<105)throw new Error('Resize did not extend event duration: '+JSON.stringify(resizeDiag));
+  if(!resizeDiag.persisted||resizeDiag.persisted.endTime!==resized.endTime)throw new Error('Resize was not persisted to Supabase: '+JSON.stringify(resizeDiag));
+  console.log('RESIZE_OK');
 
   await page.locator('#calendarSearch').fill(title);await page.locator(`[data-cal-event][data-id="${child.id}"]`).first().click();await page.locator('#calendarEditorOverlay.open').waitFor();await page.locator('#calLocation').fill('E2E ubicación temporal');await page.locator('[data-action="calendar-save"]').click();
   await page.waitForFunction(x=>state.records.some(r=>r.id===x&&r.location==='E2E ubicación temporal'),child.id,{timeout:20000});await page.waitForTimeout(1500);
