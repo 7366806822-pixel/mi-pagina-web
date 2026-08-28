@@ -40,6 +40,8 @@ jobs:
           grep -q 'clockSecond' /tmp/public.html
           grep -q 'setInterval(updateClock,1000)' /tmp/public.html
           grep -q 'MDD_CALENDAR_MARKMODIFIED_COMPAT_V1' /tmp/public.html
+          grep -q 'MDD_CALENDAR_RESIZE_DELEGATE_V1' /tmp/public.html
+          grep -q '__mddCalendarResizeDelegateV1' /tmp/public.html
           grep -q 'Promise.resolve' /tmp/public.html
           grep -q 'Hora actual en Lima' /tmp/public.html
           ! grep -q 'api.jsonstorage.net' /tmp/public.html
@@ -53,9 +55,9 @@ jobs:
         run: node e2e-sidebar-test.js
       - name: Test reference-matched UI and realtime Lima digital clock
         run: node e2e-professional-ui-test.js
-      - name: Test realtime CRUD persistence desktop and mobile
-        run: node e2e-realtime-test.js
       - name: Test Calendar PRO views CRUD recurrence drag resize and mobile
         run: node e2e-calendar-test.js
+      - name: Test realtime CRUD persistence desktop and mobile
+        run: node e2e-realtime-test.js
       - name: Mark verified backend schema run
         run: echo 'Supabase, sidebar, realtime, Calendar PRO and reference-matched UI verified'
