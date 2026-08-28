@@ -12,6 +12,7 @@ on:
       - 'e2e-professional-ui-test.js'
       - 'patch_professional_ui.py'
       - 'patch_reference_ui.py'
+      - 'patch_calendar_markmodified_compat.py'
 
 jobs:
   test-public-site:
@@ -38,7 +39,8 @@ jobs:
           grep -q 'mdd-digital-clock' /tmp/public.html
           grep -q 'clockSecond' /tmp/public.html
           grep -q 'setInterval(updateClock,1000)' /tmp/public.html
-          grep -q 'typeof markModified==="function"' /tmp/public.html
+          grep -q 'MDD_CALENDAR_MARKMODIFIED_COMPAT_V1' /tmp/public.html
+          grep -q 'Promise.resolve' /tmp/public.html
           grep -q 'Hora actual en Lima' /tmp/public.html
           ! grep -q 'api.jsonstorage.net' /tmp/public.html
           ! grep -q 'indexedDB' /tmp/public.html
