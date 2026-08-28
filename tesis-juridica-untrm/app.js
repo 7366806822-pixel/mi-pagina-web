@@ -1,1 +1,1 @@
-import './source.js?v=direct-access-v1';
+import './source.js?v=direct-access-v2';
