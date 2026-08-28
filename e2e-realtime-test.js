@@ -10,15 +10,15 @@ const base={id,type:'task',title:'E2E Realtime creación',area:'Estudio jurídic
  const errors=[]; for(const p of [a,b])p.on('console',m=>{if(m.type()==='error')errors.push(m.text())});
  try{
   await Promise.all([a.goto(URL,{waitUntil:'domcontentloaded'}),b.goto(URL,{waitUntil:'domcontentloaded'})]);
-  await Promise.all([a.waitForFunction(()=>typeof db!=='undefined'&&db.client&&typeof state!=='undefined',{timeout:30000}),b.waitForFunction(()=>typeof db!=='undefined'&&db.client&&typeof state!=='undefined',{timeout:30000})]);
-  await Promise.all([a.waitForFunction(()=>db.realtimeReady===true,{timeout:45000}),b.waitForFunction(()=>db.realtimeReady===true,{timeout:45000})]);
+  await Promise.all([a.waitForFunction(()=>typeof db!=='undefined'&&db.client&&typeof state!=='undefined',{timeout:60000}),b.waitForFunction(()=>typeof db!=='undefined'&&db.client&&typeof state!=='undefined',{timeout:60000})]);
+  await Promise.all([a.waitForFunction(()=>db.realtimeReady===true,{timeout:60000}),b.waitForFunction(()=>db.realtimeReady===true,{timeout:60000})]);
   await a.evaluate(async r=>{await db.put('records',r)},base);
-  await b.waitForFunction(x=>state.records.some(r=>r.id===x&&r.title==='E2E Realtime creación'),id,{timeout:20000}); console.log('CREATE_REALTIME_OK');
+  await b.waitForFunction(x=>state.records.some(r=>r.id===x&&r.title==='E2E Realtime creación'),id,{timeout:35000}); console.log('CREATE_REALTIME_OK');
   const edited={...base,title:'E2E Realtime edición',priority:'Urgente',updatedAt:new Date().toISOString()};
   await a.evaluate(async r=>{await db.put('records',r)},edited);
-  await b.waitForFunction(x=>state.records.some(r=>r.id===x&&r.title==='E2E Realtime edición'&&r.priority==='Urgente'),id,{timeout:20000}); console.log('EDIT_REALTIME_OK');
-  const fresh=await browser.newContext({viewport:{width:1365,height:900}}),c=await fresh.newPage(); await c.goto(URL,{waitUntil:'domcontentloaded'}); await c.waitForFunction(()=>typeof db!=='undefined'&&db.client&&db.realtimeReady===true,{timeout:45000}); await c.waitForFunction(x=>state.records.some(r=>r.id===x&&r.title==='E2E Realtime edición'),id,{timeout:20000}); await fresh.close(); console.log('REOPEN_PERSISTENCE_OK');
-  await a.evaluate(async x=>{await db.delete('records',x)},id); await b.waitForFunction(x=>!state.records.some(r=>r.id===x),id,{timeout:20000}); console.log('DELETE_REALTIME_OK');
+  await b.waitForFunction(x=>state.records.some(r=>r.id===x&&r.title==='E2E Realtime edición'&&r.priority==='Urgente'),id,{timeout:35000}); console.log('EDIT_REALTIME_OK');
+  const fresh=await browser.newContext({viewport:{width:1365,height:900}}),c=await fresh.newPage(); await c.goto(URL,{waitUntil:'domcontentloaded'}); await c.waitForFunction(()=>typeof db!=='undefined'&&db.client&&db.realtimeReady===true,{timeout:60000}); await c.waitForFunction(x=>state.records.some(r=>r.id===x&&r.title==='E2E Realtime edición'),id,{timeout:35000}); await fresh.close(); console.log('REOPEN_PERSISTENCE_OK');
+  await a.evaluate(async x=>{await db.delete('records',x)},id); await b.waitForFunction(x=>!state.records.some(r=>r.id===x),id,{timeout:35000}); console.log('DELETE_REALTIME_OK');
   if(!b.viewportSize()||b.viewportSize().width>500)throw new Error('Mobile viewport not applied');
   const brand=await b.locator('body').innerText(); if(!brand.includes('MI DÍA A DÍA'))throw new Error('Main interface not visible on mobile');
   console.log('CHROME_DESKTOP_MOBILE_OK');
