@@ -1,0 +1,73 @@
+name: Verify thesis direct access
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/test-tesis-direct-access.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Supabase client
+        run: npm install --no-save @supabase/supabase-js@2
+      - name: Verify anonymous auth, RLS CRUD and private storage
+        env:
+          SUPABASE_URL: https://ppisbpcexufegkwnqyog.supabase.co
+          SUPABASE_PUBLISHABLE_KEY: sb_publishable_bAgTrxjl6NkgpEazhmyu7A_1OrB4M6I
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { createClient } from '@supabase/supabase-js'
+          const sb=createClient(process.env.SUPABASE_URL,process.env.SUPABASE_PUBLISHABLE_KEY,{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}})
+          const fail=(label,error)=>{console.error(`${label}: ${error?.message||error}`);process.exit(1)}
+          const auth=await sb.auth.signInAnonymously({options:{data:{purpose:'tesis-direct-access-e2e'}}})
+          if(auth.error)fail('ANON_AUTH_FAILED',auth.error)
+          const user=auth.data.user
+          if(!user?.id)fail('ANON_AUTH_FAILED','No user returned')
+          console.log('ANON_AUTH_OK')
+
+          const p=await sb.from('tesis_projects').insert({owner_id:user.id,title:'E2E TEMPORAL - ELIMINAR'}).select('id,owner_id').single()
+          if(p.error)fail('PROJECT_INSERT_FAILED',p.error)
+          const projectId=p.data.id
+          console.log('PROJECT_INSERT_OK')
+
+          const t=await sb.from('tesis_tasks').insert({owner_id:user.id,project_id:projectId,title:'E2E TEMPORAL',status:'Por investigar',priority:'Baja'}).select('id,title').single()
+          if(t.error)fail('TASK_INSERT_FAILED',t.error)
+          const taskId=t.data.id
+          console.log('TASK_INSERT_OK')
+
+          const read=await sb.from('tesis_tasks').select('id,title,status').eq('id',taskId).single()
+          if(read.error||read.data?.title!=='E2E TEMPORAL')fail('TASK_READ_FAILED',read.error||'Unexpected row')
+          console.log('TASK_READ_OK')
+
+          const upd=await sb.from('tesis_tasks').update({status:'Investigando'}).eq('id',taskId).select('status').single()
+          if(upd.error||upd.data?.status!=='Investigando')fail('TASK_UPDATE_FAILED',upd.error||'Unexpected status')
+          console.log('TASK_UPDATE_OK')
+
+          const storagePath=`${user.id}/${projectId}/e2e-temporal.txt`
+          const upload=await sb.storage.from('tesis-files').upload(storagePath,new Blob(['tesis-e2e']),{contentType:'text/plain',upsert:false})
+          if(upload.error)fail('STORAGE_UPLOAD_FAILED',upload.error)
+          const signed=await sb.storage.from('tesis-files').createSignedUrl(storagePath,60)
+          if(signed.error||!signed.data?.signedUrl)fail('STORAGE_SIGNED_URL_FAILED',signed.error||'No signed URL')
+          console.log('PRIVATE_STORAGE_OK')
+          const removeFile=await sb.storage.from('tesis-files').remove([storagePath])
+          if(removeFile.error)fail('STORAGE_REMOVE_FAILED',removeFile.error)
+
+          const delTask=await sb.from('tesis_tasks').delete().eq('id',taskId)
+          if(delTask.error)fail('TASK_DELETE_FAILED',delTask.error)
+          const delProject=await sb.from('tesis_projects').delete().eq('id',projectId)
+          if(delProject.error)fail('PROJECT_DELETE_FAILED',delProject.error)
+          console.log('CRUD_CLEANUP_OK')
+          console.log('TESIS_DIRECT_ACCESS_E2E_OK')
+          NODE
