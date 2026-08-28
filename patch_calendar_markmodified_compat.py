@@ -3,7 +3,7 @@ from pathlib import Path
 p = Path('/tmp/index.html')
 s = p.read_text(encoding='utf-8')
 
-MARKER = 'MDD_CALENDAR_MARKMODIFIED_COMPAT_V2'
+MARKER = 'MDD_CALENDAR_MARKMODIFIED_COMPAT_V1'
 
 # Calendar PRO from an older layer can still call markModified() after db.put().
 # Supabase persistence is already completed by db.put(), so preserve markModified
@@ -36,4 +36,4 @@ assert 'state.calendarResize={id:h.dataset.resizeId,occurrence:h.dataset.occurre
 assert 'if(r.button)r.button.draggable=true' in s, 'No se restauró draggable tras resize.'
 
 p.write_text(s, encoding='utf-8')
-print('Calendar compatibility V2 applied:', len(s), 'bytes')
+print('Calendar compatibility V2 logic applied with stable marker:', len(s), 'bytes')
