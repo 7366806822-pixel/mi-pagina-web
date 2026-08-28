@@ -2178,7 +2178,7 @@ async function queueGoogleSync(id){
     r.googleCalendarId=r.googleCalendarId||"primary";
   }
   r.updatedAt=new Date().toISOString();
-  await db.put("records",r);if(typeof markModified==="function")await markModified();
+  await db.put("records",r);if(typeof markModified==="function")await (typeof markModified==="function"?markModified():Promise.resolve());
   renderMain();toast(isGoogleRecord(r)?"Cambio marcado para sincronizar con Google.":"Evento marcado para crear en Google Calendar.");
 }
 function renderGoogleCalendar(){
@@ -2328,7 +2328,7 @@ function renderProductivity(){
     <div class="grid-2"><section class="panel section-panel"><div class="section-head"><div><h3>Progreso por área</h3><p>Completados frente al volumen total registrado.</p></div></div><div class="progress-list">${areas.length?areas.map(x=>{const pct=Math.round(x.done/x.total*100);return `<div class="progress-item"><div><strong>${esc(x.a)}</strong><span>${x.done}/${x.total} · ${pct}%</span></div><div class="progress-track"><i style="width:${pct}%"></i></div></div>`}).join(""):`<div class="empty-state"><strong>Aún no hay suficiente información.</strong></div>`}</div></section>
     <section class="panel section-panel"><div class="section-head"><div><h3>Acciones inteligentes</h3><p>Atajos para ordenar tu sistema.</p></div></div><div class="action-grid"><button data-action="go-agenda">☷<strong>Revisar agenda</strong><span>Filtra y prioriza registros.</span></button><button data-action="go-day-planner">◷<strong>Planificar hoy</strong><span>Bloquea actividades por hora.</span></button><button data-action="export-ics">▦<strong>Google Calendar</strong><span>Exporta todas tus fechas a .ics.</span></button><button data-action="export-csv">⇩<strong>Exportar CSV</strong><span>Abre tus registros en Excel/Sheets.</span></button></div></section></div>`;
 }
-async function saveDailyNote(date){const notes={...(state.meta.dailyNotes||{})};notes[date]=($("dailyNoteInput")?.value||"").trim();await setMeta("dailyNotes",notes);await markModified();toast("Nota diaria guardada.")}
+async function saveDailyNote(date){const notes={...(state.meta.dailyNotes||{})};notes[date]=($("dailyNoteInput")?.value||"").trim();await setMeta("dailyNotes",notes);await (typeof markModified==="function"?markModified():Promise.resolve());toast("Nota diaria guardada.")}
 
 function renderAgenda(){
   $("mainView").innerHTML=`
@@ -2891,7 +2891,7 @@ async function saveRecord(){
     const idx=state.records.findIndex(x=>x.id===r.id);
     if(idx>=0)state.records[idx]=r;else state.records.push(r);
     await db.put("records",r);
-    await markModified();
+    await (typeof markModified==="function"?markModified():Promise.resolve());
     closeRecordDrawer();
     renderNav();renderMain();
     toast(idx>=0?"Registro actualizado.":"Registro guardado.");
@@ -2907,7 +2907,7 @@ async function moveToTrash(id){
   const idx=state.records.findIndex(x=>x.id===id);if(idx<0)return;
   const item={...state.records[idx],deletedAt:new Date().toISOString()};
   state.records.splice(idx,1);state.trash.unshift(item);state.lastDeletedId=id;
-  await db.delete("records",id);await db.put("trash",item);await markModified();
+  await db.delete("records",id);await db.put("trash",item);await (typeof markModified==="function"?markModified():Promise.resolve());
   renderNav();renderMain();toast("Elemento enviado a Papelera.",true);
 }
 async function undoDelete(){
@@ -2915,37 +2915,37 @@ async function undoDelete(){
   const idx=state.trash.findIndex(x=>x.id===id);if(idx<0)return;
   const item={...state.trash[idx]};delete item.deletedAt;
   state.trash.splice(idx,1);state.records.push(item);state.lastDeletedId=null;
-  await db.delete("trash",id);await db.put("records",item);await markModified();
+  await db.delete("trash",id);await db.put("records",item);await (typeof markModified==="function"?markModified():Promise.resolve());
   renderNav();renderMain();toast("Elemento restaurado.");
 }
 async function restoreFromTrash(id){
   const idx=state.trash.findIndex(x=>x.id===id);if(idx<0)return;
   const item={...state.trash[idx]};delete item.deletedAt;
   state.trash.splice(idx,1);state.records.push(item);
-  await db.delete("trash",id);await db.put("records",item);await markModified();
+  await db.delete("trash",id);await db.put("records",item);await (typeof markModified==="function"?markModified():Promise.resolve());
   renderNav();renderMain();toast("Elemento restaurado.");
 }
 function askPermanentDelete(id){
   const item=state.trash.find(x=>x.id===id);if(!item)return;
   openConfirm("Eliminar definitivamente",`Se borrará “${item.title}”. Esta acción no se puede deshacer.`,async()=>{
-    state.trash=state.trash.filter(x=>x.id!==id);await db.delete("trash",id);await markModified();renderMain();renderNav();toast("Elemento eliminado definitivamente.");
+    state.trash=state.trash.filter(x=>x.id!==id);await db.delete("trash",id);await (typeof markModified==="function"?markModified():Promise.resolve());renderMain();renderNav();toast("Elemento eliminado definitivamente.");
   },"Eliminar definitivamente");
 }
 async function toggleComplete(id){
   const r=state.records.find(x=>x.id===id);if(!r)return;
   r.status=r.status==="Completado"?"Pendiente":"Completado";r.updatedAt=new Date().toISOString();
-  await db.put("records",r);await markModified();renderNav();renderMain();
+  await db.put("records",r);await (typeof markModified==="function"?markModified():Promise.resolve());renderNav();renderMain();
 }
 async function duplicateRecord(id){
   const source=state.records.find(x=>x.id===id);if(!source)return;
   const copy=normRecord({...source,id:uid(),title:`Copia de ${source.title}`,status:"Pendiente",createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()});
-  state.records.push(copy);await db.put("records",copy);await markModified();renderNav();renderMain();toast("Registro duplicado.");
+  state.records.push(copy);await db.put("records",copy);await (typeof markModified==="function"?markModified():Promise.resolve());renderNav();renderMain();toast("Registro duplicado.");
 }
 async function moveRecordToday(id){
   const r=state.records.find(x=>x.id===id);if(!r)return;
   r.date=localISO();
   if(r.type==="hearing"){r.hearingDate=localISO();r.dueDate=localISO()}
-  r.updatedAt=new Date().toISOString();await db.put("records",r);await markModified();renderNav();renderMain();toast("Registro movido a hoy.");
+  r.updatedAt=new Date().toISOString();await db.put("records",r);await (typeof markModified==="function"?markModified():Promise.resolve());renderNav();renderMain();toast("Registro movido a hoy.");
 }
 async function trashCompleted(){
   const done=state.records.filter(r=>r.status==="Completado");
@@ -2956,13 +2956,13 @@ async function trashCompleted(){
       const tr={...r,deletedAt:new Date().toISOString()};state.trash.unshift(tr);
       await db.delete("records",r.id);await db.put("trash",tr);
     }
-    await markModified();renderNav();renderMain();toast("Completados enviados a Papelera.");
+    await (typeof markModified==="function"?markModified():Promise.resolve());renderNav();renderMain();toast("Completados enviados a Papelera.");
   },"Enviar a Papelera");
 }
 function emptyTrash(){
   if(!state.trash.length){toast("La Papelera ya está vacía.");return}
   openConfirm("Vaciar Papelera",`Se eliminarán definitivamente ${state.trash.length} elemento(s).`,async()=>{
-    state.trash=[];await db.clear("trash");await markModified();renderNav();renderMain();toast("Papelera vaciada.");
+    state.trash=[];await db.clear("trash");await (typeof markModified==="function"?markModified():Promise.resolve());renderNav();renderMain();toast("Papelera vaciada.");
   },"Vaciar definitivamente");
 }
 function openConfirm(title,text,action,label="Confirmar"){
@@ -3045,7 +3045,7 @@ async function saveHearingPanel(){
   const h=state.records.find(x=>x.id===state.hearingWorkspaceId);if(!h)return;
   h.hearingPanel=h.hearingPanel||{};
   qsa("[data-hearing-panel]",$("hearingPanelFields")).forEach(el=>h.hearingPanel[el.dataset.hearingPanel]=el.value);
-  h.updatedAt=new Date().toISOString();await db.put("records",h);await markModified();toast("Panel de audiencia guardado.");closeHearingWorkspace();
+  h.updatedAt=new Date().toISOString();await db.put("records",h);await (typeof markModified==="function"?markModified():Promise.resolve());toast("Panel de audiencia guardado.");closeHearingWorkspace();
 }
 function closeHearingWorkspace(){
   $("hearingOverlay").classList.remove("open");$("hearingOverlay").setAttribute("aria-hidden","true");state.hearingWorkspaceId=null;
@@ -3081,7 +3081,7 @@ function importBackupFile(file){
         state.records=records.map(normRecord);state.trash=trash.map(normRecord);state.meta={...state.meta,...meta};
         await db.replaceAll("records",state.records);await db.replaceAll("trash",state.trash);await db.clear("meta");
         for(const [key,value] of Object.entries(state.meta))await db.put("meta",{key,value});
-        await markModified();renderNav();renderMain();toast("Respaldo importado correctamente.");
+        await (typeof markModified==="function"?markModified():Promise.resolve());renderNav();renderMain();toast("Respaldo importado correctamente.");
       },"Importar y reemplazar");
     }catch(e){toast("El archivo no es un respaldo válido.");}
   };
@@ -3145,7 +3145,7 @@ async function saveProjectEditor(){
     for(const r of trashAffected){r.project=name;r.updatedAt=new Date().toISOString();await db.put("trash",r)}
     const assets={...(state.meta.brandAssets||{})}; if(assets[oldName]){assets[name]=assets[oldName];delete assets[oldName];await setMeta("brandAssets",assets)}
   }
-  await setMeta("projectCatalog",list);await markModified();
+  await setMeta("projectCatalog",list);await (typeof markModified==="function"?markModified():Promise.resolve());
   closeProjectEditor();renderNav();renderMain();toast(existing?"Proyecto actualizado.":"Proyecto creado y disponible en todo el sistema.");
   }finally{if(btn){btn.disabled=false;btn.textContent="Guardar proyecto"}}
 }
@@ -3155,7 +3155,7 @@ function askDeleteProject(){
   if(linked){$("projectFormError").textContent=`No se puede eliminar porque tiene ${linked} registro(s) vinculados. Cámbialo a “Archivado” o reasigna esos registros.`;return}
   closeProjectEditor();
   openConfirm("Eliminar proyecto",`Se eliminará “${p.name}” del catálogo de proyectos.`,async()=>{
-    const list=projectCatalog().filter(x=>x.id!==id);await setMeta("projectCatalog",list);await markModified();renderNav();renderMain();toast("Proyecto eliminado.");
+    const list=projectCatalog().filter(x=>x.id!==id);await setMeta("projectCatalog",list);await (typeof markModified==="function"?markModified():Promise.resolve());renderNav();renderMain();toast("Proyecto eliminado.");
   },"Eliminar proyecto");
 }
 function filterProjectManager(){
@@ -3166,14 +3166,14 @@ async function duplicateProject(id){
   const p=projectCatalog().find(x=>x.id===id);if(!p)return;
   const names=new Set(projectCatalog().map(x=>x.name.toLowerCase()));let base=`Copia de ${p.name}`,name=base,n=2;while(names.has(name.toLowerCase()))name=`${base} ${n++}`;
   const copy={...p,id:"project_"+uid(),name,status:"Activo",progress:0};
-  await setMeta("projectCatalog",[...projectCatalog(),copy]);await markModified();renderNav();renderMain();toast("Proyecto duplicado.");
+  await setMeta("projectCatalog",[...projectCatalog(),copy]);await (typeof markModified==="function"?markModified():Promise.resolve());renderNav();renderMain();toast("Proyecto duplicado.");
 }
 function goProjectManager(){navigate({label:"Mis proyectos",special:"projectManager",id:"project-manager",preferredType:"project"})}
 
 async function saveWorkspaceIdentity(){
   const name=($(`workspaceNameInput`)?.value||"MI DÍA A DÍA").trim()||"MI DÍA A DÍA";
   const subtitle=($(`workspaceSubtitleInput`)?.value||"Sistema Central · Edición Profesional").trim()||"Sistema Central · Edición Profesional";
-  await setMeta("workspaceName",name);await setMeta("workspaceSubtitle",subtitle);applyPreferences();await markModified();toast("Identidad actualizada.");
+  await setMeta("workspaceName",name);await setMeta("workspaceSubtitle",subtitle);applyPreferences();await (typeof markModified==="function"?markModified():Promise.resolve());toast("Identidad actualizada.");
 }
 
 /* ===================== Preferences ===================== */
@@ -3234,7 +3234,7 @@ function currentPrefill(){
 async function quickAdd(){
   const title=$("quickTitle")?.value.trim();if(!title){toast("Escribe una anotación rápida.");return}
   const r=normRecord({id:uid(),type:"task",title,area:$("quickArea").value,priority:"Media",status:"Pendiente",date:localISO(),createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()});
-  state.records.push(r);await db.put("records",r);await markModified();$("quickTitle").value="";renderNav();renderMain();toast("Anotación rápida guardada.");
+  state.records.push(r);await db.put("records",r);await (typeof markModified==="function"?markModified():Promise.resolve());$("quickTitle").value="";renderNav();renderMain();toast("Anotación rápida guardada.");
 }
 function handleAction(el){
   if(window.MDDCalendarPro && typeof window.MDDCalendarPro.handleAction==="function" && window.MDDCalendarPro.handleAction(el)) return;
@@ -3693,7 +3693,7 @@ init().catch(err=>{
     if(v.syncGoogle){r.googleCalendarId=r.googleCalendarId||"primary";r.googleSyncStatus=isGoogleRecord(r)?"pending_update":"pending_create";if(!r.source)r.source="local";}
     return normRecord(r);
   }
-  async function saveBaseRecord(r){ const idx=state.records.findIndex(x=>x.id===r.id);if(idx>=0)state.records[idx]=r;else state.records.push(r);await db.put("records",r);await markModified(); }
+  async function saveBaseRecord(r){ const idx=state.records.findIndex(x=>x.id===r.id);if(idx>=0)state.records[idx]=r;else state.records.push(r);await db.put("records",r);await (typeof markModified==="function"?markModified():Promise.resolve()); }
   async function saveCalendarEditor(forceSync=false){
     const v=collectEditor();if(forceSync)v.syncGoogle=true;const err=validateEditor(v);if(err){$("calendarEditorError").textContent=err;$("calendarEditorError").classList.add("show");return}
     const source=state.calendarEditingId?state.records.find(x=>x.id===state.calendarEditingId):null;const occurrence=state.calendarOccurrenceDate;const scope=$("calScope")?.value||"series";
@@ -3908,5 +3908,6 @@ init().catch(err=>{
 })();
 </script>
 
+<!-- MDD_CALENDAR_MARKMODIFIED_COMPAT_V1 -->
 </body>
 </html>
