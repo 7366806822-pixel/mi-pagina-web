@@ -17,6 +17,7 @@ on:
       - 'calendar_pro_css.p*'
       - 'patch_professional_ui.py'
       - 'patch_app_ready.py'
+      - 'patch_tesis_direct_access.py'
       - 'tesis-juridica-untrm/**'
       - '.github/workflows/build-index.yml'
   workflow_dispatch:
@@ -116,18 +117,32 @@ jobs:
           print(f'Validating {len(scripts)} inline script(s)')
           PY
           for file in /tmp/app-*.js; do node --check "$file"; done
-      - name: Stage thesis app for direct publishing
+      - name: Build thesis app with invisible automatic session
         shell: bash
         run: |
           set -euo pipefail
           rm -rf /tmp/tesis-app
           cp -R tesis-juridica-untrm /tmp/tesis-app
+          cat /tmp/tesis-app/gz/g1.txt /tmp/tesis-app/gz/g2.txt /tmp/tesis-app/gz/g3.txt /tmp/tesis-app/gz/g4.txt /tmp/tesis-app/gz/g5.txt | tr -d '\n\r' > /tmp/tesis.b64
+          base64 --decode /tmp/tesis.b64 > /tmp/tesis.js.gz
+          gzip -dc /tmp/tesis.js.gz > /tmp/tesis-source.js
+          python patch_tesis_direct_access.py /tmp/tesis-source.js
+          node --check /tmp/tesis-source.js
+          cp /tmp/tesis-source.js /tmp/tesis-app/source.js
+          printf "%s\n" "import './source.js?v=direct-access-v1';" > /tmp/tesis-app/app.js
           test -f /tmp/tesis-app/index.html
           test -f /tmp/tesis-app/app.js
+          test -f /tmp/tesis-app/source.js
           test -f /tmp/tesis-app/styles.css
           test -f /tmp/tesis-app/manifest.webmanifest
           test -f /tmp/tesis-app/sw.js
-          for f in g1.txt g2.txt g3.txt g4.txt g5.txt; do test -f "/tmp/tesis-app/gz/$f"; done
+          grep -q 'signInAnonymously' /tmp/tesis-app/source.js
+          grep -q 'ensureAutomaticSession' /tmp/tesis-app/source.js
+          ! grep -q 'signInWithPassword' /tmp/tesis-app/source.js
+          ! grep -q 'id="authForm"' /tmp/tesis-app/source.js
+          ! grep -q 'Correo electrónico' /tmp/tesis-app/source.js
+          ! grep -q 'Crear cuenta segura' /tmp/tesis-app/source.js
+          ! grep -q 'title="Cerrar sesión"' /tmp/tesis-app/source.js
           ! grep -q 'http-equiv="refresh"' /tmp/tesis-app/index.html
           ! grep -q "location.replace('../tesis-juridica-untrm/')" /tmp/tesis-app/index.html
       - name: Publish verified files to gh-pages branch
@@ -145,13 +160,17 @@ jobs:
           touch .nojekyll
           test -f tesis/index.html
           test -f tesis/app.js
+          test -f tesis/source.js
           test -f tesis/styles.css
           test -f tesis/manifest.webmanifest
           test -f tesis/sw.js
-          for f in g1.txt g2.txt g3.txt g4.txt g5.txt; do test -f "tesis/gz/$f"; done
           cmp -s tesis/index.html tesis-juridica-untrm/index.html
+          cmp -s tesis/source.js tesis-juridica-untrm/source.js
+          grep -q 'signInAnonymously' tesis/source.js
+          ! grep -q 'signInWithPassword' tesis/source.js
+          ! grep -q 'Correo electrónico' tesis/source.js
+          ! grep -q 'title="Cerrar sesión"' tesis/source.js
           ! grep -q 'http-equiv="refresh"' tesis/index.html
-          ! grep -q "location.replace('../tesis-juridica-untrm/')" tesis/index.html
           git add -A
-          git commit -m 'Publish direct thesis app at /tesis and legacy route' || true
+          git commit -m 'Publish thesis direct access without login barrier' || true
           git push origin gh-pages
