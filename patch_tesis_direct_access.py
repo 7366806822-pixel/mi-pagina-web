@@ -6,12 +6,37 @@ path = Path(sys.argv[1] if len(sys.argv) > 1 else '/tmp/tesis-source.js')
 s = path.read_text(encoding='utf-8')
 original = s
 
-# Replace the entire visible email/password auth flow with an invisible Supabase anonymous session.
+# Replace the visible email/password flow with a server-managed, passwordless session.
+# The service-role credential stays inside the Supabase Edge Function and is never shipped to the browser.
 pattern = re.compile(
     r"async function init\(\)\{.*?\n\}\n\nfunction renderAuth\(mode='login'\)\{.*?\n\}\n\nasync function ensureProject\(\)\{",
     re.S,
 )
 replacement = r'''let automaticSessionPromise=null;
+async function requestDirectSession(){
+  const response=await fetch(`${SUPABASE_URL}/functions/v1/tesis-direct-session`,{
+    method:'POST',
+    headers:{
+      'apikey':SUPABASE_KEY,
+      'content-type':'application/json',
+      'x-tesis-client':'tesis-untrm-direct-v1'
+    },
+    body:'{}',
+    cache:'no-store'
+  });
+  let payload={};
+  try{payload=await response.json();}catch{}
+  if(!response.ok||!payload?.token_hash)throw new Error('No se pudo obtener la sesión directa del servidor.');
+  const {data,error}=await sb.auth.verifyOtp({token_hash:payload.token_hash,type:'email'});
+  if(error)throw new Error(`No se pudo validar la sesión directa: ${error.message}`);
+  const session=data?.session||null;
+  const user=data?.user||session?.user||null;
+  if(!session||!user)throw new Error('Supabase no devolvió una sesión directa válida.');
+  state.session=session;
+  state.user=user;
+  return session;
+}
+
 async function ensureAutomaticSession(){
   if(automaticSessionPromise)return automaticSessionPromise;
   automaticSessionPromise=(async()=>{
@@ -22,14 +47,7 @@ async function ensureAutomaticSession(){
       state.user=current.session.user||null;
       return current.session;
     }
-    const {data,error}=await sb.auth.signInAnonymously();
-    if(error)throw new Error(`No se pudo iniciar el acceso directo: ${error.message}`);
-    const session=data?.session||null;
-    const user=data?.user||session?.user||null;
-    if(!session||!user)throw new Error('Supabase no devolvió una sesión automática válida.');
-    state.session=session;
-    state.user=user;
-    return session;
+    return await requestDirectSession();
   })();
   try{return await automaticSessionPromise;}finally{automaticSessionPromise=null;}
 }
@@ -85,15 +103,13 @@ if old_logout not in s:
     raise SystemExit('ERROR: logout binding not found')
 s = s.replace(old_logout, '', 1)
 
-# Keep settings accurate after switching to an invisible anonymous Supabase session.
-s = s.replace('<b>Autenticación</b><br><span class="muted">Supabase Auth activo.</span>', '<b>Acceso directo</b><br><span class="muted">Sesión automática de Supabase, sin correo ni contraseña.</span>')
-s = s.replace('<b>Row Level Security</b><br><span class="muted">Cada usuario accede solo a sus propios datos.</span>', '<b>Row Level Security</b><br><span class="muted">Cada sesión automática queda aislada por auth.uid().</span>')
+s = s.replace('<b>Autenticación</b><br><span class="muted">Supabase Auth activo.</span>', '<b>Acceso directo</b><br><span class="muted">Sesión técnica gestionada por servidor, sin correo ni contraseña visibles.</span>')
+s = s.replace('<b>Row Level Security</b><br><span class="muted">Cada usuario accede solo a sus propios datos.</span>', '<b>Row Level Security</b><br><span class="muted">Los datos continúan protegidos por auth.uid() y políticas RLS.</span>')
 
-# Hard verification: the production source must not contain the old login barrier.
-for forbidden in ['signInWithPassword','id="authForm"','Correo electrónico','Crear cuenta segura','title="Cerrar sesión"']:
+for forbidden in ['signInWithPassword','signInAnonymously','id="authForm"','Correo electrónico','Crear cuenta segura','title="Cerrar sesión"','SUPABASE_SERVICE_ROLE_KEY']:
     if forbidden in s:
-        raise SystemExit(f'ERROR: forbidden login artifact remains: {forbidden}')
-for required in ['signInAnonymously','ensureAutomaticSession','renderShell();','Acceso directo']:
+        raise SystemExit(f'ERROR: forbidden login/secret artifact remains: {forbidden}')
+for required in ['tesis-direct-session','verifyOtp','ensureAutomaticSession','renderShell();','Acceso directo']:
     if required not in s:
         raise SystemExit(f'ERROR: required direct-access marker missing: {required}')
 
