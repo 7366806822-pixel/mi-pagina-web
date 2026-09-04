@@ -1,0 +1,87 @@
+name: Repair LEX PERU 360 startup
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - ".github/workflows/repair-lex-peru-360.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Rebuild stable application files
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re, glob, base64, gzip, json
+
+          root = Path('lex-peru-360')
+          parts = []
+          for name in sorted(glob.glob(str(root / 'payload-*.js'))):
+              text = Path(name).read_text(encoding='utf-8')
+              m = re.search(r"\+'(.*)';\s*$", text, re.S)
+              if not m:
+                  raise RuntimeError(f'No se pudo leer {name}')
+              parts.append(m.group(1).replace('\n', ''))
+
+          packed = ''.join(parts)
+          payload = json.loads(gzip.decompress(base64.b64decode(packed)))
+          data = payload['data']
+          app = payload['app']
+
+          branches = data.get('branches', [])
+          if len(branches) != 138:
+              raise RuntimeError(f'Se esperaban 138 fichas y se encontraron {len(branches)}')
+          if branches[0].get('name') != 'Derecho constitucional':
+              raise RuntimeError('La primera ficha no coincide')
+          if branches[-1].get('name') != 'Ética y deontología jurídica':
+              raise RuntimeError('La última ficha no coincide')
+
+          safe = "const safeStore={get:(k)=>{try{return localStorage.getItem(k)}catch(e){return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}}};\n"
+          app = safe + app.replace('localStorage.getItem(', 'safeStore.get(').replace('localStorage.setItem(', 'safeStore.set(')
+
+          (root / 'data.js').write_text(
+              'window.LEX_DATA=' + json.dumps(data, ensure_ascii=False, separators=(',', ':')) + ';',
+              encoding='utf-8'
+          )
+          (root / 'app.js').write_text(app, encoding='utf-8')
+
+          index = '''<!doctype html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#07111f"><meta name="description" content="LEX PERÚ 360 — Sistema Integral del Derecho Peruano"><title>LEX PERÚ 360 | Sistema Integral del Derecho Peruano</title><link rel="stylesheet" href="styles.css?v=20260904-3"></head><body><div id="app"><div style="padding:40px;color:#edf4ff;font-family:system-ui">Cargando LEX PERÚ 360…</div></div><script>window.__LEX_BOOT_OK=false;window.addEventListener('error',function(e){console.error('LEX startup error',e.error||e.message)});window.addEventListener('unhandledrejection',function(e){console.error('LEX promise rejection',e.reason)});setTimeout(function(){var el=document.getElementById('app');if(!window.__LEX_BOOT_OK&&el&&el.innerText.indexOf('Cargando LEX PERÚ 360')>=0){el.innerHTML='<div style="padding:40px;color:#fff;font-family:system-ui"><h2>LEX PERÚ 360 no pudo iniciar</h2><p>La aplicación no terminó de cargar correctamente.</p><button onclick="location.reload()" style="padding:10px 14px;border-radius:8px;border:0;cursor:pointer">Reintentar</button></div>'}},8000);</script><script src="data.js?v=20260904-3"></script><script>if(!window.LEX_DATA||!Array.isArray(window.LEX_DATA.branches)||window.LEX_DATA.branches.length!==138){document.getElementById('app').innerHTML='<div style="padding:40px;color:#fff;font-family:system-ui"><h2>No se pudo cargar la base jurídica</h2><p>Se esperaban 138 fichas jurídicas.</p></div>';throw new Error('LEX_DATA inválido')}</script><script src="app.js?v=20260904-3"></script><script>if(document.querySelector('.app')){window.__LEX_BOOT_OK=true;console.info('LEX PERÚ 360 iniciado correctamente. Fichas:',window.LEX_DATA.branches.length)}</script></body></html>'''
+          (root / 'index.html').write_text(index, encoding='utf-8')
+          PY
+
+      - name: Validate JavaScript and 138 records
+        run: |
+          node --check lex-peru-360/data.js
+          node --check lex-peru-360/app.js
+          python - <<'PY'
+          from pathlib import Path
+          import re, json
+          s=Path('lex-peru-360/data.js').read_text(encoding='utf-8')
+          data=json.loads(s[len('window.LEX_DATA='):-1])
+          assert len(data['branches']) == 138
+          assert data['branches'][0]['name'] == 'Derecho constitucional'
+          assert data['branches'][-1]['name'] == 'Ética y deontología jurídica'
+          print('LEX PERÚ 360 validado: 138 fichas')
+          PY
+
+      - name: Commit repaired files
+        run: |
+          git config user.name "LEX PERU 360 Repair Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add lex-peru-360/index.html lex-peru-360/data.js lex-peru-360/app.js
+          if git diff --cached --quiet; then
+            echo "No hay cambios pendientes"
+          else
+            git commit -m "Fix LEX PERU 360 startup [skip ci]"
+            git push
+          fi
