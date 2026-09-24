@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#07131f" />
+  <meta name="description" content="Centro Maestro Jurídico Global: fuentes jurídicas oficiales, jurisprudencia, legislación, doctrina, IA e investigación." />
+  <title>Centro Maestro Jurídico Global</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Merriweather:wght@700&display=swap" rel="stylesheet">
+  <style>
+:root {
+  --bg: #08111b;
+  --bg-2: #0c1722;
+  --panel: #0c1d2d;
+  --panel-2: #10243a;
+  --panel-3: #0a1927;
+  --border: #21415d;
+  --border-soft: #17334a;
+  --text: #f5f7fb;
+  --muted: #9ab0c5;
+  --muted-2: #71899f;
+  --gold: #e4b84f;
+  --gold-2: #f3d47d;
+  --blue: #5da8ff;
+  --green: #53d38b;
+  --red: #ff6b78;
+  --purple: #9b7bff;
+  --shadow: 0 14px 40px rgba(0,0,0,.24);
+  --radius: 16px;
+  --sidebar: 252px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:linear-gradient(180deg,#07111a 0%,#0b141d 100%);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
+a{color:inherit;text-decoration:none}
+button,input,select{font:inherit}
+button{cursor:pointer}
+.app-shell{display:grid;grid-template-columns:var(--sidebar) 1fr;grid-template-rows:72px 1fr;min-height:100vh}
+.topbar{grid-column:1/-1;position:sticky;top:0;z-index:50;height:72px;background:#06131f;border-bottom:1px solid var(--border-soft);display:grid;grid-template-columns:minmax(290px,370px) 1fr auto;align-items:center;gap:18px;padding:0 18px;box-shadow:0 8px 28px rgba(0,0,0,.2)}
+.brand-block{display:flex;align-items:center;gap:12px;min-width:0}.brand-mark{width:42px;height:42px;border-radius:12px;background:linear-gradient(145deg,var(--gold-2),#9c7623);display:grid;place-items:center;color:#111b24;font-weight:900;box-shadow:inset 0 0 0 1px rgba(255,255,255,.18)}
+.brand-title{font-weight:800;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.brand-subtitle{font-size:10px;color:var(--muted);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.global-search-wrap{height:44px;background:#0a1b2c;border:1px solid #24445f;border-radius:12px;display:flex;align-items:center;padding:0 12px;gap:10px;max-width:100%;box-shadow:inset 0 1px 0 rgba(255,255,255,.02)}.search-icon{color:var(--muted);font-size:18px}.global-search{flex:1;background:transparent;border:0;outline:0;color:var(--text);min-width:0}.global-search::placeholder{color:#6d8194}.global-search-wrap kbd{border:1px solid #2a4b67;border-radius:6px;padding:2px 7px;color:#879caf;background:#0b1722;font-size:11px}.top-actions{display:flex;align-items:center;gap:12px}.date-block{display:flex;flex-direction:column;align-items:flex-end;gap:4px}.date-block strong{font-size:12px}.date-block span{font-size:10px;color:var(--muted)}
+.icon-button,.collapse-btn,.mobile-menu{border:1px solid var(--border);background:#0b1b2a;color:var(--text);border-radius:10px}.icon-button{width:38px;height:38px}.sidebar{grid-column:1;grid-row:2;position:sticky;top:72px;height:calc(100vh - 72px);background:#071827;border-right:1px solid var(--border-soft);overflow:auto;padding:14px 10px 18px;transition:.25s ease;z-index:30}.sidebar::-webkit-scrollbar{width:8px}.sidebar::-webkit-scrollbar-thumb{background:#496176;border-radius:20px}.sidebar-head{display:flex;align-items:center;justify-content:space-between;padding:5px 8px 10px;color:var(--gold-2);font-size:11px;font-weight:800;letter-spacing:.08em}.collapse-btn{width:28px;height:28px}.nav-list{display:flex;flex-direction:column;gap:3px}.nav-item{display:flex;align-items:center;gap:9px;color:#c5d1dc;padding:9px 10px;border-radius:8px;font-size:11px;line-height:1.3;border:1px solid transparent;text-align:left;background:transparent;width:100%}.nav-item:hover,.nav-item.active{background:#10243a;border-color:#254966;color:#fff}.nav-item .nav-index{color:var(--gold);font-weight:800;min-width:26px}.sidebar.collapsed{width:74px}.sidebar.collapsed .nav-label,.sidebar.collapsed .sidebar-head span{display:none}.sidebar.collapsed+.mobile-menu+.main-content{margin-left:-178px}
+.mobile-menu{display:none;position:fixed;bottom:18px;left:18px;z-index:60;width:46px;height:46px;box-shadow:var(--shadow)}
+.main-content{grid-column:2;grid-row:2;padding:22px 28px 36px;min-width:0;transition:.25s ease}.hero-panel{background:linear-gradient(135deg,#0f2740 0%,#0b1d2f 60%,#0a1a2a 100%);border:1px solid #244865;border-radius:20px;padding:30px 32px;box-shadow:var(--shadow)}.eyebrow{font-size:11px;letter-spacing:.16em;color:#ffd85d;font-weight:800;margin-bottom:8px}.hero-panel h1{font-family:Merriweather,serif;font-size:clamp(28px,3vw,44px);line-height:1.08;margin:0 0 10px}.hero-panel p{max-width:1100px;color:#b8c9d8;line-height:1.65;margin:0}.stats-grid{display:grid;grid-template-columns:repeat(6,minmax(120px,1fr));gap:10px;margin-top:22px}.stat-card{border:1px solid #284d69;background:#0a1b2b;border-radius:14px;padding:14px 16px}.stat-card strong{display:block;font-family:Merriweather,serif;font-size:22px}.stat-card span{font-size:10px;color:#91a9bd;display:block;margin-top:5px}
+.control-bar{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:16px 0}.filter-pills{display:flex;gap:7px;flex-wrap:wrap}.filter-pill{border:1px solid #315670;background:#0a1b29;color:#cdd9e3;border-radius:999px;padding:7px 11px;font-size:10px}.filter-pill.active{background:#183959;border-color:#5d89ac;color:white}.filter-pill .dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:5px}.dot.official{background:var(--blue)}.dot.free{background:var(--green)}.dot.freemium{background:var(--gold)}.dot.academic{background:var(--purple)}.dot.paid{background:var(--red)}.control-right{display:flex;gap:8px}.select-control,.outline-button,.need-select{background:#0a1b29;border:1px solid #2c4d68;color:#d9e4ec;border-radius:9px;padding:8px 10px;font-size:11px}.outline-button.active{border-color:var(--gold);color:var(--gold-2)}
+.content-section{margin-top:24px;scroll-margin-top:90px}.section-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:12px}.section-heading h2{font-size:16px;margin:0 0 4px;letter-spacing:.01em}.section-heading p{font-size:10px;color:#7fa5c2;margin:0}.count-badge{border:1px solid #2c4c67;border-radius:999px;padding:5px 9px;color:#a7bfd2;font-size:9px;white-space:nowrap}.quick-grid{display:grid;grid-template-columns:repeat(7,minmax(120px,1fr));gap:8px}.quick-card{border:1px solid #294e69;background:#0e2235;border-radius:13px;min-height:96px;padding:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-align:center;transition:.2s}.quick-card:hover{transform:translateY(-2px);border-color:#5f89a9;background:#112941}.quick-card img,.logo-image{width:38px;height:38px;border-radius:9px;object-fit:contain;background:#fff;padding:4px}.quick-card span{font-size:10px;font-weight:700}.resource-grid{display:grid;grid-template-columns:repeat(4,minmax(220px,1fr));gap:10px}.resource-card{background:#0d2032;border:1px solid #284c67;border-radius:14px;padding:12px;min-height:178px;display:flex;flex-direction:column;transition:.2s}.resource-card:hover{border-color:#5a86a5;transform:translateY(-2px);box-shadow:0 12px 28px rgba(0,0,0,.18)}.card-top{display:flex;gap:10px;align-items:flex-start}.card-title-wrap{min-width:0;flex:1}.card-title{font-size:13px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.card-meta{font-size:9px;color:#7fa0b8;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.fav-button{border:0;background:transparent;color:#6f89a0;font-size:19px;padding:0}.fav-button.active{color:var(--gold)}.card-description{font-size:10px;line-height:1.45;color:#aebfcd;margin:9px 0 10px;min-height:42px}.tag-row{display:flex;gap:5px;flex-wrap:wrap;margin-top:auto}.mini-tag{font-size:8px;border:1px solid #2d4e67;border-radius:999px;padding:4px 6px;color:#b8c9d6;background:#091927}.mini-tag.type-official{border-color:#2f5f83;color:#75b8ee}.mini-tag.type-academic{border-color:#5e4d92;color:#b9a4ff}.mini-tag.type-private{border-color:#685630;color:#f2c966}.mini-tag.type-informative{border-color:#45535e;color:#c1c9cf}.card-actions{display:flex;align-items:center;justify-content:space-between;margin-top:10px}.priority{font-size:8px;color:#92a8b9}.open-link{font-size:9px;border:1px solid #355975;border-radius:8px;padding:5px 8px;background:#10263a}.open-link:hover{border-color:#78a5c6}.empty-state{border:1px dashed #28465d;border-radius:13px;padding:20px;text-align:center;color:#738ea4;font-size:11px;background:#0a1722}.hidden{display:none!important}
+.recommendation-panel{border:1px solid #274861;background:#091a28;border-radius:16px;padding:16px}.recommendation-controls{display:grid;grid-template-columns:minmax(240px,340px) 1fr;gap:12px}.recommendation-result{border:1px solid #274861;border-radius:10px;background:#0d2031;padding:12px;color:#b7c9d6;font-size:11px;line-height:1.5}.recommendation-result strong{color:#fff}.method-grid{display:grid;grid-template-columns:repeat(5,minmax(180px,1fr));gap:9px}.method-card{border:1px solid #294a62;background:#0a1a28;border-radius:12px;padding:13px}.method-step{color:var(--gold-2);font-size:9px;font-weight:800}.method-card h3{font-size:12px;margin:6px 0}.method-card p{font-size:9px;color:#91a8b9;line-height:1.5;margin:0}.footer{margin-top:30px;border-top:1px solid #18354a;padding:20px 0 5px;display:flex;justify-content:space-between;gap:15px;color:#7390a7;font-size:10px}.footer strong{color:#b7c7d3}.toast{position:fixed;right:20px;bottom:20px;background:#10283d;border:1px solid #345c78;color:white;padding:11px 14px;border-radius:10px;box-shadow:var(--shadow);opacity:0;transform:translateY(12px);pointer-events:none;transition:.2s;z-index:90;font-size:11px}.toast.show{opacity:1;transform:translateY(0)}
+body.light{--bg:#eef3f8;--bg-2:#f7f9fb;--panel:#fff;--panel-2:#f4f8fb;--panel-3:#fff;--border:#c9d6e1;--border-soft:#d9e3eb;--text:#112231;--muted:#617789;--muted-2:#71899f;background:#edf2f6}.light .topbar,.light .sidebar{background:#f8fbfd}.light .global-search-wrap,.light .filter-pill,.light .select-control,.light .outline-button,.light .need-select{background:#fff;color:#183046}.light .hero-panel{background:linear-gradient(135deg,#15334f,#274f72)}.light .resource-card,.light .quick-card,.light .stat-card,.light .recommendation-result,.light .recommendation-panel,.light .method-card{background:#fff;color:#112231}.light .card-description,.light .hero-panel p{color:#557086}.light .section-heading p{color:#57778f}.light .nav-item{color:#294359}.light .nav-item:hover,.light .nav-item.active{background:#e8f1f8;color:#102336}.light .footer{color:#5d7182}
+@media(max-width:1300px){.quick-grid{grid-template-columns:repeat(5,minmax(120px,1fr))}.resource-grid{grid-template-columns:repeat(3,minmax(220px,1fr))}.stats-grid{grid-template-columns:repeat(3,1fr)}.method-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:980px){.app-shell{grid-template-columns:1fr}.topbar{grid-template-columns:1fr auto;height:auto;min-height:72px;padding:10px 14px}.brand-block{grid-column:1}.global-search-wrap{grid-column:1/-1;grid-row:2}.top-actions{grid-column:2;grid-row:1}.sidebar{position:fixed;left:-280px;top:0;height:100vh;width:260px!important;z-index:80;padding-top:82px;box-shadow:var(--shadow);transition:left .25s}.sidebar.open{left:0}.sidebar.collapsed{width:260px!important}.sidebar.collapsed .nav-label,.sidebar.collapsed .sidebar-head span{display:block}.mobile-menu{display:block}.main-content{grid-column:1;grid-row:2;padding:18px}.sidebar.collapsed+.mobile-menu+.main-content{margin-left:0}.quick-grid{grid-template-columns:repeat(4,1fr)}.resource-grid{grid-template-columns:repeat(2,minmax(220px,1fr))}.method-grid{grid-template-columns:repeat(2,1fr)}.recommendation-controls{grid-template-columns:1fr}}
+@media(max-width:640px){.brand-subtitle{display:none}.date-block{display:none}.topbar{gap:8px}.hero-panel{padding:22px 18px}.hero-panel h1{font-size:28px}.stats-grid{grid-template-columns:repeat(2,1fr)}.control-bar{align-items:flex-start;flex-direction:column}.control-right{width:100%}.select-control,.outline-button{flex:1}.quick-grid{grid-template-columns:repeat(2,1fr)}.resource-grid{grid-template-columns:1fr}.method-grid{grid-template-columns:1fr}.footer{flex-direction:column}.main-content{padding:14px}.section-heading{align-items:flex-start}.quick-card{min-height:86px}}
+
+</style>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand-block">
+        <div class="brand-mark">CMJ</div>
+        <div>
+          <div class="brand-title">CENTRO MAESTRO JURÍDICO GLOBAL</div>
+          <div class="brand-subtitle">Derecho · Jurisprudencia · Legislación · Doctrina · IA · Investigación</div>
+        </div>
+      </div>
+      <div class="global-search-wrap">
+        <span class="search-icon">⌕</span>
+        <input id="globalSearch" class="global-search" type="search" placeholder="Buscar jurisprudencia, legislación, doctrina, tribunales, IA, tratados, repositorios…" autocomplete="off" />
+        <kbd>/</kbd>
+      </div>
+      <div class="top-actions">
+        <div class="date-block">
+          <strong id="todayDate">—</strong>
+          <span id="resourceCountTop">0 recursos verificados</span>
+        </div>
+        <button id="themeButton" class="icon-button" aria-label="Cambiar apariencia" title="Cambiar apariencia">◐</button>
+      </div>
+    </header>
+
+    <aside id="sidebar" class="sidebar" aria-label="Navegación principal">
+      <div class="sidebar-head">
+        <span>NAVEGACIÓN</span>
+        <button id="collapseSidebar" class="collapse-btn" aria-label="Contraer menú">‹</button>
+      </div>
+      <nav id="navList" class="nav-list"></nav>
+    </aside>
+
+    <button id="mobileMenuButton" class="mobile-menu" aria-label="Abrir menú">☰</button>
+
+    <main class="main-content">
+      <section class="hero-panel">
+        <div class="eyebrow">CENTRO JURÍDICO PRIVADO DE INTELIGENCIA Y CONOCIMIENTO · 2026</div>
+        <h1>Una puerta de entrada seria al conocimiento jurídico mundial.</h1>
+        <p>Fuentes oficiales, jurisprudencia, legislación, doctrina, investigación académica, derecho comparado, inteligencia artificial jurídica y organismos internacionales reunidos en una plataforma profesional.</p>
+        <div id="statsGrid" class="stats-grid"></div>
+      </section>
+
+      <section class="control-bar" aria-label="Filtros">
+        <div id="filterPills" class="filter-pills"></div>
+        <div class="control-right">
+          <select id="sortSelect" class="select-control" aria-label="Ordenar recursos">
+            <option value="priority">Prioridad</option>
+            <option value="name">Nombre A-Z</option>
+            <option value="country">País</option>
+          </select>
+          <button id="favoritesOnlyButton" class="outline-button">★ Favoritos</button>
+        </div>
+      </section>
+
+      <section id="quickAccessSection" class="content-section">
+        <div class="section-heading">
+          <div>
+            <h2>00 · ACCESO RÁPIDO</h2>
+            <p>Herramientas prioritarias para el trabajo jurídico cotidiano.</p>
+          </div>
+          <span class="count-badge" id="quickCount">0 recursos</span>
+        </div>
+        <div id="quickGrid" class="quick-grid"></div>
+      </section>
+
+      <section id="favoritesSection" class="content-section">
+        <div class="section-heading">
+          <div>
+            <h2>★ FAVORITOS</h2>
+            <p>Recursos marcados para acceso inmediato.</p>
+          </div>
+          <span id="favoritesCount" class="count-badge">0 favoritos</span>
+        </div>
+        <div id="favoritesGrid" class="resource-grid favorites-grid"></div>
+        <div id="favoritesEmpty" class="empty-state">Aún no has marcado favoritos.</div>
+      </section>
+
+      <section id="recommendationSection" class="content-section recommendation-panel">
+        <div class="section-heading">
+          <div>
+            <h2>¿QUÉ NECESITAS INVESTIGAR?</h2>
+            <p>Selecciona un objetivo y el sistema priorizará las mejores fuentes.</p>
+          </div>
+        </div>
+        <div class="recommendation-controls">
+          <select id="needSelect" class="need-select">
+            <option value="">Selecciona una necesidad…</option>
+            <option value="ley">Encontrar una ley vigente</option>
+            <option value="casacion">Encontrar una casación</option>
+            <option value="constitucional">Buscar precedente constitucional</option>
+            <option value="tributario">Buscar jurisprudencia tributaria</option>
+            <option value="laboral">Buscar precedente laboral</option>
+            <option value="registral">Buscar jurisprudencia registral</option>
+            <option value="doctrina">Buscar doctrina</option>
+            <option value="tesis">Buscar tesis</option>
+            <option value="tratado">Buscar tratado internacional</option>
+            <option value="ddhh">Buscar derechos humanos</option>
+            <option value="comparado">Buscar derecho comparado</option>
+          </select>
+          <div id="recommendationResult" class="recommendation-result">Selecciona una opción para recibir una ruta de investigación.</div>
+        </div>
+      </section>
+
+      <section id="resourcesSection" class="content-section">
+        <div class="section-heading">
+          <div>
+            <h2 id="resourcesTitle">RECURSOS JURÍDICOS</h2>
+            <p id="resourcesSubtitle">Directorio profesional curado y organizado por especialidad.</p>
+          </div>
+          <span id="visibleCount" class="count-badge">0 recursos</span>
+        </div>
+        <div id="resourceGrid" class="resource-grid"></div>
+        <div id="noResults" class="empty-state hidden">No se encontraron recursos con los criterios seleccionados.</div>
+      </section>
+
+      <section id="methodSection" class="content-section method-section">
+        <div class="section-heading">
+          <div>
+            <h2>MÉTODO PROFESIONAL DE INVESTIGACIÓN JURÍDICA</h2>
+            <p>Flujo sugerido para reducir errores de vigencia, autoridad y citación.</p>
+          </div>
+        </div>
+        <div id="methodGrid" class="method-grid"></div>
+      </section>
+
+      <footer class="footer">
+        <strong>Centro Maestro Jurídico Global</strong>
+        <span>La IA localiza y analiza; el abogado verifica y cita en la fuente oficial.</span>
+      </footer>
+    </main>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script>
+window.CMJ_RESOURCES = [
+  {id:'spij',name:'SPIJ',officialName:'Sistema Peruano de Información Jurídica',institution:'MINJUSDH',country:'Perú',url:'https://spij.minjus.gob.pe/',domain:'spij.minjus.gob.pe',type:'Oficial',access:'Mixto',category:'Legislación peruana',areas:['Constitucional','Penal','Civil','Administrativo','Laboral','Tributario','Empresarial'],features:['Legislación','Jurisprudencia'],priority:100,quick:true,description:'Legislación nacional sistematizada, concordada y actualizada; referencia esencial para verificar vigencia normativa.'},
+  {id:'elperuano',name:'El Peruano',officialName:'Diario Oficial El Peruano',institution:'Editora Perú',country:'Perú',url:'https://diariooficial.elperuano.pe/normas/',domain:'elperuano.pe',type:'Oficial',access:'Gratuito',category:'Legislación peruana',areas:['Todas'],features:['Legislación'],priority:99,quick:true,description:'Publicación oficial de normas y repositorio de Normas Legales para comprobar texto y fecha de publicación.'},
+  {id:'congreso',name:'Congreso · Legislación',officialName:'Archivo Digital de la Legislación del Perú',institution:'Congreso de la República',country:'Perú',url:'https://www.leyes.congreso.gob.pe/',domain:'congreso.gob.pe',type:'Oficial',access:'Gratuito',category:'Legislación peruana',areas:['Todas'],features:['Legislación'],priority:96,quick:true,description:'Archivo legislativo oficial con leyes, decretos legislativos, decretos de urgencia y legislación histórica.'},
+  {id:'pj',name:'Poder Judicial',officialName:'Jurisprudencia Nacional Sistematizada',institution:'Poder Judicial del Perú',country:'Perú',url:'https://jurisprudencia.pj.gob.pe/',domain:'pj.gob.pe',type:'Oficial',access:'Gratuito',category:'Jurisprudencia peruana',areas:['Penal','Civil','Laboral','Constitucional','Familia','Comercial'],features:['Jurisprudencia'],priority:100,quick:true,description:'Buscador oficial de jurisprudencia, casaciones, acuerdos plenarios y resoluciones judiciales.'},
+  {id:'sinoe',name:'SINOE · Casilla Electrónica',officialName:'Sistema de Notificaciones Electrónicas',institution:'Poder Judicial del Perú',country:'Perú',url:'https://casillas.pj.gob.pe/sinoe/login.xhtml',domain:'pj.gob.pe',type:'Oficial',access:'Gratuito',category:'Herramientas judiciales',areas:['Procesal','Litigación','Notificaciones'],features:['Notificaciones','Casilla electrónica'],priority:98,quick:true,description:'Sistema oficial del Poder Judicial para revisar notificaciones y gestionar la casilla electrónica judicial.'},
+  {id:'cej',name:'CEJ · Consulta de Expedientes',officialName:'Consulta de Expedientes Judiciales',institution:'Poder Judicial del Perú',country:'Perú',url:'https://cej.pj.gob.pe/cej/forms/busquedaform.html',domain:'pj.gob.pe',type:'Oficial',access:'Gratuito',category:'Herramientas judiciales',areas:['Procesal','Litigación','Seguimiento de expedientes'],features:['Expedientes','Consulta judicial'],priority:98,quick:true,description:'Consulta oficial de expedientes judiciales del Poder Judicial para seguimiento de procesos y actuaciones.'},
+  {id:'tc',name:'Tribunal Constitucional · Iura',officialName:'Iura · Jurisprudencia Constitucional',institution:'Tribunal Constitucional',country:'Perú',url:'https://ia.tc.gob.pe/jurisprudencia',domain:'tc.gob.pe',type:'Oficial',access:'Gratuito',category:'Derecho constitucional',areas:['Constitucional','Procesal constitucional','Derechos humanos'],features:['Jurisprudencia','IA'],priority:100,quick:true,description:'Buscador oficial de jurisprudencia constitucional con herramientas de búsqueda asistida.'},
+  {id:'mp',name:'Ministerio Público',officialName:'Ministerio Público - Fiscalía de la Nación',institution:'Ministerio Público',country:'Perú',url:'https://www.gob.pe/mpfn',domain:'gob.pe',type:'Oficial',access:'Gratuito',category:'Derecho penal',areas:['Penal','Procesal penal'],features:['Publicaciones','Jurisprudencia'],priority:87,description:'Portal institucional con publicaciones, normativa y recursos de interés fiscal y penal.'},
+  {id:'tribunal-fiscal',name:'Tribunal Fiscal',officialName:'Tribunal Fiscal',institution:'MEF',country:'Perú',url:'https://www.gob.pe/57954-tribunal-fiscal',domain:'gob.pe',type:'Oficial',access:'Gratuito',category:'Derecho tributario',areas:['Tributario'],features:['Jurisprudencia'],priority:96,description:'Jurisprudencia tributaria, resoluciones de observancia obligatoria y acuerdos de Sala Plena.'},
+  {id:'sunat',name:'SUNAT',officialName:'Superintendencia Nacional de Aduanas y de Administración Tributaria',institution:'SUNAT',country:'Perú',url:'https://www.sunat.gob.pe/',domain:'sunat.gob.pe',type:'Oficial',access:'Gratuito',category:'Derecho tributario',areas:['Tributario','Aduanero'],features:['Legislación','Criterios'],priority:94,description:'Normativa tributaria y aduanera, informes, resoluciones y servicios oficiales.'},
+  {id:'sunarp',name:'SUNARP',officialName:'Superintendencia Nacional de los Registros Públicos',institution:'SUNARP',country:'Perú',url:'https://www.gob.pe/sunarp',domain:'gob.pe',type:'Oficial',access:'Gratuito',category:'Derecho notarial y registral',areas:['Registral','Notarial','Civil','Empresarial'],features:['Jurisprudencia','Precedentes'],priority:95,description:'Información registral, precedentes, resoluciones y servicios del sistema registral peruano.'},
+  {id:'tribunal-registral',name:'Tribunal Registral',officialName:'Resoluciones del Tribunal Registral',institution:'SUNARP',country:'Perú',url:'https://www.gob.pe/institucion/sunarp/colecciones/18891-resoluciones-del-tribunal-registral',domain:'gob.pe',type:'Oficial',access:'Gratuito',category:'Derecho notarial y registral',areas:['Registral','Notarial','Civil','Empresarial'],features:['Jurisprudencia','Precedentes'],priority:97,description:'Compendio oficial de resoluciones del Tribunal Registral y acceso a precedentes de observancia obligatoria.'},
+  {id:'julio',name:'JULIO · SUNARP',officialName:'JULIO - herramienta de inteligencia artificial registral',institution:'SUNARP',country:'Perú',url:'https://www.gob.pe/sunarp',domain:'gob.pe',type:'Oficial',access:'Gratuito',category:'IA jurídica',areas:['Registral','Notarial'],features:['IA','Jurisprudencia','Precedentes'],priority:91,description:'Herramienta oficial de apoyo para consulta de resoluciones, precedentes y criterios registrales.'},
+  {id:'servir',name:'SERVIR',officialName:'Autoridad Nacional del Servicio Civil',institution:'SERVIR',country:'Perú',url:'https://www.gob.pe/servir',domain:'gob.pe',type:'Oficial',access:'Gratuito',category:'Empleo público',areas:['Administrativo','Laboral público','Disciplinario'],features:['Jurisprudencia','Precedentes'],priority:92,description:'Portal institucional de SERVIR con normativa, orientación, publicaciones y acceso a recursos sobre empleo público y servicio civil.'},
+  {id:'tsc',name:'Tribunal del Servicio Civil',officialName:'Tribunal del Servicio Civil',institution:'SERVIR',country:'Perú',url:'https://www.gob.pe/institucion/servir/tema/tribunal-del-servicio-civil',domain:'gob.pe',type:'Oficial',access:'Gratuito',category:'Empleo público',areas:['Administrativo','Laboral público','Disciplinario'],features:['Jurisprudencia','Precedentes'],priority:96,description:'Resoluciones, precedentes y criterios del Tribunal del Servicio Civil en empleo público y régimen disciplinario.'},
+  {id:'oece',name:'OECE',officialName:'Organismo Especializado para las Contrataciones Públicas Eficientes',institution:'OECE',country:'Perú',url:'https://www.gob.pe/oece',domain:'gob.pe',type:'Oficial',access:'Gratuito',category:'Contratación pública',areas:['Administrativo','Contrataciones'],features:['Legislación','Resoluciones'],priority:92,description:'Portal institucional vigente para contratación pública, normativa, resoluciones y orientación especializada.'},
+  {id:'tcp',name:'Tribunal de Contrataciones Públicas',officialName:'Tribunal de Contrataciones Públicas',institution:'OECE',country:'Perú',url:'https://www.gob.pe/institucion/oece/colecciones/68030-resoluciones-del-tribunal-de-contrataciones-publicas',domain:'gob.pe',type:'Oficial',access:'Gratuito',category:'Contratación pública',areas:['Administrativo','Contrataciones','Sancionador'],features:['Jurisprudencia','Resoluciones'],priority:96,description:'Compendio oficial de resoluciones del Tribunal de Contrataciones Públicas del OECE.'},
+  {id:'indecopi',name:'Indecopi',officialName:'Instituto Nacional de Defensa de la Competencia y de la Protección de la Propiedad Intelectual',institution:'Indecopi',country:'Perú',url:'https://www.gob.pe/indecopi',domain:'gob.pe',type:'Oficial',access:'Gratuito',category:'Protección al consumidor',areas:['Consumidor','Competencia','Propiedad intelectual','Barreras burocráticas'],features:['Jurisprudencia','IA'],priority:95,description:'Resoluciones administrativas en consumidor, competencia, propiedad intelectual y barreras burocráticas.'},
+  {id:'indecopi-ai',name:'Indecopi · Buscador IA',officialName:'Buscador Semántico de Resoluciones',institution:'Indecopi',country:'Perú',url:'https://indecopi.iasearch.io/',domain:'indecopi.iasearch.io',type:'Oficial',access:'Gratuito',category:'IA jurídica',areas:['Consumidor','Competencia','Propiedad intelectual','Administrativo'],features:['IA','Jurisprudencia','Búsqueda semántica'],priority:96,description:'Buscador semántico oficial potenciado con IA para consultar resoluciones del Indecopi mediante preguntas y palabras clave.'},
+  {id:'sunafil',name:'SUNAFIL',officialName:'Superintendencia Nacional de Fiscalización Laboral',institution:'SUNAFIL',country:'Perú',url:'https://www.gob.pe/sunafil',domain:'gob.pe',type:'Oficial',access:'Gratuito',category:'Derecho laboral',areas:['Laboral','Inspección laboral'],features:['Jurisprudencia','Precedentes'],priority:94,description:'Portal oficial de fiscalización laboral, normativa inspectiva, orientación y servicios de SUNAFIL.'},
+  {id:'tfl',name:'Tribunal de Fiscalización Laboral',officialName:'Tribunal de Fiscalización Laboral',institution:'SUNAFIL',country:'Perú',url:'https://www.gob.pe/sunafil',domain:'gob.pe',type:'Oficial',access:'Gratuito',category:'Derecho laboral',areas:['Laboral','Inspección laboral','Administrativo sancionador'],features:['Jurisprudencia','Precedentes'],priority:96,description:'Última instancia administrativa especializada en fiscalización laboral; publica resoluciones y precedentes inspectivos.'},
+  {id:'oefa',name:'OEFA',officialName:'Organismo de Evaluación y Fiscalización Ambiental',institution:'OEFA',country:'Perú',url:'https://www.gob.pe/oefa',domain:'gob.pe',type:'Oficial',access:'Gratuito',category:'Derecho ambiental',areas:['Ambiental','Administrativo sancionador'],features:['Jurisprudencia'],priority:89,description:'Portal oficial de fiscalización ambiental, normativa, servicios y acceso a resoluciones administrativas de OEFA.'},
+  {id:'tfa',name:'Tribunal de Fiscalización Ambiental',officialName:'Tribunal de Fiscalización Ambiental',institution:'OEFA',country:'Perú',url:'https://www.gob.pe/institucion/oefa/colecciones/1716-resoluciones-del-tribunal-de-fiscalizacion-ambiental-tfa',domain:'gob.pe',type:'Oficial',access:'Gratuito',category:'Derecho ambiental',areas:['Ambiental','Administrativo sancionador'],features:['Jurisprudencia','Resoluciones'],priority:94,description:'Compendio oficial de resoluciones del Tribunal de Fiscalización Ambiental.'},
+  {id:'jne',name:'JNE',officialName:'Jurado Nacional de Elecciones',institution:'JNE',country:'Perú',url:'https://www.jne.gob.pe/',domain:'jne.gob.pe',type:'Oficial',access:'Gratuito',category:'Derecho electoral',areas:['Electoral','Constitucional'],features:['Jurisprudencia'],priority:89,description:'Resoluciones y jurisprudencia electoral del órgano constitucional electoral.'},
+  {id:'osiptel',name:'OSIPTEL',officialName:'Organismo Supervisor de Inversión Privada en Telecomunicaciones',institution:'OSIPTEL',country:'Perú',url:'https://www.osiptel.gob.pe/',domain:'osiptel.gob.pe',type:'Oficial',access:'Gratuito',category:'Telecomunicaciones',areas:['Telecomunicaciones','Consumidor'],features:['Legislación','Resoluciones'],priority:86,description:'Normativa, resoluciones y criterios regulatorios del sector telecomunicaciones.'},
+  {id:'sbs',name:'SBS',officialName:'Superintendencia de Banca, Seguros y AFP',institution:'SBS',country:'Perú',url:'https://www.sbs.gob.pe/',domain:'sbs.gob.pe',type:'Oficial',access:'Gratuito',category:'Derecho financiero y bancario',areas:['Bancario','Seguros','AFP','Financiero'],features:['Legislación','Resoluciones'],priority:89,description:'Normativa oficial y criterios regulatorios del sistema financiero, seguros y pensiones.'},
+  {id:'contraloria',name:'Contraloría',officialName:'Contraloría General de la República',institution:'Contraloría',country:'Perú',url:'https://www.gob.pe/contraloria',domain:'gob.pe',type:'Oficial',access:'Gratuito',category:'Derecho administrativo',areas:['Administrativo','Control gubernamental','Responsabilidad funcional'],features:['Informes'],priority:90,description:'Informes de control, resultados de servicios de control y recursos sobre responsabilidad pública.'},
+  {id:'defensoria',name:'Defensoría del Pueblo',officialName:'Defensoría del Pueblo',institution:'Defensoría del Pueblo',country:'Perú',url:'https://www.defensoria.gob.pe/',domain:'defensoria.gob.pe',type:'Oficial',access:'Gratuito',category:'Derechos humanos',areas:['Derechos humanos','Constitucional','Administrativo'],features:['Informes','Estudios'],priority:89,description:'Informes defensoriales y estudios sobre derechos fundamentales, administración y políticas públicas.'},
+  {id:'alicia',name:'ALICIA',officialName:'Acceso Libre a Información Científica para la Innovación',institution:'CONCYTEC',country:'Perú',url:'https://alicia.concytec.gob.pe/',domain:'concytec.gob.pe',type:'Académica',access:'Gratuito',category:'Tesis y repositorios',areas:['Investigación académica'],features:['Tesis','Artículos'],priority:91,description:'Repositorio nacional de acceso abierto para tesis, artículos y producción académica peruana.'},
+  {id:'renati',name:'RENATI',officialName:'Registro Nacional de Trabajos de Investigación',institution:'SUNEDU',country:'Perú',url:'https://renati.sunedu.gob.pe/',domain:'sunedu.gob.pe',type:'Académica',access:'Gratuito',category:'Tesis y repositorios',areas:['Investigación académica'],features:['Tesis'],priority:90,description:'Registro nacional para localizar tesis y trabajos de investigación universitarios peruanos.'},
+  {id:'lp',name:'LP Derecho',officialName:'LP Derecho',institution:'LP',country:'Perú',url:'https://lpderecho.pe/',domain:'lpderecho.pe',type:'Informativa',access:'Freemium',category:'Doctrina jurídica',areas:['Todas'],features:['Jurisprudencia','Doctrina','Noticias','Modelos'],priority:93,quick:true,description:'Portal jurídico de alta utilidad práctica para descubrir jurisprudencia, normas comentadas, noticias y modelos.'},
+  {id:'jurispe',name:'Juris.pe',officialName:'Juris.pe · Derecho a un clic',institution:'JURIS.PE S.A.C.',country:'Perú',url:'https://juris.pe/',domain:'juris.pe',type:'Informativa',access:'Freemium',category:'Doctrina jurídica',areas:['Penal','Procesal Penal','Civil','Procesal Civil','Familia','Constitucional','Administrativo','Laboral','Notarial y registral'],features:['Jurisprudencia','Doctrina','Blog','Cursos','Libros'],priority:92,quick:true,description:'Plataforma jurídica peruana con jurisprudencia, artículos, cursos, diplomados y libros. Útil para localizar y estudiar contenidos jurídicos; las resoluciones deben verificarse en la fuente oficial correspondiente.'},
+  {id:'alejandrius-penal',name:'ALEJANDRIUS · Penal',officialName:'ALEJANDRIUS Inteligencia Jurídica',institution:'Alejandrius',country:'Perú',url:'https://alejandrius.com/category/penal/',domain:'alejandrius.com',type:'Informativa',access:'Gratuito',category:'Derecho penal',areas:['Penal','Procesal Penal','Penal Militar Policial','Ejecución Penal','Responsabilidad Penal de Adolescentes'],features:['Legislación','Herramientas','Códigos','Plazos','Calculadoras jurídicas'],priority:92,quick:true,description:'Plataforma peruana de inteligencia jurídica con acceso libre a códigos penales, procesales y militar-policiales, además de herramientas como prescripción penal, calendario de plazos, reparación civil y sistema de tercios.'},
+  {id:'alejandrius-apps',name:'ALEJANDRIUS · App Store',officialName:'Caja de herramientas ALEJANDRIUS',institution:'Alejandrius',country:'Perú',url:'https://alejandrius.com/category/apps/',domain:'alejandrius.com',type:'Informativa',access:'Gratuito',category:'Herramientas jurídicas y calculadoras',areas:['Penal','Procesal Penal','Procesal','Gestión documental','Estudio'],features:['Calculadoras jurídicas','Generadores','PDF','Directorio','Trivia'],priority:94,quick:true,description:'Índice de aplicaciones jurídicas gratuitas de Alejandrius: calculadoras penales, plazos, generadores y utilidades PDF.'},
+  {id:'alej-reparacion-civil',name:'ALEJANDRIUS · Reparación Civil',officialName:'Calculadora de Reparación Civil por Conducción en Estado de Ebriedad',institution:'Alejandrius',country:'Perú',url:'https://alejandrius.com/calculadora-para-la-reparacion-civil-por-conduccion-en-estado-de-ebriedad/',domain:'alejandrius.com',type:'Informativa',access:'Gratuito',category:'Herramientas jurídicas y calculadoras',areas:['Penal','Conducción en estado de ebriedad','Reparación civil'],features:['Calculadora jurídica'],priority:91,description:'Calculadora orientativa de reparación civil para casos de conducción en estado de ebriedad. El resultado debe contrastarse con la normativa y el caso concreto.'},
+  {id:'alej-calendario-plazos',name:'ALEJANDRIUS · Calendario de Plazos',officialName:'Alejandrius Calendar · Contabilizar Plazos Procesales',institution:'Alejandrius',country:'Perú',url:'https://alejandrius.com/alejandrius-calendar-plazos-procesales/',domain:'alejandrius.com',type:'Informativa',access:'Gratuito',category:'Herramientas jurídicas y calculadoras',areas:['Procesal','Civil','Penal','Laboral','Administrativo'],features:['Calendario','Plazos procesales'],priority:94,quick:true,description:'Herramienta para contabilizar plazos procesales y fechas de vencimiento. La verificación final debe hacerse con la norma y calendario oficial aplicable.'},
+  {id:'alej-prescripcion-penal',name:'ALEJANDRIUS · Prescripción Penal',officialName:'Calculadora de Prescripción de la Acción Penal',institution:'Alejandrius',country:'Perú',url:'https://alejandrius.com/calculadora-de-prescripcion-de-la-accion-penal-herramienta-online-gratuita/',domain:'alejandrius.com',type:'Informativa',access:'Gratuito',category:'Herramientas jurídicas y calculadoras',areas:['Penal','Procesal Penal'],features:['Calculadora jurídica','Prescripción'],priority:95,quick:true,description:'Calculadora de prescripción de la acción penal. Úsala como apoyo y verifica siempre reglas especiales, interrupción, suspensión y normativa vigente.'},
+  {id:'alej-alcohol-sangre',name:'ALEJANDRIUS · Alcohol en Sangre',officialName:'Calculadora de Alcohol en Sangre · Método de Widmark',institution:'Alejandrius',country:'Perú',url:'https://alejandrius.com/calculadora-de-alcohol-en-sangre-metodo-de-widmark/',domain:'alejandrius.com',type:'Informativa',access:'Gratuito',category:'Herramientas jurídicas y calculadoras',areas:['Penal','Conducción en estado de ebriedad'],features:['Calculadora jurídica'],priority:89,description:'Estimador basado en el método de Widmark. No reemplaza el dosaje etílico oficial ni una pericia.'},
+  {id:'alej-determinacion-escalonada',name:'ALEJANDRIUS · Determinación Escalonada',officialName:'Calculadora del Esquema Escalonado Penal',institution:'Alejandrius',country:'Perú',url:'https://alejandrius.com/calculadora-determinacion-penal-escalonada/',domain:'alejandrius.com',type:'Informativa',access:'Gratuito',category:'Herramientas jurídicas y calculadoras',areas:['Penal','Determinación judicial de la pena'],features:['Calculadora jurídica','Pena'],priority:94,description:'Calculadora de determinación judicial de la pena mediante esquema escalonado, para apoyo en análisis penal.'},
+  {id:'alej-dias-multa',name:'ALEJANDRIUS · Días Multa',officialName:'Calculadora de Días Multa',institution:'Alejandrius',country:'Perú',url:'https://alejandrius.com/calculadora-de-dias-multa/',domain:'alejandrius.com',type:'Informativa',access:'Gratuito',category:'Herramientas jurídicas y calculadoras',areas:['Penal','Determinación de pena'],features:['Calculadora jurídica','Días multa'],priority:93,description:'Calculadora orientativa para días-multa en materia penal, sujeta a verificación de datos y reglas legales aplicables.'},
+  {id:'alej-numerador-pdf',name:'ALEJANDRIUS · Numerador PDF',officialName:'Numerador de PDF Gratis Online · Añadir Números de Página',institution:'Alejandrius',country:'Perú',url:'https://alejandrius.com/numerador-foliador-alejandrius/',domain:'alejandrius.com',type:'Informativa',access:'Gratuito',category:'Herramientas jurídicas y calculadoras',areas:['Gestión documental','Litigación','Ofimática jurídica'],features:['PDF','Numeración','Foliación'],priority:96,quick:true,description:'Aplicación web gratuita para numerar o foliar documentos PDF, útil para expedientes, anexos y documentos académicos.'},
+  {id:'alej-terminacion-anticipada',name:'ALEJANDRIUS · Terminación Anticipada',officialName:'Calculadora de Confesión Sincera y Terminación Anticipada',institution:'Alejandrius',country:'Perú',url:'https://alejandrius.com/calculadora-de-confesion-y-terminacion-anticipada/',domain:'alejandrius.com',type:'Informativa',access:'Gratuito',category:'Herramientas jurídicas y calculadoras',areas:['Procesal Penal','Penal'],features:['Calculadora jurídica','Reducción de pena'],priority:95,description:'Calculadora de reducción de pena vinculada a confesión sincera y terminación anticipada, para apoyo en estrategia penal.'},
+  {id:'alej-conclusion-anticipada',name:'ALEJANDRIUS · Conclusión Anticipada',officialName:'Calculadora de Conclusión Anticipada',institution:'Alejandrius',country:'Perú',url:'https://alejandrius.com/calculadora-de-conclusion-anticipada/',domain:'alejandrius.com',type:'Informativa',access:'Gratuito',category:'Herramientas jurídicas y calculadoras',areas:['Procesal Penal','Penal'],features:['Calculadora jurídica','Reducción de pena'],priority:94,description:'Calculadora orientativa de reducción de pena por conclusión anticipada.'},
+  {id:'alej-sistema-tercios',name:'ALEJANDRIUS · Sistema de Tercios',officialName:'Calculadora de Determinación Penal en Tercios',institution:'Alejandrius',country:'Perú',url:'https://alejandrius.com/calculadora-de-determinacion-penal-en-tercios/',domain:'alejandrius.com',type:'Informativa',access:'Gratuito',category:'Herramientas jurídicas y calculadoras',areas:['Penal','Determinación judicial de la pena'],features:['Calculadora jurídica','Sistema de tercios'],priority:95,description:'Herramienta para apoyar la determinación de la pena mediante el sistema de tercios.'},
+  {id:'alej-disposiciones-consentidas',name:'ALEJANDRIUS · Disposiciones Consentidas',officialName:'Generador de Disposiciones Consentidas',institution:'Alejandrius',country:'Perú',url:'https://alejandrius.com/generador-de-disposiciones-consentidas/',domain:'alejandrius.com',type:'Informativa',access:'Gratuito',category:'Herramientas jurídicas y calculadoras',areas:['Procesal Penal','Fiscalía','Gestión documental'],features:['Generador jurídico'],priority:88,description:'Generador de apoyo para disposiciones consentidas. El contenido generado debe ser revisado y adaptado antes de su uso.'},
+  {id:'alej-disposiciones-fiscales',name:'ALEJANDRIUS · Generador Fiscal',officialName:'Generador de Disposiciones Fiscales Automáticas · D. ENGINE',institution:'Alejandrius',country:'Perú',url:'https://alejandrius.com/generador-de-disposiciones-fiscales-automaticas/',domain:'alejandrius.com',type:'Informativa',access:'Gratuito',category:'Herramientas jurídicas y calculadoras',areas:['Procesal Penal','Fiscalía','Redacción jurídica'],features:['IA','Generador jurídico'],priority:92,description:'Generador automatizado de disposiciones fiscales. Requiere revisión jurídica humana y contraste con el expediente.'},
+  {id:'alej-imagen-pdf',name:'ALEJANDRIUS · Imagen en PDF',officialName:'Insertar Imagen en PDF ALEJANDRIUS',institution:'Alejandrius',country:'Perú',url:'https://alejandrius.com/insertar-imagen-en-pdf-alejandrius/',domain:'alejandrius.com',type:'Informativa',access:'Gratuito',category:'Herramientas jurídicas y calculadoras',areas:['Gestión documental','Ofimática jurídica'],features:['PDF','Edición documental'],priority:90,description:'Utilidad web para insertar imágenes en documentos PDF.'},
+  {id:'alej-trivia',name:'ALEJANDRIUS · Trivia Jurídica',officialName:'TRIVIA ALEJANDRIUS',institution:'Alejandrius',country:'Perú',url:'https://alejandrius.com/trivia-alejandrius/',domain:'alejandrius.com',type:'Informativa',access:'Gratuito',category:'Herramientas jurídicas y calculadoras',areas:['Estudio','Formación jurídica'],features:['Trivia','Estudio'],priority:82,description:'Herramienta lúdica de repaso y formación jurídica.'},
+  {id:'alej-directorio',name:'ALEJANDRIUS · Directorio',officialName:'Directorio Telefónico ALEJANDRIUS',institution:'Alejandrius',country:'Perú',url:'https://alejandrius.com/directorio-telefonico/',domain:'alejandrius.com',type:'Informativa',access:'Gratuito',category:'Herramientas jurídicas y calculadoras',areas:['Directorio','Gestión jurídica'],features:['Directorio','Contactos'],priority:86,description:'Directorio telefónico y de contactos de utilidad para gestión jurídica.'},
+  {id:'alej-conversion-pena',name:'ALEJANDRIUS · Conversión de Pena',officialName:'Calculadora de Conversión de Pena Privativa de Libertad',institution:'Alejandrius',country:'Perú',url:'https://alejandrius.com/calculadora-de-conversion-de-pena-privativa-de-libertad/',domain:'alejandrius.com',type:'Informativa',access:'Gratuito',category:'Herramientas jurídicas y calculadoras',areas:['Penal','Ejecución Penal','Determinación de pena'],features:['Calculadora jurídica','Conversión de pena'],priority:94,description:'Calculadora orientativa para conversión de pena privativa de libertad. Verifica siempre límites legales y restricciones del caso concreto.'},
+  {id:'mp-denuncia',name:'MPFN · Registro de Denuncia',officialName:'Registro de Denuncias en Línea',institution:'Ministerio Público - Fiscalía de la Nación',country:'Perú',url:'https://portal.mpfn.gob.pe/denuncias-en-linea',domain:'mpfn.gob.pe',type:'Oficial',access:'Gratuito',category:'Herramientas judiciales',areas:['Penal','Procesal Penal','Denuncias'],features:['Trámite en línea','Denuncias'],priority:96,description:'Acceso oficial del Ministerio Público para el registro de denuncias en línea.'},
+  {id:'mp-consulta-caso',name:'MPFN · Consulta de Caso Fiscal',officialName:'Consulta Ciudadana de Casos Fiscales',institution:'Ministerio Público - Fiscalía de la Nación',country:'Perú',url:'https://portal.mpfn.gob.pe/consulta-ciudadana',domain:'mpfn.gob.pe',type:'Oficial',access:'Gratuito',category:'Herramientas judiciales',areas:['Penal','Procesal Penal','Seguimiento fiscal'],features:['Consulta fiscal','Seguimiento'],priority:97,quick:true,description:'Acceso oficial para consultar información disponible sobre casos fiscales.'},
+  {id:'gaceta',name:'Gaceta Jurídica',officialName:'Gaceta Jurídica',institution:'Gaceta Jurídica',country:'Perú',url:'https://www.gacetajuridica.com.pe/',domain:'gacetajuridica.com.pe',type:'Privada',access:'Pago',category:'Doctrina jurídica',areas:['Todas'],features:['Doctrina','Jurisprudencia','Libros'],priority:92,description:'Doctrina especializada, publicaciones jurídicas y jurisprudencia comentada.'},
+  {id:'normas-online',name:'Normas Legales Online',officialName:'Normas Legales Online',institution:'Gaceta Jurídica',country:'Perú',url:'https://www.normaslegalesonline.pe/',domain:'normaslegalesonline.pe',type:'Privada',access:'Pago',category:'Bases jurídicas profesionales',areas:['Todas'],features:['Legislación','Jurisprudencia','Doctrina'],priority:90,description:'Base privada de legislación, jurisprudencia, doctrina y concordancias para investigación profesional.'},
+  {id:'checkpoint',name:'Checkpoint Perú',officialName:'Thomson Reuters Checkpoint',institution:'Thomson Reuters',country:'Perú',url:'https://www.thomsonreuters.com.pe/es/soluciones-tributarias-contables/checkpoint.html',domain:'thomsonreuters.com.pe',type:'Privada',access:'Pago',category:'Bases jurídicas profesionales',areas:['Tributario','Laboral','Empresarial'],features:['Legislación','Jurisprudencia','Doctrina','Modelos'],priority:93,description:'Plataforma profesional especializada en tributario, laboral, contable y empresarial.'},
+  {id:'proview',name:'Thomson Reuters ProView',officialName:'ProView legal and tax e-books',institution:'Thomson Reuters',country:'Internacional',url:'https://www.thomsonreuters.com/en/products/proview',domain:'thomsonreuters.com',type:'Privada',access:'Pago',category:'Libros y bibliotecas',areas:['Todas','Tributario','Empresarial'],features:['Libros','Biblioteca digital','Anotaciones'],priority:89,description:'Biblioteca profesional de e-books jurídicos y tributarios con lectura multidispositivo, anotaciones y marcadores.'},
+  {id:'vlex',name:'vLex Perú',officialName:'vLex',institution:'vLex',country:'Internacional',url:'https://vlex.com/coverage/peru',domain:'vlex.com',type:'Privada',access:'Pago',category:'Bases jurídicas profesionales',areas:['Todas','Derecho comparado'],features:['Legislación','Jurisprudencia','Doctrina','IA'],priority:97,quick:true,description:'Base jurídica internacional con cobertura peruana, jurisprudencia, legislación, doctrina y herramientas de IA.'},
+  {id:'vincent',name:'Vincent AI',officialName:'Vincent AI',institution:'vLex',country:'Internacional',url:'https://vlex.com/products/vincent-ai',domain:'vlex.com',type:'Privada',access:'Pago',category:'IA jurídica',areas:['Todas','Derecho comparado'],features:['IA','Jurisprudencia','Legislación'],priority:94,description:'IA jurídica profesional integrada con la base documental de vLex y cobertura multijurisdiccional.'},
+  {id:'corteidh',name:'Corte IDH',officialName:'Corte Interamericana de Derechos Humanos',institution:'OEA',country:'Internacional',url:'https://www.corteidh.or.cr/',domain:'corteidh.or.cr',type:'Oficial',access:'Gratuito',category:'Derechos humanos',areas:['Derechos humanos','Internacional'],features:['Jurisprudencia'],priority:98,quick:true,description:'Sentencias, opiniones consultivas y resoluciones del tribunal interamericano de derechos humanos.'},
+  {id:'cidh',name:'CIDH',officialName:'Comisión Interamericana de Derechos Humanos',institution:'OEA',country:'Internacional',url:'https://www.oas.org/es/cidh/',domain:'oas.org',type:'Oficial',access:'Gratuito',category:'Derechos humanos',areas:['Derechos humanos','Internacional'],features:['Informes','Casos'],priority:96,description:'Informes de admisibilidad, fondo, soluciones amistosas y documentación del Sistema Interamericano.'},
+  {id:'icj',name:'CIJ / ICJ',officialName:'Corte Internacional de Justicia',institution:'Naciones Unidas',country:'Internacional',url:'https://www.icj-cij.org/',domain:'icj-cij.org',type:'Oficial',access:'Gratuito',category:'Derecho internacional público',areas:['Derecho internacional público'],features:['Jurisprudencia','Opiniones consultivas'],priority:97,description:'Tribunal principal de Naciones Unidas para controversias interestatales y opiniones consultivas.'},
+  {id:'icc',name:'CPI / ICC',officialName:'Corte Penal Internacional',institution:'ICC',country:'Internacional',url:'https://www.icc-cpi.int/',domain:'icc-cpi.int',type:'Oficial',access:'Gratuito',category:'Derecho penal internacional',areas:['Penal internacional'],features:['Casos','Jurisprudencia'],priority:97,description:'Casos y documentos oficiales sobre genocidio, lesa humanidad, crímenes de guerra y agresión.'},
+  {id:'un-treaty',name:'UN Treaty Collection',officialName:'United Nations Treaty Collection',institution:'Naciones Unidas',country:'Internacional',url:'https://treaties.un.org/',domain:'treaties.un.org',type:'Oficial',access:'Gratuito',category:'Tratados internacionales',areas:['Internacional'],features:['Tratados'],priority:95,description:'Colección oficial de tratados depositados ante Naciones Unidas.'},
+  {id:'un-legal',name:'ONU · Derecho Internacional',officialName:'Codification and Progressive Development of International Law',institution:'Naciones Unidas · Office of Legal Affairs',country:'Internacional',url:'https://legal.un.org/cod/',domain:'legal.un.org',type:'Oficial',access:'Gratuito',category:'Derecho internacional público',areas:['Internacional','Derecho internacional público'],features:['Documentos','Codificación','Publicaciones'],priority:95,description:'Portal jurídico oficial de Naciones Unidas sobre codificación, desarrollo progresivo y publicaciones de derecho internacional.'},
+  {id:'ohchr-juris',name:'OHCHR · JURIS',officialName:'OHCHR Jurisprudence Database',institution:'Oficina del Alto Comisionado de las Naciones Unidas para los Derechos Humanos',country:'Internacional',url:'https://juris.ohchr.org/',domain:'ohchr.org',type:'Oficial',access:'Gratuito',category:'Derechos humanos',areas:['Derechos humanos','Internacional'],features:['Jurisprudencia','Comités ONU'],priority:95,description:'Base oficial de jurisprudencia de los órganos de tratados de derechos humanos de Naciones Unidas.'},
+  {id:'hudoc',name:'HUDOC',officialName:'HUDOC Database',institution:'Tribunal Europeo de Derechos Humanos',country:'Internacional',url:'https://hudoc.echr.coe.int/',domain:'echr.coe.int',type:'Oficial',access:'Gratuito',category:'Jurisprudencia internacional',areas:['Derechos humanos','Derecho comparado'],features:['Jurisprudencia'],priority:95,description:'Base oficial de jurisprudencia del Tribunal Europeo de Derechos Humanos.'},
+  {id:'eurlex',name:'EUR-Lex',officialName:'EUR-Lex',institution:'Unión Europea',country:'Unión Europea',url:'https://eur-lex.europa.eu/',domain:'europa.eu',type:'Oficial',access:'Gratuito',category:'Legislación comparada',areas:['Derecho UE','Comparado'],features:['Legislación','Jurisprudencia','Tratados'],priority:94,description:'Portal oficial del Derecho de la Unión Europea: tratados, legislación y jurisprudencia.'},
+  {id:'curia',name:'CURIA',officialName:'Tribunal de Justicia de la Unión Europea',institution:'TJUE',country:'Unión Europea',url:'https://curia.europa.eu/',domain:'curia.europa.eu',type:'Oficial',access:'Gratuito',category:'Jurisprudencia internacional',areas:['Derecho UE','Comparado'],features:['Jurisprudencia'],priority:93,description:'Jurisprudencia y documentación oficial del Tribunal de Justicia de la Unión Europea.'},
+  {id:'wipolex',name:'WIPO Lex',officialName:'WIPO Lex',institution:'OMPI',country:'Internacional',url:'https://www.wipo.int/wipolex/',domain:'wipo.int',type:'Oficial',access:'Gratuito',category:'Propiedad intelectual',areas:['Propiedad intelectual','Comparado'],features:['Legislación','Tratados','Jurisprudencia'],priority:91,description:'Base mundial de legislación, tratados y decisiones en propiedad intelectual.'},
+  {id:'uncitral',name:'UNCITRAL · CNUDMI',officialName:'Comisión de las Naciones Unidas para el Derecho Mercantil Internacional',institution:'Naciones Unidas',country:'Internacional',url:'https://uncitral.un.org/es/texts',domain:'uncitral.un.org',type:'Oficial',access:'Gratuito',category:'Comercio internacional',areas:['Comercio internacional','Arbitraje','Insolvencia','Comercio electrónico'],features:['Convenios','Leyes modelo','Reglas','Guías'],priority:94,description:'Textos oficiales de la CNUDMI sobre arbitraje, compraventa internacional, insolvencia, comercio electrónico y derecho mercantil internacional.'},
+  {id:'clout',name:'CLOUT · UNCITRAL',officialName:'Case Law on UNCITRAL Texts',institution:'UNCITRAL',country:'Internacional',url:'https://uncitral.un.org/es/case_law',domain:'uncitral.un.org',type:'Oficial',access:'Gratuito',category:'Comercio internacional',areas:['Arbitraje','Comercio internacional'],features:['Jurisprudencia'],priority:92,description:'Jurisprudencia internacional relativa a textos de UNCITRAL, arbitraje y comercio internacional.'},
+  {id:'icsid',name:'CIADI / ICSID',officialName:'International Centre for Settlement of Investment Disputes',institution:'Banco Mundial',country:'Internacional',url:'https://icsid.worldbank.org/',domain:'worldbank.org',type:'Oficial',access:'Gratuito',category:'Arbitraje internacional',areas:['Arbitraje','Inversiones'],features:['Casos','Laudos'],priority:92,description:'Casos y materiales de arbitraje internacional de inversiones.'},
+  {id:'wto',name:'OMC · Disputas',officialName:'WTO Dispute Settlement',institution:'OMC',country:'Internacional',url:'https://www.wto.org/english/tratop_e/dispu_e/dispu_e.htm',domain:'wto.org',type:'Oficial',access:'Gratuito',category:'Comercio internacional',areas:['Comercio internacional'],features:['Casos','Informes'],priority:90,description:'Sistema oficial de solución de diferencias de la Organización Mundial del Comercio.'},
+  {id:'normlex',name:'NORMLEX · OIT',officialName:'NORMLEX',institution:'Organización Internacional del Trabajo',country:'Internacional',url:'https://normlex.ilo.org/',domain:'ilo.org',type:'Oficial',access:'Gratuito',category:'Derecho laboral',areas:['Laboral internacional','Derechos humanos'],features:['Normas','Convenios','Observaciones'],priority:91,description:'Base de normas internacionales del trabajo, convenios, ratificaciones y observaciones.'},
+  {id:'worldlii',name:'WorldLII',officialName:'World Legal Information Institute',institution:'WorldLII',country:'Internacional',url:'https://www.worldlii.org/',domain:'worldlii.org',type:'Académica',access:'Gratuito',category:'Derecho comparado',areas:['Comparado','Internacional'],features:['Legislación','Jurisprudencia'],priority:88,description:'Portal de libre acceso a legislación y jurisprudencia de múltiples jurisdicciones.'},
+  {id:'scholar',name:'Google Scholar',officialName:'Google Scholar',institution:'Google',country:'Internacional',url:'https://scholar.google.com/',domain:'scholar.google.com',type:'Académica',access:'Gratuito',category:'Investigación académica',areas:['Todas'],features:['Artículos','Tesis','Citas'],priority:94,quick:true,description:'Buscador académico multidisciplinario útil para localizar artículos, tesis, libros y citas.'},
+  {id:'dialnet',name:'Dialnet',officialName:'Dialnet',institution:'Fundación Dialnet',country:'España',url:'https://dialnet.unirioja.es/',domain:'dialnet.unirioja.es',type:'Académica',access:'Freemium',category:'Investigación académica',areas:['Todas'],features:['Artículos','Tesis','Revistas'],priority:92,description:'Base académica iberoamericana especialmente útil para doctrina jurídica en español.'},
+  {id:'scielo',name:'SciELO',officialName:'Scientific Electronic Library Online',institution:'SciELO',country:'Internacional',url:'https://scielo.org/',domain:'scielo.org',type:'Académica',access:'Gratuito',category:'Investigación académica',areas:['Todas'],features:['Artículos','Revistas'],priority:90,description:'Biblioteca científica de acceso abierto con importante cobertura latinoamericana.'},
+  {id:'ssrn',name:'SSRN',officialName:'Social Science Research Network',institution:'Elsevier',country:'Internacional',url:'https://www.ssrn.com/',domain:'ssrn.com',type:'Académica',access:'Freemium',category:'Investigación académica',areas:['Derecho','Ciencias sociales'],features:['Papers','Preprints'],priority:89,description:'Red de papers y preprints útil para investigación jurídica contemporánea.'},
+  {id:'heinonline',name:'HeinOnline',officialName:'HeinOnline',institution:'William S. Hein & Co.',country:'Estados Unidos',url:'https://home.heinonline.org/',domain:'heinonline.org',type:'Privada',access:'Pago',category:'Bases académicas profesionales',areas:['Todas','Internacional'],features:['Revistas','Tratados','Libros'],priority:95,description:'Base académica jurídica premium con revistas, tratados, libros y colecciones históricas.'},
+  {id:'hein-ai',name:'HeinOnline · IA y NLP',officialName:'AI Summaries y herramientas NLP de HeinOnline',institution:'HeinOnline',country:'Estados Unidos',url:'https://help.heinonline.com/kb/machine-learning-and-natural-language-processing-tools-in-heinonline/',domain:'heinonline.org',type:'Privada',access:'Pago',category:'IA jurídica',areas:['Investigación académica','Todas'],features:['IA','NLP','PathFinder','AI Summaries'],priority:90,description:'Herramientas de inteligencia artificial y procesamiento de lenguaje natural de HeinOnline para mejorar descubrimiento y síntesis de investigación jurídica.'},
+  {id:'westlaw',name:'Westlaw Precision',officialName:'Westlaw Precision',institution:'Thomson Reuters',country:'Internacional',url:'https://legal.thomsonreuters.com/en/products/westlaw',domain:'thomsonreuters.com',type:'Privada',access:'Pago',category:'Bases jurídicas profesionales',areas:['Comparado','Estados Unidos'],features:['Jurisprudencia','Legislación','Doctrina','IA'],priority:94,description:'Investigación jurídica profesional con KeyCite y herramientas de IA, especialmente fuerte en EE. UU.'},
+  {id:'cocounsel',name:'CoCounsel Legal',officialName:'CoCounsel Legal',institution:'Thomson Reuters',country:'Internacional',url:'https://www.thomsonreuters.com/cocounsel',domain:'thomsonreuters.com',type:'Privada',access:'Pago',category:'IA jurídica',areas:['Litigación','Corporativo','Investigación'],features:['IA','Investigación','Análisis documental','Redacción'],priority:94,description:'Asistente jurídico profesional de IA de Thomson Reuters integrado con fuentes y flujos de trabajo legales especializados.'},
+  {id:'lexis',name:'Lexis+ with Protégé',officialName:'Lexis+ with Protégé',institution:'LexisNexis',country:'Internacional',url:'https://www.lexisnexis.com/en-us/products/lexis-plus-protege.page',domain:'lexisnexis.com',type:'Privada',access:'Pago',category:'IA jurídica',areas:['Comparado','Estados Unidos'],features:['Jurisprudencia','Legislación','Doctrina','IA'],priority:93,description:'Plataforma de investigación jurídica e IA con fuentes primarias, secundarias y citación asistida.'},
+  {id:'harvey',name:'Harvey',officialName:'Harvey AI',institution:'Harvey',country:'Internacional',url:'https://www.harvey.ai/',domain:'harvey.ai',type:'Privada',access:'Pago',category:'IA jurídica',areas:['Corporativo','Comparado'],features:['IA','Análisis documental','Drafting'],priority:91,description:'IA jurídica empresarial orientada a investigación, redacción, revisión y flujos documentales.'},
+  {id:'chatgpt',name:'ChatGPT',officialName:'ChatGPT',institution:'OpenAI',country:'Internacional',url:'https://chatgpt.com/',domain:'chatgpt.com',type:'Privada',access:'Freemium',category:'IA jurídica',areas:['Todas'],features:['IA','Investigación','Redacción'],priority:90,quick:true,description:'Asistente general de IA útil para análisis, estructuración y redacción, siempre sujeto a verificación jurídica oficial.'},
+  {id:'puclaw',name:'Derecho PUCP',officialName:'Derecho PUCP',institution:'Pontificia Universidad Católica del Perú',country:'Perú',url:'https://revistas.pucp.edu.pe/index.php/derechopucp/',domain:'pucp.edu.pe',type:'Académica',access:'Gratuito',category:'Revistas jurídicas',areas:['Todas'],features:['Doctrina','Artículos'],priority:91,description:'Revista jurídica académica peruana con artículos especializados y revisión académica.'},
+  {id:'themis',name:'THĒMIS',officialName:'THĒMIS Revista de Derecho',institution:'PUCP',country:'Perú',url:'https://revistas.pucp.edu.pe/index.php/themis/',domain:'pucp.edu.pe',type:'Académica',access:'Gratuito',category:'Revistas jurídicas',areas:['Todas'],features:['Doctrina','Artículos'],priority:89,description:'Revista jurídica universitaria de acceso abierto con amplia cobertura temática.'},
+  {id:'derechoysociedad',name:'Derecho & Sociedad',officialName:'Derecho & Sociedad',institution:'PUCP',country:'Perú',url:'https://revistas.pucp.edu.pe/index.php/derechoysociedad/',domain:'pucp.edu.pe',type:'Académica',access:'Gratuito',category:'Revistas jurídicas',areas:['Todas'],features:['Doctrina','Artículos'],priority:88,description:'Revista académica jurídica peruana de acceso abierto con contenidos doctrinarios especializados.'}
+];
+
+</script>
+<script>
+(() => {
+  const resources = window.CMJ_RESOURCES || [];
+  const state = {
+    query: '', filter: 'Todos', category: 'Todos', sort: 'priority', favoritesOnly: false,
+    favorites: new Set(JSON.parse(localStorage.getItem('cmj_favorites_fallback') || '[]')),
+    supabaseReady: false
+  };
+
+  const categoryNav = [
+    'Acceso rápido','Fuentes oficiales del Perú','Legislación peruana','Jurisprudencia peruana','Herramientas judiciales','Herramientas jurídicas y calculadoras','Derecho constitucional','Derecho penal','Derecho procesal penal','Derecho civil','Derecho procesal civil','Derecho de familia','Derecho administrativo','Derecho laboral','Empleo público','Derecho tributario','Derecho empresarial y corporativo','Derecho notarial y registral','Contratación pública','Protección al consumidor','Competencia','Propiedad intelectual','Derecho ambiental','Derecho electoral','Derecho financiero y bancario','Telecomunicaciones','Derechos humanos','Derecho internacional público','Derecho penal internacional','Jurisprudencia internacional','Arbitraje internacional','Comercio internacional','Derecho comparado','Legislación comparada','Tratados internacionales','Doctrina jurídica','Revistas jurídicas','Tesis y repositorios','Investigación académica','Libros y bibliotecas','Bases académicas profesionales','IA jurídica','Bases jurídicas profesionales','Favoritos','Método de investigación'
+  ];
+
+  const filters = [
+    ['Todos',''],['Oficial','official'],['Gratuito','free'],['Freemium','freemium'],['Académica','academic'],['Privada','paid'],['IA','official'],['Perú','official'],['Internacional','academic']
+  ];
+
+  const recommendations = {
+    ley: ['SPIJ','El Peruano','Congreso · Legislación'],
+    casacion: ['Poder Judicial','vLex Perú','LP Derecho','Juris.pe'],
+    constitucional: ['Tribunal Constitucional · Iura','SPIJ','vLex Perú'],
+    tributario: ['Tribunal Fiscal','SUNAT','Checkpoint Perú'],
+    laboral: ['Tribunal de Fiscalización Laboral','SUNAFIL','Poder Judicial','Checkpoint Perú'],
+    registral: ['Tribunal Registral','SUNARP','JULIO · SUNARP','vLex Perú'],
+    doctrina: ['Derecho PUCP','Gaceta Jurídica','vLex Perú','Dialnet','HeinOnline'],
+    tesis: ['RENATI','ALICIA','Google Scholar'],
+    tratado: ['UN Treaty Collection','ONU · Derecho Internacional','EUR-Lex','WIPO Lex'],
+    ddhh: ['Corte IDH','CIDH','OHCHR · JURIS','Tribunal Constitucional · Iura','HUDOC'],
+    comparado: ['vLex Perú','WorldLII','EUR-Lex','HUDOC','HeinOnline']
+  };
+
+  const methods = [
+    ['PASO 1','Identificar el problema jurídico','Hechos, pretensión, institución jurídica y preguntas concretas.'],
+    ['PASO 2','Localizar legislación vigente','SPIJ → El Peruano → Congreso.'],
+    ['PASO 3','Buscar jurisprudencia judicial','Poder Judicial: casaciones, acuerdos plenarios y resoluciones.'],
+    ['PASO 4','Revisar jurisprudencia constitucional','Iura / Tribunal Constitucional para precedentes y derechos fundamentales.'],
+    ['PASO 5','Buscar precedente administrativo','Tribunal Fiscal, TSC, TFL, Tribunal Registral, Indecopi, TCP, TFA u OSIPTEL.'],
+    ['PASO 6','Buscar doctrina','Derecho PUCP, Gaceta, vLex, Dialnet, SciELO y HeinOnline.'],
+    ['PASO 7','Comparar internacionalmente','Corte IDH, CIDH, ICJ, HUDOC, WorldLII, EUR-Lex.'],
+    ['PASO 8','Verificar documento original','Confirmar PDF oficial, número, órgano, fecha y fundamento jurídico.'],
+    ['PASO 9','Construir matriz jurídica','Fuente, autoridad, tesis, fundamento relevante y posición.'],
+    ['PASO 10','Redactar','Hechos → norma → jurisprudencia → doctrina → subsunción → conclusión → petitorio.']
+  ];
+
+  const $ = (id) => document.getElementById(id);
+  const normalize = (s) => (s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  const favicon = (r) => `https://www.google.com/s2/favicons?domain=${encodeURIComponent(r.domain)}&sz=64`;
+  const typeClass = (type) => ({Oficial:'type-official',Académica:'type-academic',Privada:'type-private',Informativa:'type-informative'}[type] || '');
+  const accessLabel = (a) => a || 'No verificado';
+
+  function today() {
+    const d = new Date();
+    return new Intl.DateTimeFormat('es-PE',{day:'numeric',month:'short',year:'numeric'}).format(d).replace('.','');
+  }
+
+  function renderNav() {
+    $('navList').innerHTML = categoryNav.map((label, idx) => `
+      <button class="nav-item ${idx===0?'active':''}" data-category="${label}">
+        <span class="nav-index">${String(idx).padStart(2,'0')}</span><span class="nav-label">${label.toUpperCase()}</span>
+      </button>`).join('');
+    document.querySelectorAll('.nav-item').forEach(btn => btn.addEventListener('click', () => {
+      document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      const cat = btn.dataset.category;
+      if (cat === 'Acceso rápido') { $('quickAccessSection').scrollIntoView({behavior:'smooth'}); return; }
+      if (cat === 'Favoritos') { $('favoritesSection').scrollIntoView({behavior:'smooth'}); return; }
+      if (cat === 'Método de investigación') { $('methodSection').scrollIntoView({behavior:'smooth'}); return; }
+      state.category = cat === 'Fuentes oficiales del Perú' ? 'OficialPeru' : cat;
+      $('resourcesTitle').textContent = cat.toUpperCase();
+      $('resourcesSubtitle').textContent = 'Recursos filtrados por la categoría seleccionada.';
+      renderResources();
+      $('resourcesSection').scrollIntoView({behavior:'smooth'});
+      if (window.innerWidth < 980) $('sidebar').classList.remove('open');
+    }));
+  }
+
+  function renderFilters() {
+    $('filterPills').innerHTML = filters.map(([label, cls]) => `<button class="filter-pill ${label==='Todos'?'active':''}" data-filter="${label}">${cls?`<span class="dot ${cls}"></span>`:''}${label}</button>`).join('');
+    document.querySelectorAll('.filter-pill').forEach(btn => btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-pill').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active'); state.filter = btn.dataset.filter; renderResources();
+    }));
+  }
+
+  function resourceMatches(r) {
+    const haystack = normalize([r.name,r.officialName,r.institution,r.country,r.category,r.type,r.access,r.description,...r.areas,...r.features].join(' '));
+    if (state.query && !haystack.includes(normalize(state.query))) return false;
+    if (state.category !== 'Todos') {
+      if (state.category === 'OficialPeru') { if (!(r.type === 'Oficial' && r.country === 'Perú')) return false; }
+      else if (normalize(r.category) !== normalize(state.category) && !r.areas.some(a=>normalize(a)===normalize(state.category))) return false;
+    }
+    const f = state.filter;
+    if (f==='Oficial' && r.type!=='Oficial') return false;
+    if (f==='Gratuito' && r.access!=='Gratuito') return false;
+    if (f==='Freemium' && r.access!=='Freemium') return false;
+    if (f==='Académica' && r.type!=='Académica') return false;
+    if (f==='Privada' && r.type!=='Privada') return false;
+    if (f==='IA' && !r.features.includes('IA')) return false;
+    if (f==='Perú' && r.country!=='Perú') return false;
+    if (f==='Internacional' && r.country==='Perú') return false;
+    if (state.favoritesOnly && !state.favorites.has(r.id)) return false;
+    return true;
+  }
+
+  function sorted(list) {
+    return [...list].sort((a,b)=> {
+      if (state.sort==='name') return a.name.localeCompare(b.name,'es');
+      if (state.sort==='country') return a.country.localeCompare(b.country,'es') || b.priority-a.priority;
+      return b.priority-a.priority || a.name.localeCompare(b.name,'es');
+    });
+  }
+
+  function card(r) {
+    const favorite = state.favorites.has(r.id);
+    const tags = [r.type, accessLabel(r.access), ...(r.features.includes('IA')?['IA']:[]), ...r.areas.slice(0,1)];
+    return `<article class="resource-card" data-id="${r.id}">
+      <div class="card-top">
+        <img class="logo-image" src="${favicon(r)}" alt="Icono de ${r.name}" loading="lazy" onerror="this.style.display='none'">
+        <div class="card-title-wrap"><div class="card-title" title="${r.officialName}">${r.name}</div><div class="card-meta">${r.country} · ${r.institution}</div></div>
+        <button class="fav-button ${favorite?'active':''}" data-fav="${r.id}" aria-label="${favorite?'Quitar':'Agregar'} favorito">★</button>
+      </div>
+      <div class="card-description">${r.description}</div>
+      <div class="tag-row">${tags.map((t,i)=>`<span class="mini-tag ${i===0?typeClass(r.type):''}">${t}</span>`).join('')}</div>
+      <div class="card-actions"><span class="priority">Prioridad ${r.priority}/100</span><a class="open-link" href="${r.url}" target="_blank" rel="noopener noreferrer">Abrir ↗</a></div>
+    </article>`;
+  }
+
+  function bindFavoriteButtons(root=document) {
+    root.querySelectorAll('[data-fav]').forEach(btn => btn.addEventListener('click', async () => {
+      const id = btn.dataset.fav;
+      if (state.favorites.has(id)) state.favorites.delete(id); else state.favorites.add(id);
+      localStorage.setItem('cmj_favorites_fallback', JSON.stringify([...state.favorites]));
+      showToast(state.favorites.has(id) ? 'Recurso agregado a favoritos.' : 'Recurso eliminado de favoritos.');
+      renderResources(); renderFavorites();
+    }));
+  }
+
+  function renderResources() {
+    const list = sorted(resources.filter(resourceMatches));
+    $('resourceGrid').innerHTML = list.map(card).join('');
+    $('visibleCount').textContent = `${list.length} recursos`;
+    $('noResults').classList.toggle('hidden', list.length>0);
+    bindFavoriteButtons($('resourceGrid'));
+  }
+
+  function renderQuick() {
+    const quick = sorted(resources.filter(r=>r.quick));
+    $('quickCount').textContent = `${quick.length} recursos`;
+    $('quickGrid').innerHTML = quick.map(r=>`<a class="quick-card" href="${r.url}" target="_blank" rel="noopener noreferrer"><img src="${favicon(r)}" alt="" loading="lazy"><span>${r.name}</span></a>`).join('');
+  }
+
+  function renderFavorites() {
+    const list = sorted(resources.filter(r=>state.favorites.has(r.id)));
+    $('favoritesGrid').innerHTML = list.map(card).join('');
+    $('favoritesCount').textContent = `${list.length} favoritos`;
+    $('favoritesEmpty').classList.toggle('hidden', list.length>0);
+    bindFavoriteButtons($('favoritesGrid'));
+  }
+
+  function renderStats() {
+    const official = resources.filter(r=>r.type==='Oficial').length;
+    const free = resources.filter(r=>r.access==='Gratuito').length;
+    const academic = resources.filter(r=>r.type==='Académica').length;
+    const ai = resources.filter(r=>r.features.includes('IA')).length;
+    const intl = resources.filter(r=>r.country!=='Perú').length;
+    const stats = [[resources.length,'recursos curados'],[official,'fuentes oficiales'],[free,'gratuitos'],[academic,'académicos'],[ai,'herramientas con IA'],[intl,'internacionales']];
+    $('statsGrid').innerHTML = stats.map(([v,l])=>`<div class="stat-card"><strong>${v}</strong><span>${l}</span></div>`).join('');
+    $('resourceCountTop').textContent = `${resources.length} recursos curados`;
+  }
+
+  function renderMethods(){ $('methodGrid').innerHTML = methods.map(([s,t,p])=>`<div class="method-card"><div class="method-step">${s}</div><h3>${t}</h3><p>${p}</p></div>`).join(''); }
+
+  function showToast(message){ const el=$('toast'); el.textContent=message; el.classList.add('show'); clearTimeout(showToast.t); showToast.t=setTimeout(()=>el.classList.remove('show'),2200); }
+
+  function initEvents(){
+    $('globalSearch').addEventListener('input',e=>{state.query=e.target.value.trim(); renderResources();});
+    $('sortSelect').addEventListener('change',e=>{state.sort=e.target.value; renderResources(); renderFavorites();});
+    $('favoritesOnlyButton').addEventListener('click',()=>{state.favoritesOnly=!state.favoritesOnly; $('favoritesOnlyButton').classList.toggle('active',state.favoritesOnly); renderResources();});
+    $('needSelect').addEventListener('change',e=>{
+      const names = recommendations[e.target.value] || [];
+      if (!names.length) { $('recommendationResult').textContent='Selecciona una opción para recibir una ruta de investigación.'; return; }
+      $('recommendationResult').innerHTML = `<strong>Ruta recomendada:</strong> ${names.map((n,i)=>`${i+1}. ${n}`).join(' → ')}`;
+    });
+    $('collapseSidebar').addEventListener('click',()=> $('sidebar').classList.toggle('collapsed'));
+    $('mobileMenuButton').addEventListener('click',()=> $('sidebar').classList.toggle('open'));
+    $('themeButton').addEventListener('click',()=> document.body.classList.toggle('light'));
+    document.addEventListener('keydown',e=>{ if(e.key==='/' && document.activeElement!==$('globalSearch')) {e.preventDefault(); $('globalSearch').focus();} if(e.key==='Escape') $('sidebar').classList.remove('open'); });
+  }
+
+  $('todayDate').textContent = today();
+  renderNav(); renderFilters(); renderStats(); renderQuick(); renderFavorites(); renderResources(); renderMethods(); initEvents();
+})();
+
+</script>
+</body>
+</html>
